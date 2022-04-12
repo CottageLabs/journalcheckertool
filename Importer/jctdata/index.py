@@ -60,8 +60,8 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description='Load data into the index')
-    parser.add_argument("index_prefix")
     parser.add_argument('target')
+    parser.add_argument("-s", "--index_suffix")
 
     args = parser.parse_args()
 
@@ -79,12 +79,16 @@ if __name__ == "__main__":
     dirs.sort(reverse=True)
     latest = dirs[0]
 
-    timestamped_index_name = args.index_prefix + "_" + args.target + datetime.strftime(datetime.utcnow(), settings.INDEX_SUFFIX_DATE_FORMAT)
+    index_suffix = ""
+    if args.index_suffix:
+        index_suffix = "_" + args.index_suffix
+
+    ALIAS =  "jct_" + args.target + index_suffix
+    timestamped_index_name = ALIAS + datetime.strftime(datetime.utcnow(), settings.INDEX_SUFFIX_DATE_FORMAT)
 
     IN = os.path.join(target_dir, latest, args.target + ".json")
     CONN = esprit.raw.Connection(settings.ES_HOST, timestamped_index_name)
     INDEX_TYPE = args.target
-    ALIAS = args.index_prefix + "_" + args.target
     BULK_FILE = os.path.join(target_dir, latest, args.target + ".bulk")
     MAPPING = {INDEX_TYPE : settings.DEFAULT_MAPPING}
 

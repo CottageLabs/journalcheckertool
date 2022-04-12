@@ -9,17 +9,20 @@ python jctdata/jac.py
 This will gather data from Crossref and DOAJ (more sources need to be added to make this complete), and produce 
 an output file in `databases/jct/jac/[current timestamp]/jac.json`
 
-You can then import this into ES with:
+You can then import this into ES (dev) with:
 
 ```
-python jctdata/index.py jct_dev jac
+python jctdata/index.py jac -s dev
 ```
 
-This will create a new index type with the name `jac` in an index called `jct_dev_jac[timestamp]`
+This will create a new index type with the name `jac` in an index called `jct_jac_dev[timestamp]`
 
-It will then create (or repoint) the alias `jct_dev_jac` to this new index.
+It will then create (or repoint) the alias `jct_jac_dev` to this new index.
 
-It does not currently remove the old index.
+If you want to create the index for production, omit the `-s dev` argument.
+
+This operation will also remove any old indices for the same type, leaving behind 2 old ones for reference (or
+however many are specified in `settings.py`).
 
 
 # Gathering data

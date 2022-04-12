@@ -6,6 +6,7 @@ from jctdata import settings
 
 ISSN_RX = "\d{4}-\d{3}[\dxX]"
 
+
 def journals(coincident_issn_files, title_files, publisher_files):
     dir = datetime.strftime(datetime.utcnow(), settings.DIR_DATE_FORMAT)
     jacdir = os.path.join(settings.DATABASES, "jct", "jac", dir)
@@ -134,13 +135,6 @@ def _get_titles(issns, titles, preference_order):
             elif c[1] == "alt":
                 alts.append((c[0].strip(), c[2].strip()))
 
-    # for row in titlerows:
-    #     if row[0] in issns:
-    #         if row[2] == "main":
-    #             mains.append((row[1].strip(), row[3].strip()))
-    #         elif row[2] == "alt":
-    #             alts.append((row[1].strip(), row[3].strip()))
-
     if len(mains) == 0:
         # if there are no titles, return an empty state
         if len(alts) == 0:
@@ -163,9 +157,6 @@ def _get_publisher(issns, publishers, preference_order):
         candidates = publishers.get(issn, [])
         for c in candidates:
             pubs.append((c[0].strip(), c[1].strip()))
-    # for row in pubrows:
-    #     if row[0] in issns:
-    #          pubs.append((row[1].strip(), row[2].strip()))
 
     if len(pubs) == 0:
         return None

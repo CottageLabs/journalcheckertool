@@ -12,12 +12,14 @@ an output file in `databases/jct/jac/[current timestamp]/jac.json`
 You can then import this into ES with:
 
 ```
-python jctdata/index.py jac
+python jctdata/index.py jct_dev jac
 ```
 
-This will create a new index type with the name `jac-[timestamp]`
+This will create a new index type with the name `jac` in an index called `jct_dev_jac[timestamp]`
 
-It currently does not set the alias on the ES, so you need to do that manually for now.
+It will then create (or repoint) the alias `jct_dev_jac` to this new index.
+
+It does not currently remove the old index.
 
 
 # Gathering data

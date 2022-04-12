@@ -18,7 +18,7 @@ class Datasource:
         if len(dirs) == 0:
             return True
 
-        dirs.sort()
+        dirs.sort(reverse=True)
         created = datetime.strptime(dirs[0], settings.DIR_DATE_FORMAT)
         return created + timedelta(seconds=self.max_age) < datetime.utcnow()
 
@@ -31,7 +31,7 @@ class Datasource:
         if len(dirs) == 0:
             return None
 
-        dirs.sort()
+        dirs.sort(reverse=True)
         return dirs[0]
 
     def current_paths(self):

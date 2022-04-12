@@ -2,32 +2,13 @@ import esprit
 import json
 import uuid
 import os
+import requests
 from datetime import datetime
 
 from jctdata import settings
 
-MAPPING = {
-    "jac" : {
-        "dynamic_templates": [
-            {
-                "default": {
-                    "match": "*",
-                    "match_mapping_type": "string",
-                    "mapping": {
-                        "type": "multi_field",
-                        "fields": {
-                            "{name}": {"type": "{dynamic_type}", "index": "analyzed", "store": "no"},
-                            "exact": {"type": "{dynamic_type}", "index": "not_analyzed", "store": "yes"}
-                        }
-                    }
-                }
-            }
-        ]
-    }
-}
 
-
-def index(infile, bulkfile, conn, index_type, mapping):
+def index(infile, bulkfile, conn, index_type, mapping, alias):
     with open(infile, "r") as f, open(bulkfile, "w") as o:
         line = f.readline()
         while line:
@@ -39,17 +20,47 @@ def index(infile, bulkfile, conn, index_type, mapping):
 
     if not esprit.raw.type_exists(conn, index_type, es_version="1.7.5"):
         r = esprit.raw.put_mapping(conn, index_type, mapping, es_version="1.7.5")
-        print("Creating ES Type + Mapping in index {0}; status: {1}".format(index_type, r.status_code))
+        print("INDEX: Creating ES Type + Mapping in index {0}; status: {1}".format(conn.index, r.status_code))
     else:
-        print("ES Type + Mapping already exists in index {0}".format(index_type))
+        print("INDEX: ES Type + Mapping already exists in index {0}".format(conn.index))
 
+    print("INDEX: bulk loading from {x}".format(x=bulkfile))
     esprit.tasks.bulk_load(conn, index_type, bulkfile)
+
+    old_idx = None
+    resp = requests.get(conn.host + ":" + conn.port + "/_aliases")
+    aliases = json.loads(resp.text)
+    for idx, a in aliases.items():
+        if alias in a.get("aliases", {}):
+            old_idx = idx
+            break
+
+    if old_idx is None:
+        print("INDEX: creating new alias {x} for {y}".format(x=alias, y=conn.index))
+        esprit.tasks.create_alias(conn, alias)
+    else:
+        old_conn = esprit.raw.Connection(conn.host, old_idx, port=conn.port)
+        print("INDEX: repointing existing alias {x} from {y} to {z}".format(x=alias, y=old_conn.index, z=conn.index))
+        esprit.tasks.repoint_alias(old_conn, conn, alias)
+
+    removal_candidates = [idx for idx in aliases.keys() if idx.startswith(alias)]
+    if len(removal_candidates) < settings.INDEX_KEEP_OLD_INDICES:
+        print("INDEX: less than {x} old indices, none removed".format(x=settings.INDEX_KEEP_OLD_INDICES))
+        return
+
+    removal_candidates.sort(reverse=True)
+    removes = removal_candidates[settings.INDEX_KEEP_OLD_INDICES:]
+    for r in removes:
+        print("INDEX: removing old index {x}".format(x=r))
+        conn = esprit.raw.Connection(conn.host, r, port=conn.port)
+        esprit.raw.delete(conn)
 
 
 if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description='Load data into the index')
+    parser.add_argument("index_prefix")
     parser.add_argument('target')
 
     args = parser.parse_args()
@@ -65,16 +76,22 @@ if __name__ == "__main__":
         print("target has not got a build to load into the index")
         exit(0)
 
-    dirs.sort()
+    dirs.sort(reverse=True)
     latest = dirs[0]
 
+    timestamped_index_name = args.index_prefix + "_" + args.target + datetime.strftime(datetime.utcnow(), settings.INDEX_SUFFIX_DATE_FORMAT)
+
     IN = os.path.join(target_dir, latest, args.target + ".json")
-
-    # IN = "databases/jct/journals-2022-05-06.json"
-    CONN = esprit.raw.Connection(settings.ES_HOST, settings.INDEX)
-    INDEX_TYPE = args.target + "-" + datetime.strftime(datetime.utcnow(), settings.INDEX_SUFFIX_DATE_FORMAT)
-    # BULK_FILE = "../databases/jct/jac-2022-05-06.bulk"
+    CONN = esprit.raw.Connection(settings.ES_HOST, timestamped_index_name)
+    INDEX_TYPE = args.target
+    ALIAS = args.index_prefix + "_" + args.target
     BULK_FILE = os.path.join(target_dir, latest, args.target + ".bulk")
-
     MAPPING = {INDEX_TYPE : settings.DEFAULT_MAPPING}
-    index(IN, BULK_FILE, CONN, INDEX_TYPE, MAPPING)
+
+    print("INDEX: loading into index")
+    print("INDEX: IN: {x}".format(x=IN))
+    print("INDEX: INDEX_TYPE: {x}".format(x=INDEX_TYPE))
+    print("INDEX: ALIAS: {x}".format(x=ALIAS))
+    print("INDEX: BULK: {x}".format(x=BULK_FILE))
+
+    index(IN, BULK_FILE, CONN, INDEX_TYPE, MAPPING, ALIAS)

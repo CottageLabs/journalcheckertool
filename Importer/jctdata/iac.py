@@ -60,14 +60,13 @@ def _index(record):
     idx["ror"] = record['ror']
     idx["title"] = title_variants(record["title"])
 
-    if len(record.get('aliases', [])) > 0 or len(record.get('acronyms', [])) > 0:
-        idx["alts"] = []
-        if len(record.get('aliases', [])) > 0:
-            for alt in record["aliases"]:
-                idx["alts"].extend(title_variants(alt))
-        if len(record.get('acronyms', [])) > 0:
-            idx["alts"].extend(record['acronyms'])
-        idx["alts"] = list(set(idx["alts"]))
+    if len(record.get('aliases', [])) > 0:
+        idx["aliases"] = []
+        for alt in record["aliases"]:
+            idx["aliases"].extend(title_variants(alt))
+        idx["aliases"] = list(set(idx["aliases"]))
+    if len(record.get('acronyms', [])) > 0:
+        idx["acronyms"] = list(set(record['acronyms']))
     record["index"] = idx
 
 

@@ -134,48 +134,6 @@ class DOAJ(datasource.Datasource):
                             writer.writerow([row[1], row[4]])
 
 if __name__ == "__main__":
-    TARBALL = "databases/doaj/doaj_journal_data_2022-04-05.tar.gz"
-    OUT = "databases/doaj/doaj-2022-04-05.csv"
-    ISSN = "databases/doaj/coincident_issns-2022-04-05.csv"
-    TITLE = "databases/doaj/titles-2022-04-05.csv"
-    PUB = "databases/doaj/pubs-2022-04-05.csv"
-
     doaj = DOAJ()
-    doaj.gather(OUT, TARBALL)
-    doaj.analyse(OUT, ISSN, TITLE, PUB)
-
-"""
-{"last_updated": "2021-04-29T13:15:45Z", "bibjson": {"editorial": {"review_process": ["Peer review"],
-                                                                   "review_url": "http://revues.imist.ma/?journal=JMSR&page=about&op=editorialPolicies#openAccessPolicy",
-                                                                   "board_url": "http://journal-jmsr.net/editorial_board.php"},
-                                                     "pid_scheme": {"has_pid_scheme": false},
-                                                     "copyright": {"author_retains": true,
-                                                                   "url": "http://journal-jmsr.net/aboutthejournal.php"},
-                                                     "keywords": ["medical", "surgical", "clinical", "nursing",
-                                                                  "pathology"], "plagiarism": {"detection": false},
-                                                     "subject": [{"code": "R", "scheme": "LCC", "term": "Medicine"}],
-                                                     "eissn": "2351-8200", "language": ["EN"],
-                                                     "title": "Journal of Medical and Surgical Research", "article": {
-        "license_display_example_url": "http://journal-jmsr.net/aboutthejournal.php", "license_display": ["Embed"]},
-                                                     "preservation": {"has_preservation": true, "service": [
-                                                         "Institut Marocain de l'Information Scientifique et Technique (IMIST)"],
-                                                                      "url": "http://journal-jmsr.net/aboutthejournal.php"},
-                                                     "license": [
-                                                         {"NC": true, "ND": true, "BY": true, "type": "CC BY-NC-ND",
-                                                          "SA": false}], "ref": {
-        "aims_scope": "http://revues.imist.ma/?journal=JMSR&page=about&op=editorialPolicies#focusAndScope",
-        "journal": "http://journal-jmsr.net/", "oa_statement": "http://journal-jmsr.net/aboutthejournal.php",
-        "author_instructions": "http://revues.imist.ma/?journal=JMSR&page=about&op=submissions#authorGuidelines",
-        "license_terms": "http://journal-jmsr.net/aboutthejournal.php"}, "oa_start": 2014, "alternative_title": "JMSR",
-                                                     "apc": {"has_apc": false,
-                                                             "url": "http://journal-jmsr.net/aboutthejournal.php"},
-                                                     "other_charges": {"has_other_charges": false,
-                                                                       "url": "http://journal-jmsr.net/aboutthejournal.php"},
-                                                     "publication_time_weeks": 12,
-                                                     "deposit_policy": {"has_policy": false},
-                                                     "publisher": {"country": "MA",
-                                                                   "name": "Medical and Surgical Research Journals Group"},
-                                                     "boai": true, "waiver": {"has_waiver": false}},
- "admin": {"ticked": true, "seal": false}, "id": "b537a8e783d54a74b979219eae032445",
- "created_date": "2016-08-03T13:36:31Z"}
-"""
+    doaj.gather()
+    doaj.analyse()

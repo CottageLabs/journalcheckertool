@@ -33,7 +33,7 @@ def jac_index_data():
 def journals(coincident_issn_files, title_files, publisher_files):
     dir = datetime.strftime(datetime.utcnow(), settings.DIR_DATE_FORMAT)
     jacdir = os.path.join(settings.DATABASES, "jct", "jac", dir)
-    os.makedirs(jacdir)
+    os.makedirs(jacdir, exist_ok=True)
     issn_clusters_file = os.path.join(jacdir, "issn_clusters.csv")
 
     preference_order = settings.JAC_PREF_ORDER

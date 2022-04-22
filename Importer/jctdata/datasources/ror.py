@@ -177,7 +177,7 @@ class ROR(datasource.Datasource):
 if __name__ == "__main__":
     print(datetime.utcnow())
     ror = ROR()
-    if ror.requires_update():
+    if ror.requires_update() or not ror.path_exists():
         ror.gather()
     ror.analyse()
     print(datetime.utcnow())

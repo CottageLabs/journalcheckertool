@@ -56,16 +56,10 @@ def index(infile, bulkfile, conn, index_type, mapping, alias):
         esprit.raw.delete(conn)
 
 
-if __name__ == "__main__":
-    import argparse
+def index_latest_with_alias(target, index_suffix):
+    target_dir = os.path.join(settings.DATABASES, "jct", target)
 
-    parser = argparse.ArgumentParser(description='Load data into the index')
-    parser.add_argument('target')
-    parser.add_argument("-s", "--index_suffix")
-
-    args = parser.parse_args()
-
-    target_dir = os.path.join(settings.DATABASES, "jct", args.target)
+    os.makedirs(target_dir, exist_ok=True)
 
     dirs = []
     for entry in os.listdir(target_dir):
@@ -74,22 +68,21 @@ if __name__ == "__main__":
 
     if len(dirs) == 0:
         print("target has not got a build to load into the index")
-        exit(0)
+        return
 
     dirs.sort(reverse=True)
     latest = dirs[0]
 
-    index_suffix = ""
-    if args.index_suffix:
-        index_suffix = "_" + args.index_suffix
+    if index_suffix and not index_suffix.startswith('_'):
+        index_suffix = "_" + index_suffix
 
-    ALIAS =  "jct_" + args.target + index_suffix
+    ALIAS = "jct_" + target + index_suffix
     timestamped_index_name = ALIAS + datetime.strftime(datetime.utcnow(), settings.INDEX_SUFFIX_DATE_FORMAT)
 
-    IN = os.path.join(target_dir, latest, args.target + ".json")
+    IN = os.path.join(target_dir, latest, target + ".json")
     CONN = esprit.raw.Connection(settings.ES_HOST, timestamped_index_name)
-    INDEX_TYPE = args.target
-    BULK_FILE = os.path.join(target_dir, latest, args.target + ".bulk")
+    INDEX_TYPE = target
+    BULK_FILE = os.path.join(target_dir, latest, target + ".bulk")
     MAPPING = {INDEX_TYPE : settings.DEFAULT_MAPPING}
 
     print("INDEX: loading into index")
@@ -99,3 +92,14 @@ if __name__ == "__main__":
     print("INDEX: BULK: {x}".format(x=BULK_FILE))
 
     index(IN, BULK_FILE, CONN, INDEX_TYPE, MAPPING, ALIAS)
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Load data into the index')
+    parser.add_argument('target')
+    parser.add_argument("-s", "--index_suffix")
+
+    args = parser.parse_args()
+    index_latest_with_alias(args.target, args.index_suffix)

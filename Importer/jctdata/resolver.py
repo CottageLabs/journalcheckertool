@@ -3,11 +3,13 @@ import json
 from jctdata.datasources import crossref
 from jctdata.datasources import doaj
 from jctdata.datasources import tj
+from jctdata.datasources import ror
 
 SOURCES = {
     "crossref" : crossref.Crossref(),
     "doaj" : doaj.DOAJ(),
-    "tj" : tj.TJ()
+    "tj" : tj.TJ(),
+    "ror": ror.ROR()
 }
 
 

@@ -11,6 +11,7 @@ class Datasource:
 
     def requires_update(self):
         dirs = []
+        os.makedirs(self.dir, exist_ok=True)
         for entry in os.listdir(self.dir):
             if os.path.isdir(os.path.join(self.dir, entry)):
                 dirs.append(entry)

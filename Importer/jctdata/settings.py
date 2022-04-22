@@ -8,6 +8,7 @@ def rel2abs(file, *args):
 
 
 DATABASES = rel2abs(__file__, "..", "databases")
+RESOURCES = rel2abs(__file__, "..", "resources")
 
 DIR_DATE_FORMAT = "%Y-%m-%d_%H%M"
 ROR_DIR_DATE_FORMAT = "%Y-%m-%d"
@@ -19,6 +20,8 @@ ROR_DOWNLOAD_PATH = "https://github.com/ror-community/ror-api/raw/master/rorapi/
 #         git ls-tree HEAD | grep data
 #         > 040000 tree 8ec3e0e5bce8a33c644f1544b877d756eca1a2f6    data
 ROR_TREE_SHA = "8ec3e0e5bce8a33c644f1544b877d756eca1a2f6"
+
+ROR_DATA_FILE = os.path.join(RESOURCES, "ror", "v1.0-2022-03-17-ror-data.json.zip")
 
 MAX_DATASOURCE_AGE = {
     "crossref" : 60 * 60 * 24 * 7,

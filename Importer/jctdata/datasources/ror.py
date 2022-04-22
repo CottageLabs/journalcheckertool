@@ -5,6 +5,7 @@ from jctdata import datasource
 from jctdata import settings
 from datetime import datetime, timedelta
 from zipfile import ZipFile
+import shutil
 
 class ROR(datasource.Datasource):
     ID = "ror"
@@ -22,37 +23,41 @@ class ROR(datasource.Datasource):
             "origin": origin_file
         }
 
-    def requires_update(self):
-        print("ROR: Checking for latest file")
-        dirs = []
-        os.makedirs(self.dir, exist_ok=True)
-        for entry in os.listdir(self.dir):
-            if os.path.isdir(os.path.join(self.dir, entry)):
-                dirs.append(entry)
-
-        if len(dirs) == 0:
-            return True
-
-        dirs.sort(reverse=True)
-        created = datetime.strptime(dirs[0], settings.ROR_DIR_DATE_FORMAT)
-        latest_dt, url = self._get_latest_file()
-        if latest_dt:
-            return created < latest_dt
-        return created + timedelta(seconds=self.max_age) < datetime.utcnow()
+    # def requires_update(self):
+    #     print("ROR: Checking for latest file")
+    #     dirs = []
+    #     os.makedirs(self.dir, exist_ok=True)
+    #     for entry in os.listdir(self.dir):
+    #         if os.path.isdir(os.path.join(self.dir, entry)):
+    #             dirs.append(entry)
+    #
+    #     if len(dirs) == 0:
+    #         return True
+    #
+    #     dirs.sort(reverse=True)
+    #     created = datetime.strptime(dirs[0], settings.ROR_DIR_DATE_FORMAT)
+    #     latest_dt, url = self._get_latest_file()
+    #     if latest_dt:
+    #         return created < latest_dt
+    #     return created + timedelta(seconds=self.max_age) < datetime.utcnow()
 
     def gather(self):
-        latest_dt, url = self._get_latest_file()
-        dir = datetime.strftime(latest_dt, settings.ROR_DIR_DATE_FORMAT)
-        os.makedirs(os.path.join(self.dir, dir), exist_ok=True)
-        out = os.path.join(self.dir, dir, "origin.json")
-
+        dir = datetime.strftime(datetime.utcnow(), settings.DIR_DATE_FORMAT)
         zip_file = os.path.join(self.dir, dir, "origin.zip")
+        os.makedirs(os.path.join(self.dir, dir), exist_ok=True)
 
-        if not os.path.exists(zip_file):
-            print("ROR: downloading data dump")
-            resp = requests.get(url)
-            with open(zip_file, "wb") as f:
-                f.write(resp.content)
+        if settings.ROR_DATA_FILE and os.path.exists(settings.ROR_DATA_FILE):
+            print("ROR: extracting data from locally supplied file {x}".format(x=settings.ROR_DATA_FILE))
+            shutil.copy(settings.ROR_DATA_FILE, zip_file)
+        else:
+            latest_dt, url = self._get_latest_file()
+            if not os.path.exists(zip_file):
+                print("ROR: downloading data dump from {x}".format(x=url))
+                resp = requests.get(url)
+                with open(zip_file, "wb") as f:
+                    f.write(resp.content)
+
+        out = os.path.join(self.dir, dir, "origin.json")
         self._extract_ror_data(zip_file, out)
 
     def analyse(self):
@@ -101,7 +106,16 @@ class ROR(datasource.Datasource):
         print("ROR: extracting data dump {x}".format(x=zip_file))
 
         with ZipFile(zip_file, mode="r") as archive, open(out, "w") as o:
-            data = archive.read("ror.json").decode(encoding="utf-8")
+            rorfile = None
+            for zi in archive.infolist():
+                if zi.filename.endswith(".json") and not zi.filename.startswith("."):
+                    rorfile = zi
+                    break
+
+            if rorfile is None:
+                raise Exception("Unable to extract ROR JSON file")
+
+            data = archive.read(rorfile).decode(encoding="utf-8")
             j = json.loads(data)
             for ror_rec in j:
                 rec = {
@@ -165,5 +179,5 @@ if __name__ == "__main__":
     ror = ROR()
     if ror.requires_update():
         ror.gather()
-    # ror.analyse()
+    ror.analyse()
     print(datetime.utcnow())

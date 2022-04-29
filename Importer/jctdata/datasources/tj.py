@@ -5,7 +5,6 @@ from datetime import datetime
 import os
 import requests
 import csv
-from io import StringIO
 
 class TJ(datasource.Datasource):
     ID = "tj"
@@ -38,7 +37,58 @@ class TJ(datasource.Datasource):
         publisher_file = os.path.join(self.dir, dir, "publishers.csv")
         print("TJ: analysing csv {x}".format(x=infile))
 
-        reader = csv.reader(stream)
+        self._coincident_issns(infile, coincident_issn_file)
+        self._title_map(infile, title_file)
+        self._publisher_map(infile, publisher_file)
 
-        reader.__next__()
-        for row in reader:
+    def _coincident_issns(self, tj_file, outfile):
+        issn_pairs = []
+
+        with open(tj_file, "r") as f:
+            reader = csv.reader(f)
+            reader.__next__()
+            for row in reader:
+                if row[1] and row[2]:
+                    issn_pairs.append([row[1], row[2]])
+                    issn_pairs.append([row[2], row[1]])
+                elif row[1] and not row[2]:
+                    issn_pairs.append([row[1], ""])
+                elif not row[1] and row[2]:
+                    issn_pairs.append([row[2], ""])
+
+        issn_pairs.sort(key=lambda x: x[0])
+
+        with open(outfile, "w") as o:
+            writer = csv.writer(o)
+            writer.writerows(issn_pairs)
+
+    def _title_map(self, tj_file, outfile):
+        with open(outfile, "w") as o:
+            writer = csv.writer(o)
+
+            with open(tj_file, "r") as f:
+                reader = csv.reader(f)
+                reader.__next__()
+                for row in reader:
+                    if row[1]:
+                        if row[0]:
+                            writer.writerow([row[1], row[0], "main"])
+                    if row[2]:
+                        if row[1]:
+                            writer.writerow([row[2], row[0], "main"])
+
+    def _publisher_map(self, tj_file, outfile):
+        with open(outfile, "w") as o:
+            writer = csv.writer(o)
+
+            with open(tj_file, "r") as f:
+                reader = csv.reader(f)
+                reader.__next__()
+                for row in reader:
+                    if row[1]:
+                        if row[3]:
+                            writer.writerow([row[1], row[3]])
+                    if row[2]:
+                        if row[3]:
+                            writer.writerow([row[2], row[3]])
+

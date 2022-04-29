@@ -10,21 +10,21 @@ ISSN_RX = "\d{4}-\d{3}[\dxX]"
 
 def jac_index_data():
     print('JAC: Data for journal autocomplete start')
-    paths = resolver.gather_data(["crossref", "doaj"])
+    paths = resolver.gather_data(["crossref", "doaj", "tj"])
     ISSNS = [
         ("crossref", paths["crossref"].get("coincident_issns")),
-        ("doaj", paths["doaj"].get("coincident_issns"))#,
-        #("tj", paths["doaj"].get("coincident_issns"))
+        ("doaj", paths["doaj"].get("coincident_issns")),
+        ("tj", paths["tj"].get("coincident_issns"))
     ]
     TITLE = [
         ("crossref", paths["crossref"].get("titles")),
-        ("doaj", paths["doaj"].get("titles"))#,
-        #("tj", paths["doaj"].get("titles"))
+        ("doaj", paths["doaj"].get("titles")),
+        ("tj", paths["tj"].get("titles"))
     ]
     PUB = [
         ("crossref", paths["crossref"].get("publishers")),
-        ("doaj", paths["doaj"].get("publishers"))#,
-        #("tj", paths["doaj"].get("publishers"))
+        ("doaj", paths["doaj"].get("publishers")),
+        ("tj", paths["tj"].get("publishers"))
     ]
     journals(ISSNS, TITLE, PUB)
     print('JAC: Data for journal autocomplete end')

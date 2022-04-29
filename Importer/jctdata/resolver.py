@@ -36,4 +36,4 @@ def gather_data(datasources, reanalyse=False):
 
 
 if __name__ == "__main__":
-    gather_data(["doaj"], True)
+    gather_data(["tj"], True)

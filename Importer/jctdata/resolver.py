@@ -3,11 +3,13 @@ import json
 from jctdata.datasources import crossref
 from jctdata.datasources import doaj
 from jctdata.datasources import tj
+from jctdata.datasources import ror
 
 SOURCES = {
     "crossref" : crossref.Crossref(),
     "doaj" : doaj.DOAJ(),
-    "tj" : tj.TJ()
+    "tj" : tj.TJ(),
+    "ror": ror.ROR()
 }
 
 
@@ -17,7 +19,7 @@ def gather_data(datasources, reanalyse=False):
         handler = SOURCES[source]
         ru = handler.requires_update()
 
-        if ru:
+        if ru or not handler.paths_exists():
             print("RESOLVER: {x} requires update".format(x=source))
             handler.gather()
         else:

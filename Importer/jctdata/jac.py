@@ -1,16 +1,40 @@
-import csv, json, itertools, string, os, re
-from unidecode import unidecode
+import csv, json, itertools, os, re
 from datetime import datetime
 
 from jctdata import settings
+from jctdata import resolver
+from lib.title_variants import title_variants
 
 ISSN_RX = "\d{4}-\d{3}[\dxX]"
 
 
+def jac_index_data():
+    print('JAC: Data for journal autocomplete start')
+    paths = resolver.gather_data(["crossref", "doaj"])
+    ISSNS = [
+        ("crossref", paths["crossref"].get("coincident_issns")),
+        ("doaj", paths["doaj"].get("coincident_issns"))#,
+        #("tj", paths["doaj"].get("coincident_issns"))
+    ]
+    TITLE = [
+        ("crossref", paths["crossref"].get("titles")),
+        ("doaj", paths["doaj"].get("titles"))#,
+        #("tj", paths["doaj"].get("titles"))
+    ]
+    PUB = [
+        ("crossref", paths["crossref"].get("publishers")),
+        ("doaj", paths["doaj"].get("publishers"))#,
+        #("tj", paths["doaj"].get("publishers"))
+    ]
+    journals(ISSNS, TITLE, PUB)
+    print('JAC: Data for journal autocomplete end')
+
+
 def journals(coincident_issn_files, title_files, publisher_files):
+    print("JAC: Preparing journal autocomplete data")
     dir = datetime.strftime(datetime.utcnow(), settings.DIR_DATE_FORMAT)
     jacdir = os.path.join(settings.DATABASES, "jct", "jac", dir)
-    os.makedirs(jacdir)
+    os.makedirs(jacdir, exist_ok=True)
     issn_clusters_file = os.path.join(jacdir, "issn_clusters.csv")
 
     preference_order = settings.JAC_PREF_ORDER
@@ -171,84 +195,18 @@ def _index(record):
     idx["issns"] = [issn.lower() for issn in record["issns"]]
     idx["issns"] += [issn.replace("-", "") for issn in idx["issns"]]
 
-    idx["title"] = _make_variants(record["title"])
+    idx["title"] = title_variants(record["title"])
 
     if "alts" in record:
         idx["alts"] = []
         for alt in record["alts"]:
-            idx["alts"] += _make_variants(alt)
+            idx["alts"] += title_variants(alt)
         idx["alts"] = list(set(idx["alts"]))
 
     record["index"] = idx
 
 
-def _make_variants(title):
-    title = title.lower()
-    variants = [title]
-    variants += _asciifold(title)
-    variants += [x for x in [_ampersander(t) for t in variants] if x is not None]
-    return list(set(variants))
-
-
-def _asciifold(val):
-    try:
-        asciititle = unidecode(val)
-    except:
-        asciititle = val
-
-    throwlist = string.punctuation + '\n\t'
-    unpunctitle = "".join(c for c in val if c not in throwlist).strip()
-    asciiunpunctitle = "".join(c for c in asciititle if c not in throwlist).strip()
-
-    return [unpunctitle, asciititle, asciiunpunctitle]
-
-
-def _ampersander(val):
-    if " & " in val:
-        return val.replace(" & ", " and ")
-    if " and " in val:
-        return val.replace(" and ", " & ")
-    return None
-
-
 if __name__ == "__main__":
     print(datetime.utcnow())
-
-    from jctdata import resolver
-    paths = resolver.gather_data(["crossref", "doaj"])
-
-    # CLUSTERS = "databases/intermediates/issn_clusters-2022-04-06.csv"
-    ISSNS = [
-        ("crossref", paths["crossref"].get("coincident_issns")),
-        ("doaj", paths["doaj"].get("coincident_issns"))#,
-        #("tj", paths["doaj"].get("coincident_issns"))
-    ]
-    TITLE = [
-        ("crossref", paths["crossref"].get("titles")),
-        ("doaj", paths["doaj"].get("titles"))#,
-        #("tj", paths["doaj"].get("titles"))
-    ]
-    PUB = [
-        ("crossref", paths["crossref"].get("publishers")),
-        ("doaj", paths["doaj"].get("publishers"))#,
-        #("tj", paths["doaj"].get("publishers"))
-    ]
-    # ISSNS = [
-    #     ("crossref", "databases/crossref/coincident_issns-2022-04-05.1.csv"),
-    #     ("doaj", "databases/doaj/coincident_issns-2022-04-05.csv")
-    # ]
-    # TITLE = [
-    #     ("crossref", "databases/crossref/titles-2022-04-05.csv"),
-    #     ("doaj", "databases/doaj/titles-2022-04-05.csv")
-    # ]
-    # PUB = [
-    #     ("crossref", "databases/crossref/pubs-2022-04-05.csv"),
-    #     ("doaj", "databases/doaj/pubs-2022-04-05.csv")
-    # ]
-    # PREF_ORDER = [
-    #     "doaj",
-    #     "crossref"
-    # ]
-    # OUT = "databases/jct/journals-2022-05-06.json"
-    journals(ISSNS, TITLE, PUB)
+    jac_index_data()
     print(datetime.utcnow())

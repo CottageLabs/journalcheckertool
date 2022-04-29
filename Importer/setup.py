@@ -6,7 +6,8 @@ setup(
     packages=find_packages(),
     install_requires=[
         "requests==2.22.0",
-        "Unidecode==1.1.1"
+        "Unidecode==1.1.1",
+        "wheel"
     ],
     url='http://journalcheckertool.org/',
     author='Cottage Labs',

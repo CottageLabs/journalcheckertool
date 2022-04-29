@@ -11,6 +11,7 @@ class Datasource:
 
     def requires_update(self):
         dirs = []
+        os.makedirs(self.dir, exist_ok=True)
         for entry in os.listdir(self.dir):
             if os.path.isdir(os.path.join(self.dir, entry)):
                 dirs.append(entry)
@@ -42,3 +43,15 @@ class Datasource:
 
     def analyse(self):
         raise NotImplementedError()
+
+    def paths_exists(self):
+        exists = True
+        try:
+            paths = self.current_paths()
+        except:
+            paths = {}
+            exists = False
+        for k, filepath in paths.items():
+            if not os.path.exists(filepath):
+                exists = False
+        return exists

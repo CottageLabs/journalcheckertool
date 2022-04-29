@@ -133,12 +133,6 @@ class Crossref(datasource.Datasource):
 
 
 if __name__ == "__main__":
-    OUT = "databases/crossref/crossref-2022-04-04.csv"
-    ISSN = "databases/crossref/coincident_issns-2022-04-05.1.csv"
-    TITLE = "databases/crossref/titles-2022-04-05.csv"
-    PUB = "databases/crossref/pubs-2022-04-05.csv"
-    OLDEST_DOI = 2019
-
     cr = Crossref()
     # cr.gather(OUT)
-    cr.analyse(OUT, ISSN, TITLE, PUB, OLDEST_DOI)
+    cr.analyse()

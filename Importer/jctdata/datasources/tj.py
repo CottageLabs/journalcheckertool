@@ -74,7 +74,7 @@ class TJ(datasource.Datasource):
                         if row[0]:
                             writer.writerow([row[1], row[0], "main"])
                     if row[2]:
-                        if row[1]:
+                        if row[0]:
                             writer.writerow([row[2], row[0], "main"])
 
     def _publisher_map(self, tj_file, outfile):

@@ -1,0 +1,57 @@
+// Buttons, button inputs, & links styled as buttons
+
+a.button {
+  display: inline-block;
+}
+
+.button,
+button {
+  @include unstyled-input;
+  margin-bottom: $spacing-04;
+  padding-left: $spacing-04;
+  padding-right: $spacing-04;
+  height: $btn-height;
+  border-radius: $btn-height/2;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: 0.035em;
+  font-size: smaller;
+  line-height: $btn-height;
+  transition: $transition;
+
+  svg {
+    margin-right: 0.5em;
+    position: relative;
+    top: 0.2em;
+    height: 20px;
+  }
+
+  &--primary {
+    background: $orange;
+    background: $gradient;
+
+    &:hover, &:active, &:focus {
+      background: $orange;
+      background: $gradient-reverse;
+    }
+  }
+
+  &--secondary {
+    background-color: $dark-grey;
+    color: $white;
+
+    svg {
+      fill: $white;
+    }
+
+    &:hover, &:active, &:focus {
+      background-color: $white;
+      color: $dark-grey;
+    }
+  }
+
+  + button {
+    margin-left: $spacing-04;
+  }
+}

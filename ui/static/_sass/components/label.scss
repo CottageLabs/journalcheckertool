@@ -1,0 +1,19 @@
+// All-caps labels, often seen above headers
+
+.label {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: smaller;
+
+  svg {
+    margin-right: $spacing-02;
+    position: relative;
+    top: 0.2em;
+    height: 20px;
+  }
+
+  a {
+    border: 0;
+    text-decoration: none;
+  }
+}

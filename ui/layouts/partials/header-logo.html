@@ -1,0 +1,15 @@
+{{ if or (.IsHome) (eq .Page.Type "minimal") }}
+    <div class="header-logo">
+        <h2 class="label">
+            {{- partial "header-title-image.html" . -}}
+            {{ .Site.Params.Header.PageTitle }}
+        </h2>
+    </div>
+{{ else }}
+    <div class="header-logo">
+        <h2 class="label">
+            {{- partial "header-title-image.html" . -}}
+            <a href="/">{{ .Site.Params.Header.PageTitle }}</a>
+        </h2>
+    </div>
+{{ end }}

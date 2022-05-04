@@ -1,0 +1,30 @@
+{{ define "head" }}
+    {{- partial "head.html" . -}}
+{{ end }}
+
+{{ define "header" }}
+    {{- partial "static-header.html" . -}}
+{{ end }}
+
+{{ define "main" }}
+<main class="container">
+    <div class="row row--centered" style="height: 60vh;">
+        <div class="col col--1of2">
+            <h1 id="title">404</h1>
+            <h2>We don't have this page</h2>
+        </div>
+    </div>
+</main>
+{{ end }}
+
+{{ define "footer" }}
+    {{- partial "main-footer.html" . -}}
+{{ end }}
+
+{{ define "modal" }}
+    {{- partial "modal.html" . -}}
+{{ end }}
+
+{{ define "script" }}
+    {{- partial "static-initialize-js.html" . -}}
+{{ end }}

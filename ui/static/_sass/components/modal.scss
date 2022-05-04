@@ -1,0 +1,72 @@
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 9999; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: $black; /* Fallback color */
+  background-color: rgba($black, .25); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  margin: 5vh auto;
+  padding: $modal-narrow $modal-wide;
+  background-color: $light-grey;
+  border-radius: $spacing-03;
+  width: 95vw;
+
+  @media only screen and (min-width: 768px) {
+    width: 75vw;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    width: 50vw;
+  }
+}
+
+.modal-header {
+  padding: $modal-narrow $modal-wide;
+  margin: $modal-wide-negative $modal-wide-negative $modal-narrow $modal-wide-negative;
+  background-color: $yellow;
+  border-radius: $spacing-03 $spacing-03 0 0;
+
+  h2 {
+    margin: 0;
+    font-size: $typescale-04;
+  }
+}
+
+.modal-inputs {
+ margin-top: $gutter;
+}
+
+/* The Close Button */
+.close {
+  float: right;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.contact_input {
+  width: 100%;
+  margin-top: $spacing-03;
+  border: solid 2px black;
+  background-color: transparent;
+  border-radius: 0;
+}
+
+.helpicon {
+  padding: 0;
+}
+
+.helpicon_img {
+  width: 25px;
+  height: 25px;
+  float: right;
+  cursor: pointer;
+}

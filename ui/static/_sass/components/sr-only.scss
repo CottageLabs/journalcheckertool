@@ -1,0 +1,10 @@
+// Utility class to make element visible to screen readers only 
+
+.sr-only {
+  @include sr-only;
+}
+
+.sr-only-focusable:active,
+.sr-only-focusable:focus {
+  @include sr-only-focusable;
+}

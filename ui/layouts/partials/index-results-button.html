@@ -1,0 +1,15 @@
+<!-- Buttons start over, explain and print-->
+<div class="row">
+    <div class="col col--1of3">
+        <button class="button button--primary" id="jct_restart">
+            <img src="/img/restart.svg" alt="restart"> {{ .Site.Params.Results.RestartButton }}
+        </button>
+    </div>
+    <div class="col col--2of3 col--right">
+        <button class="button button--secondary modal-trigger" id="jct_share_results" data-modal="share_results">Share this result</button>
+        <button class="button button--secondary" id="jct_explain_results">{{ .Site.Params.Results.ExplainButton }}</button>
+        <button class="button button--secondary" id="jct_print" style="display:none">
+            <img src="/img/print.svg" alt="print">{{ .Site.Params.Results.PrintButton }}
+        </button>
+    </div>
+</div>

@@ -1,0 +1,76 @@
+// Expressions: "formula" used in header query
+
+.expression {
+  display: flex;
+  padding: 0 $gutter * 2;
+
+  label {
+    margin-top: $spacing-03;
+    margin-bottom: 0;
+  }
+
+  input, select {
+    margin-top: $spacing-02;
+    width: 100%;
+    background-color: $black;
+  }
+
+  ::placeholder {
+    text-align: center;
+    color: rgba($white, 0.75);
+    font-size: $typescale-06;
+  }
+
+  &__input {
+    width: 100%;
+    text-align: center;
+    color: $white;
+  }
+
+  &__operator {
+    display: none;
+  }
+
+  &__checkbox {
+    margin: $spacing-01 0;
+
+    label {
+      margin: 0;
+      display: inline-block;
+      text-align: left;
+      text-transform: none;
+      font-size: $typescale-06;
+      font-style: italic;
+      vertical-align: top;
+    }
+
+    input {
+      margin: 0 $spacing-03 0 0;
+      height: 15px !important;
+      width: 15px;
+    }
+  }
+
+  // Style equal btn (text-only on mobile)
+  &:last-child {
+    cursor: pointer;
+
+    .expression__operator {
+      margin: $spacing-04 $gutter;
+
+      span {
+        display: block;
+      }
+    }
+
+    flex-direction: column; // Display on its own line on smaller viewports
+
+    svg {
+      display: none;
+    }
+
+    .expression__operator {
+      display: block;
+    }
+  }
+}

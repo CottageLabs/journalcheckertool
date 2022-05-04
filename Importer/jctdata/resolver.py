@@ -6,6 +6,7 @@ from jctdata.datasources import doaj_inprogress
 from jctdata.datasources import tj
 from jctdata.datasources import ta
 from jctdata.datasources import ror
+from jctdata.datasources import sa_negative
 
 SOURCES = {
     "crossref" : crossref.Crossref(),
@@ -13,7 +14,8 @@ SOURCES = {
     "doaj_inprogress" : doaj_inprogress.DOAJInProgress(),
     "tj" : tj.TJ(),
     "ta" : ta.TA(),
-    "ror": ror.ROR()
+    "ror": ror.ROR(),
+    "sa_negative" : sa_negative.SANegative()
 }
 
 
@@ -40,4 +42,4 @@ def gather_data(datasources, reanalyse=False):
 
 
 if __name__ == "__main__":
-    gather_data(["doaj_inprogress"], True)
+    gather_data(["sa_negative"], True)

@@ -29,7 +29,8 @@ MAX_DATASOURCE_AGE = {
     "doaj_inprogress": 60 * 60 * 24 * 7,
     "tj" : 60 * 60 * 24 * 7,
     "ta" : 60 * 60 * 24 * 7,
-    "ror": 60 * 60 * 24 * 7
+    "ror": 60 * 60 * 24 * 7,
+    "sa_negative": 60 * 60 * 24 * 7
 }
 
 DATASOURCE_PATH = {
@@ -38,7 +39,8 @@ DATASOURCE_PATH = {
     "doaj_inprogress": os.path.join(DATABASES, "doaj_inprogress"),
     "tj" : os.path.join(DATABASES, "tj"),
     "ta" : os.path.join(DATABASES, "ta"),
-    "ror": os.path.join(DATABASES, "ror")
+    "ror": os.path.join(DATABASES, "ror"),
+    "sa_negative": os.path.join(DATABASES, "sa_negative")
 }
 
 CROSSREF_OLDEST_DOI = 2019
@@ -50,6 +52,8 @@ TA_INDEX_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vStezELi7qnKcy
 DOAJ_IN_PROGRESS_URL = "https://doaj.org/jct/inprogress"
 
 DOAJ_IN_PROGRESS_KEYFILE = "../keyfiles/doaj_inprogress.txt"
+
+SA_NEGATIVE_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0EEMZTikcQZV28BiCL4huv-r0RnHiDrU08j3W1fyERNasoJYuAZek5G3oQH1TUKmf_X-yC5SiHaBM/pub?gid=0&single=true&output=csv"
 
 JAC_PREF_ORDER = [
     "doaj",

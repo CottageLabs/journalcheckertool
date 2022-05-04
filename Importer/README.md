@@ -1,4 +1,45 @@
-# Building the JCT autocomplete
+# Import data to JCT
+
+To import data into jct, run
+
+```
+python jct.py
+```
+
+This runs the following imports
+
+* Journal autocomplete data import
+* Institution autocomplete data import
+* JCT import, which in turn imports from
+  * Journals form Crossref and DOAJ
+  * TJ
+  * SA Prohibited data
+  * Rights retention data
+  * Funder config
+  * Funder language
+  * TA
+
+This will send an email, when the importer has finished running the commands needed to invoke an import. The import task itself runs in the background and could take a couple of hours to complete.
+
+To import just the TA data, run
+
+```
+python jct_ta.py
+```
+
+This will send an email, when the importer has finished running the commands needed to invoke a TA import. The import task itself runs in the background and could take a couple of hours to complete.
+
+## Check the import has run fine
+
+To check the import, run
+
+```
+python check_index.py
+```
+
+This will send an email when the import check is completed. It checks for count and date created (if it exists).
+
+## Building the JCT autocomplete
 
 The JCT autocomplete has two autocomplete sources - [journal](#building-the-journal-autocomplete) and [institution](#building-the-institution-autocomplete). 
 
@@ -20,7 +61,7 @@ To index the institution autocomplete data, run
 python jctdata/index.py iac -s dev
 ```
 
-## Building the Journal Autocomplete
+### Building the Journal Autocomplete
 
 Run
 
@@ -45,7 +86,7 @@ If you want to create the index for production, omit the `-s dev` argument.
 
 This operation will also remove any old indices for the same type, leaving behind 2 old ones for reference (or however many are specified in `settings.py`).
 
-## Building the Institution Autocomplete
+### Building the Institution Autocomplete
 
 Run
 
@@ -70,7 +111,7 @@ If you want to create the index for production, omit the `-s dev` argument.
 This operation will also remove any old indices for the same type, leaving behind 2 old ones for reference (or however many are specified in `settings.py`).
 
 
-## Gathering data
+### Gathering data
 
 Look in `jctdata/resolver.py`.  In the `__name__ == "__main__"` section at the bottom, list the
 datasources (using the names used in `settings.py`) you want to gather like:

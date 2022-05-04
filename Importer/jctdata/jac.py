@@ -10,7 +10,7 @@ ISSN_RX = "\d{4}-\d{3}[\dxX]"
 
 def jac_index_data():
     print('JAC: Data for journal autocomplete start')
-    paths = resolver.gather_data(["crossref", "doaj", "tj", "ta", "doaj_inprogress", "sa_negative"])
+    paths = resolver.gather_data(["crossref", "doaj", "tj", "ta", "doaj_inprogress", "sa_negative", "sa_positive"])
 
     ISSNS = []
     TITLE = []
@@ -50,10 +50,10 @@ def journals(coincident_issn_files, title_files, publisher_files):
 
     with open(issn_clusters_file, "r") as f, open(outfile, "w") as o:
         reader = csv.reader(f)
-        for row in reader:
-            vissns = valid_issns(row)
-            if len(vissns) == 0:
-                continue
+        for vissns in reader:
+            # vissns = valid_issns(row)
+            # if len(vissns) == 0:
+            #     continue
 
             record = {"issns": vissns}
             main, alts = _get_titles(vissns, titles, preference_order)
@@ -72,6 +72,15 @@ def journals(coincident_issn_files, title_files, publisher_files):
             o.write(json.dumps(record) + "\n")
 
 
+def _remove_invalid_issns(input):
+    valid = []
+    for row in input:
+        newrow = valid_issns(row)
+        if len(newrow) > 0:
+            valid.append(newrow)
+    return valid
+
+
 def valid_issns(issns):
     return [issn.upper() for issn in issns if re.match(ISSN_RX, issn)]
 
@@ -80,6 +89,7 @@ def issn_clusters(coincident_issn_files, clusters_file):
     issn_clusters = []
 
     inputs = _cat_and_dedupe(coincident_issn_files)
+    inputs = _remove_invalid_issns(inputs)
     inputs.sort(key=lambda x: x[0])
 
     current_issn_root = None
@@ -97,7 +107,7 @@ def issn_clusters(coincident_issn_files, clusters_file):
             current_cluster = [row[0]]
             current_issn_root = row[0]
 
-        if row[1]:
+        if len(row) > 1 and row[1]:
             current_cluster.append(row[1])
 
     issn_clusters.sort()

@@ -7,8 +7,8 @@ import os
 import requests
 
 
-class SANegative(datasource.Datasource):
-    ID = "sa_negative"
+class SAPositive(datasource.Datasource):
+    ID = "sa_positive"
 
     def current_paths(self):
         dir = self.current_dir()
@@ -26,7 +26,7 @@ class SANegative(datasource.Datasource):
         os.makedirs(os.path.join(self.dir, dir), exist_ok=True)
         out = os.path.join(self.dir, dir, "origin.csv")
 
-        resp = requests.get(settings.SA_NEGATIVE_SHEET)
+        resp = requests.get(settings.SA_POSITIVE_SHEET)
         with open(out, "w") as f:
             f.write(resp.text)
 
@@ -42,7 +42,6 @@ class SANegative(datasource.Datasource):
         self._title_map(infile, title_file)
         self._publisher_map(infile, publisher_file)
 
-
     def _coincident_issns(self, sa_file, outfile):
         analysis.pair_manager(sa_file, outfile, first=1, second=2, skip_title_row=True)
 
@@ -50,4 +49,4 @@ class SANegative(datasource.Datasource):
         analysis.simple_property_extract(sa_file, outfile, property=0, identifiers=[1,2], info="main", skip_title_row=True)
 
     def _publisher_map(self, sa_file, outfile):
-        analysis.simple_property_extract(sa_file, outfile, property=3, identifiers=[1, 2], skip_title_row=True)
+        analysis.simple_property_extract(sa_file, outfile, property=4, identifiers=[1, 2], skip_title_row=True)

@@ -7,6 +7,8 @@ from jctdata.datasources import tj
 from jctdata.datasources import ta
 from jctdata.datasources import ror
 from jctdata.datasources import sa_negative
+from jctdata.datasources import sa_positive
+
 
 SOURCES = {
     "crossref" : crossref.Crossref(),
@@ -15,7 +17,8 @@ SOURCES = {
     "tj" : tj.TJ(),
     "ta" : ta.TA(),
     "ror": ror.ROR(),
-    "sa_negative" : sa_negative.SANegative()
+    "sa_negative" : sa_negative.SANegative(),
+    "sa_positive" : sa_positive.SAPositive()
 }
 
 
@@ -42,4 +45,4 @@ def gather_data(datasources, reanalyse=False):
 
 
 if __name__ == "__main__":
-    gather_data(["sa_negative"], True)
+    gather_data(["sa_positive"], True)

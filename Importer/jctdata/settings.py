@@ -30,7 +30,8 @@ MAX_DATASOURCE_AGE = {
     "tj" : 60 * 60 * 24 * 7,
     "ta" : 60 * 60 * 24 * 7,
     "ror": 60 * 60 * 24 * 7,
-    "sa_negative": 60 * 60 * 24 * 7
+    "sa_negative": 60 * 60 * 24 * 7,
+    "sa_positive": 60 * 60 * 24 * 7
 }
 
 DATASOURCE_PATH = {
@@ -40,7 +41,8 @@ DATASOURCE_PATH = {
     "tj" : os.path.join(DATABASES, "tj"),
     "ta" : os.path.join(DATABASES, "ta"),
     "ror": os.path.join(DATABASES, "ror"),
-    "sa_negative": os.path.join(DATABASES, "sa_negative")
+    "sa_negative": os.path.join(DATABASES, "sa_negative"),
+    "sa_positive": os.path.join(DATABASES, "sa_positive")
 }
 
 CROSSREF_OLDEST_DOI = 2019
@@ -54,6 +56,8 @@ DOAJ_IN_PROGRESS_URL = "https://doaj.org/jct/inprogress"
 DOAJ_IN_PROGRESS_KEYFILE = "../keyfiles/doaj_inprogress.txt"
 
 SA_NEGATIVE_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0EEMZTikcQZV28BiCL4huv-r0RnHiDrU08j3W1fyERNasoJYuAZek5G3oQH1TUKmf_X-yC5SiHaBM/pub?gid=0&single=true&output=csv"
+
+SA_POSITIVE_SHEET ="https://docs.google.com/spreadsheets/d/e/2PACX-1vTm6sDI16Kin3baNWaAiMUfGdMEUEGXy0LRvSDnvAQTWDN_exlYGyv4gnstGKdv3rXshjSa7AUWtAc5/pub?gid=0&single=true&output=csv"
 
 JAC_PREF_ORDER = [
     "doaj",

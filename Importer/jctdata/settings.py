@@ -45,6 +45,17 @@ DATASOURCE_PATH = {
     "sa_positive": os.path.join(DATABASES, "sa_positive")
 }
 
+DATASOURCE_HISTORY = {
+    "crossref" : 3,
+    "doaj" : 3,
+    "doaj_inprogress": 3,
+    "tj" : 3,
+    "ta" : 3,
+    "ror": 3,
+    "sa_negative": 3,
+    "sa_positive": 3
+}
+
 CROSSREF_OLDEST_DOI = 2019
 
 TJ_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2SPOjVU4CKhP7FHOgaf0aRsjSOt-ApwLOy44swojTDFsWlZAIZViC0gdbmxJaEWxdJSnUmNoAnoo9/pub?gid=0&single=true&output=csv"
@@ -63,6 +74,8 @@ JAC_PREF_ORDER = [
     "doaj",
     "crossref"
 ]
+
+JAC_HISTORY = 5
 
 DEFAULT_MAPPING = {
     "dynamic_templates": [

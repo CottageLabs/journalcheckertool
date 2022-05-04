@@ -1,4 +1,4 @@
-import csv, json, itertools, os, re
+import csv, json, itertools, os, re, shutil
 from datetime import datetime
 
 from jctdata import settings
@@ -71,6 +71,23 @@ def journals(coincident_issn_files, title_files, publisher_files):
 
             o.write(json.dumps(record) + "\n")
 
+    _cleanup(os.path.join(settings.DATABASES, "jct", "jac"))
+
+
+def _cleanup(dir):
+    dirs = []
+    for entry in os.listdir(dir):
+        if os.path.isdir(os.path.join(dir, entry)):
+            dirs.append(entry)
+
+    if len(dirs) <= settings.JAC_HISTORY:
+        return
+
+    dirs.sort(reverse=True)
+    for remove in dirs[settings.JAC_HISTORY:]:
+        removing = os.path.join(dir, remove)
+        print("JAC: cleaning up old directory {x}".format(x=removing))
+        shutil.rmtree(removing)
 
 def _remove_invalid_issns(input):
     valid = []

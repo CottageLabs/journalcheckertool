@@ -41,6 +41,8 @@ def gather_data(datasources, reanalyse=False):
         pathset[source] = handler.current_paths()
         print("RESOLVER : {y} analysed files: {x}".format(y=source, x=json.dumps(pathset[source])))
 
+        handler.cleanup()
+
     return pathset
 
 

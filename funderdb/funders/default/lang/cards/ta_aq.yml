@@ -1,0 +1,12 @@
+icon: ta
+title: "Transformative <br>agreement"
+body:
+  default: "<p>The corresponding author of the submitted article must be based at an institution within this
+            transformative agreement for it to provide a route to compliance</p>
+            <p>Other conditions may also be in place around publishing through this agreement.</p>
+            <p><a href=\"#\" class=\"modal-trigger\" data-modal=\"ta\">Make sure to read this information</a>.</p>
+            <p><em>{title}</em> is part of a transformative agreement between <em>{publisher}</em> and <em>{institution}</em></p>"
+explain:
+  title: Transformative agreement
+  text: This way to comply is available to you because you are the corresponding author and your selected journal and
+        institution are both present in an active Transformative Agreement.

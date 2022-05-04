@@ -1,0 +1,8 @@
+id: billmelindagatesfoundation
+name: Bill & Melinda Gates Foundation
+plan_s: 2021-01-01
+apc:
+  tj: true # implementation roadmap
+routes:
+  self_archiving:
+    rights_retention: 2021-01-01  # implementation roadmap

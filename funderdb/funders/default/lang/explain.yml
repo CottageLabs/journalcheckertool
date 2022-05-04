@@ -1,0 +1,95 @@
+# This file provides all the overall framework text for the Explain This Result section
+
+your_query:
+  title: Your query
+  text: "You asked us to calculate whether you can comply with your funder's policy under the following conditions:"
+  statement: We carried out this query at {date}, and found {compliant} route{compliant_plural} that enable compliance,
+              {non_compliant} non-compliant route{non_compliant_plural} and {unknown} undetermined route{unknown_plural}.
+  publisher_not_known: Not known
+  journal_title_unknown: Unknown Title
+  journal_label: Journal
+  publisher_label: Publisher
+  funder_label: Funder
+  institution_label: Institution
+  unaffiliated: Not part of Higher Education
+ways_to_comply:
+  title: Ways to Comply
+  text: This section tells you about your ways to comply with your funder's Open Access policies
+  none: There are no ways to comply with your funder's policy
+supporting_data:
+  compliant_routes: Compliant Routes
+  non_compliant_routes: Non-Compliant Routes
+  unknown_routes: Unknown Routes
+  qualifications_prefix: "Please note, "
+versions:
+  publishedVersion: Published version
+  acceptedVersion: Accepted version
+  submittedVersion: Submitted version
+routes:
+  self_archiving:
+    label: Self Archiving Route
+    yes:
+      statement: You are able to comply with your funder's policy via Self-archiving.
+      explanation: "The following checks were carried out to determine whether the right exists to comply with
+                   your funder's policy via self-archiving. Data from Open Access Button Permissions (OAB Permissions) is used
+                   to see if the publisher's policy of self-archiving enables compliance. If it does not or if an
+                   unknown answer has been returned then the cOAlition S Implementation Roadmap data is checked
+                   to see if cOAlition S's Rights Retention Strategy provides a route to compliance:"
+    no:
+      statement: Self-archiving <strong>does not</strong> enable compliance with your funder's policy when publishing in this journal.
+      explanation: "The following checks were carried out to determine that this is not a compliant route:"
+    unknown:
+      statement: We are <b>unable to determine</b> if you are able to comply with your funder's policy via Self-archiving, when publishing in this journal.
+      explanation: "The following checks were carried out to determine compliance:"
+  tj:
+    label: Transformative Journal Route
+    yes:
+      statement: This journal is a Transformative Journal and therefore you <b>can comply with your funder's policy</b> via this route.
+      explanation: "The following checks were carried out on the JCT's Transformative Journal Index to determine that this is a compliant route:"
+    no:
+      statement: This journal is not a Transformative Journal and therefore you <b>cannot comply with your funder's policy</b> via this route.
+      explanation: "The following checks were carried out on the JCT's Transformative Journal Index to determine that this is not a compliant route:"
+    unknown:
+      statement: We are unable to determine if this journal is a Transformative Journal and therefore <b>unable to determine compliance</b> via this route.
+      explanation: "The following checks were carried out on the JCT's Transformative Journal Index to determine compliance:"
+  ta:
+    label: Transformative Agreement Route
+    yes:
+      statement: You are able to comply with your funder's policy via a Transformative Agreement.
+      explanation: "The following checks were carried out on the JCT's Transformative Agreement Index to
+                    determine if a Transformative Agreement is available that would enable compliance:"
+    no:
+      statement: You are not able to <b>comply with your funder's policy</b> via a Transformative Agreement.
+      explanation: "The following checks were carried out on the JCT's Transformative Agreement Index to
+                   determine if a Transformative Agreement is available that would enable compliance:"
+    unknown:
+      statement: We are <b>unable to determine</b> if you are able to comply with your funder's policy via a Transformative Agreement.
+      explanation: "The following checks were carried out on the JCT's Transformative Agreement Index to determine compliance:"
+  hybrid:
+    label: Hybrid Route
+    yes:
+      statement: This journal is a hybrid journal, and therefore you <b>can comply</b> with your funder's policy via this route
+      explanation: "The following checks were carried out to determine if this is a hybrid journal:"
+    no:
+      statement: This journal is not a hybrid journal, and therefore you <b>cannot comply</b> with your funder's policy via this route
+      explanation: "The following checks were carried out to determine if this is a hybrid journal:"
+    unknown:
+      statement: We are <b>unable to determine</b> if this journal is a hybrid journal
+      explanation: "The following checks were carried out to determine if this is a hybrid journal:"
+  fully_oa:
+    label: Open Access Journal Route
+    yes:
+      statement: You are able to comply with your funder's policy as this is a fully open access journal.
+      explanation: "The following checks in the Directory of Open Access Journals (DOAJ) were carried
+                   out to determine if your chosen journal is an open access journal that enables compliance:"
+    no:
+      statement: You are not able to <b>comply with your funder's policy</b> via the fully open access journal route.
+      explanation: "The following checks in the Directory of Open Access Journals (DOAJ) were carried out
+                    to determine that this is not a route to compliance:"
+    unknown:
+      statement: We are <b>unable to determine if you are complaint</b> via the fully open access journal route.
+      explanation: "The following checks in the Directory of Open Access Journals (DOAJ) were carried out to determine compliance:"
+qualifications:
+  fully_oa.doaj_under_review: Under review at DOAJ
+  self_archiving.rights_retention_author_advice: RR Author Advice (need wording for this)
+  ta.corresponding_authors: TA is only open to corresponding authors

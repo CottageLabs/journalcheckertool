@@ -1,0 +1,9 @@
+id: vinnovasweden
+name: Vinnova
+country: Sweden
+plan_s: 2021-01-01
+apc:
+  tj: false # N/A in implementation roadmap
+routes:
+  self_archiving:
+    rights_retention: 2100-01-01  # implementation roadmap

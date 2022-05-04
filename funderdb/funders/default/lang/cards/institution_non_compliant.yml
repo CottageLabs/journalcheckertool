@@ -1,0 +1,7 @@
+icon: false
+title: Check with a different institution
+body:
+  default: "<p>If you or one of your co-authors are affiliated with different institutions, repeat your search with
+            these alternative institutions. Transformative agreements are made between publishers and (consortia of)
+            institutions. While the institution you searched does not currently have an agreement with the publisher
+            of this journal, one of your collaborator’s institutions may have one.</p>"

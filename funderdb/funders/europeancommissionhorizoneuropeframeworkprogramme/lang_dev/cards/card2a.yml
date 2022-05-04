@@ -1,0 +1,13 @@
+icon: fully_oa
+title: "ALLOWS COMPLIANCE WITH THE HORIZON EUROPE OPEN ACCESS MANDATE"
+body:
+  default: "<p>Remember to select a CC BY licence (or equivalent).</p>
+            <p>Remember to also ensure, at the time of publication, the immediate deposition and open access of the
+            Author Accepted Manuscript or the Version of Record in a trusted repository.</p>
+            <p>If incurred, Article Processing Charges will not be eligible costs under Horizon Europe.
+            <a href=\"#\" class=\"modal-trigger\" data-modal=\"he_2a\">More information</a></p>"
+explain:
+  title: Hybrid Journal
+  text: This way to comply is available to you because the journal is a hybrid or Transformative Journal, with a suitable
+        Self-Archiving policy.  The journal is not part of a Transformative Agreement that applies to your selected
+        institution.

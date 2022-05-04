@@ -1,0 +1,13 @@
+icon: self_archiving
+title: Self-archiving
+body:
+  default: "<p>Upon acceptance, you can deposit your Author Accepted Manuscript in a repository without embargo
+            and with a <a href=\"https://creativecommons.org/licenses/by/2.0/\" target=\"_blank\" rel=\"noopener\">
+            CC BY licence</a>. Open access publishing charges do not apply with this route.</p>
+            <p>Ensure that the required statement is included in the funding acknowledgement section of the manuscript
+            to be compliant</p>
+            <p>See <a href=\"https://www.ukri.org/publications/ukri-open-access-policy/\">further guidance</a></p>"
+explain:
+  title: Self-archiving
+  text: This way to comply is available to you because the journal has a suitable policy
+        for enabling Self-Archiving

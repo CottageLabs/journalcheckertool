@@ -1,0 +1,9 @@
+id: fortesweden
+name: FORTE
+country: Sweden
+plan_s: 2021-01-01
+apc:
+  tj: false # implementation roadmap
+routes:
+  self_archiving:
+    rights_retention: 2021-01-01  # implementation roadmap

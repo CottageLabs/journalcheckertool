@@ -27,6 +27,7 @@ MAX_DATASOURCE_AGE = {
     "crossref" : 60 * 60 * 24 * 7,
     "doaj" : 60 * 60 * 24 * 7,
     "tj" : 60 * 60 * 24 * 7,
+    "ta" : 60 * 60 * 24 * 7,
     "ror": 60 * 60 * 24 * 7
 }
 
@@ -34,10 +35,15 @@ DATASOURCE_PATH = {
     "crossref" : os.path.join(DATABASES, "crossref"),
     "doaj" : os.path.join(DATABASES, "doaj"),
     "tj" : os.path.join(DATABASES, "tj"),
+    "ta" : os.path.join(DATABASES, "ta"),
     "ror": os.path.join(DATABASES, "ror")
 }
 
 CROSSREF_OLDEST_DOI = 2019
+
+TJ_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2SPOjVU4CKhP7FHOgaf0aRsjSOt-ApwLOy44swojTDFsWlZAIZViC0gdbmxJaEWxdJSnUmNoAnoo9/pub?gid=0&single=true&output=csv"
+
+TA_INDEX_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vStezELi7qnKcyE8OiO2OYx2kqQDOnNsDX1JfAsK487n2uB_Dve5iDTwhUFfJ7eFPDhEjkfhXhqVTGw/pub?gid=1130349201&single=true&output=csv"
 
 JAC_PREF_ORDER = [
     "doaj",

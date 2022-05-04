@@ -3,31 +3,30 @@ from datetime import datetime
 
 from jctdata import settings
 from jctdata import resolver
-from lib.title_variants import title_variants
+from jctdata.lib.title_variants import title_variants
 
 ISSN_RX = "\d{4}-\d{3}[\dxX]"
 
 
 def jac_index_data():
     print('JAC: Data for journal autocomplete start')
-    paths = resolver.gather_data(["crossref", "doaj", "tj", "ta"])
-    ISSNS = [
-        ("crossref", paths["crossref"].get("coincident_issns")),
-        ("doaj", paths["doaj"].get("coincident_issns")),
-        ("tj", paths["tj"].get("coincident_issns")),
-        ("ta", paths["ta"].get("coincident_issns"))
-    ]
-    TITLE = [
-        ("crossref", paths["crossref"].get("titles")),
-        ("doaj", paths["doaj"].get("titles")),
-        ("tj", paths["tj"].get("titles")),
-        ("ta", paths["ta"].get("titles"))
-    ]
-    PUB = [
-        ("crossref", paths["crossref"].get("publishers")),
-        ("doaj", paths["doaj"].get("publishers")),
-        ("tj", paths["tj"].get("publishers"))
-    ]
+    paths = resolver.gather_data(["crossref", "doaj", "tj", "ta", "doaj_inprogress"])
+
+    ISSNS = []
+    TITLE = []
+    PUB = []
+
+    for source, files in paths.items():
+        if "coincident_issns" in files:
+            ISSNS.append((source, files["coincident_issns"]))
+        if "titles" in files:
+            TITLE.append((source, files["titles"]))
+        if "publishers" in files:
+            PUB.append((source, files["publishers"]))
+
+    print("JAC: ISSN sources: " + ", ".join([x[0] for x in ISSNS]))
+    print("JAC: TITLE sources: " + ", ".join([x[0] for x in TITLE]))
+    print("JAC: PUB sources: " + ", ".join([x[0] for x in PUB]))
     journals(ISSNS, TITLE, PUB)
     print('JAC: Data for journal autocomplete end')
 

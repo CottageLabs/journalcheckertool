@@ -1,7 +1,7 @@
 from datetime import datetime
 from jctdata.jac import jac_index_data
 from jctdata.iac import iac_index_data
-from lib.strfdelta import strfdelta
+from jctdata.lib.strfdelta import strfdelta
 
 
 def gather_index_data():

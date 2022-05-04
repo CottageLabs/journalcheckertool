@@ -26,6 +26,7 @@ ROR_DATA_FILE = os.path.join(RESOURCES, "ror", "v1.0-2022-03-17-ror-data.json.zi
 MAX_DATASOURCE_AGE = {
     "crossref" : 60 * 60 * 24 * 7,
     "doaj" : 60 * 60 * 24 * 7,
+    "doaj_inprogress": 60 * 60 * 24 * 7,
     "tj" : 60 * 60 * 24 * 7,
     "ta" : 60 * 60 * 24 * 7,
     "ror": 60 * 60 * 24 * 7
@@ -34,6 +35,7 @@ MAX_DATASOURCE_AGE = {
 DATASOURCE_PATH = {
     "crossref" : os.path.join(DATABASES, "crossref"),
     "doaj" : os.path.join(DATABASES, "doaj"),
+    "doaj_inprogress": os.path.join(DATABASES, "doaj_inprogress"),
     "tj" : os.path.join(DATABASES, "tj"),
     "ta" : os.path.join(DATABASES, "ta"),
     "ror": os.path.join(DATABASES, "ror")
@@ -44,6 +46,10 @@ CROSSREF_OLDEST_DOI = 2019
 TJ_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2SPOjVU4CKhP7FHOgaf0aRsjSOt-ApwLOy44swojTDFsWlZAIZViC0gdbmxJaEWxdJSnUmNoAnoo9/pub?gid=0&single=true&output=csv"
 
 TA_INDEX_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vStezELi7qnKcyE8OiO2OYx2kqQDOnNsDX1JfAsK487n2uB_Dve5iDTwhUFfJ7eFPDhEjkfhXhqVTGw/pub?gid=1130349201&single=true&output=csv"
+
+DOAJ_IN_PROGRESS_URL = "https://doaj.org/jct/inprogress"
+
+DOAJ_IN_PROGRESS_KEYFILE = "../keyfiles/doaj_inprogress.txt"
 
 JAC_PREF_ORDER = [
     "doaj",

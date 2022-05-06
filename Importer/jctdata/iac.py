@@ -2,7 +2,7 @@ import json, os, re
 from datetime import datetime
 from jctdata import settings
 from jctdata import resolver
-from lib.title_variants import title_variants
+from jctdata.lib.title_variants import title_variants
 
 ROR_RX = "\d{2}[a-z0-9]{5}\d{2}"
 

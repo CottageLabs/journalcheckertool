@@ -2,16 +2,23 @@ import json
 
 from jctdata.datasources import crossref
 from jctdata.datasources import doaj
+from jctdata.datasources import doaj_inprogress
 from jctdata.datasources import tj
 from jctdata.datasources import ta
 from jctdata.datasources import ror
+from jctdata.datasources import sa_negative
+from jctdata.datasources import sa_positive
+
 
 SOURCES = {
     "crossref" : crossref.Crossref(),
     "doaj" : doaj.DOAJ(),
+    "doaj_inprogress" : doaj_inprogress.DOAJInProgress(),
     "tj" : tj.TJ(),
     "ta" : ta.TA(),
-    "ror": ror.ROR()
+    "ror": ror.ROR(),
+    "sa_negative" : sa_negative.SANegative(),
+    "sa_positive" : sa_positive.SAPositive()
 }
 
 
@@ -34,8 +41,10 @@ def gather_data(datasources, reanalyse=False):
         pathset[source] = handler.current_paths()
         print("RESOLVER : {y} analysed files: {x}".format(y=source, x=json.dumps(pathset[source])))
 
+        handler.cleanup()
+
     return pathset
 
 
 if __name__ == "__main__":
-    gather_data(["ta"], True)
+    gather_data(["sa_positive"], True)

@@ -3,3 +3,5 @@ Importer/databases
 */venv
 *.pyc
 *.egg-info
+Importer/keyfiles/*
+!Importer/keyfiles/.keep

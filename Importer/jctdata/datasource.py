@@ -1,4 +1,4 @@
-import os
+import os, shutil
 from datetime import datetime, timedelta
 from jctdata import settings
 
@@ -8,6 +8,7 @@ class Datasource:
     def __init__(self):
         self.max_age = settings.MAX_DATASOURCE_AGE[self.ID]
         self.dir = settings.DATASOURCE_PATH[self.ID]
+        self.keep_historic = settings.DATASOURCE_HISTORY.get(self.ID, 3)
 
     def requires_update(self):
         dirs = []
@@ -43,6 +44,20 @@ class Datasource:
 
     def analyse(self):
         raise NotImplementedError()
+
+    def cleanup(self):
+        dirs = []
+        for entry in os.listdir(self.dir):
+            if os.path.isdir(os.path.join(self.dir, entry)):
+                dirs.append(entry)
+
+        if len(dirs) <= self.keep_historic:
+            return
+
+        dirs.sort(reverse=True)
+        for remove in dirs[self.keep_historic:]:
+            removing = os.path.join(self.dir, remove)
+            shutil.rmtree(removing)
 
     def paths_exists(self):
         exists = True

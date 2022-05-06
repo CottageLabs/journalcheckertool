@@ -26,17 +26,34 @@ ROR_DATA_FILE = os.path.join(RESOURCES, "ror", "v1.0-2022-03-17-ror-data.json.zi
 MAX_DATASOURCE_AGE = {
     "crossref" : 60 * 60 * 24 * 7,
     "doaj" : 60 * 60 * 24 * 7,
+    "doaj_inprogress": 60 * 60 * 24 * 7,
     "tj" : 60 * 60 * 24 * 7,
     "ta" : 60 * 60 * 24 * 7,
-    "ror": 60 * 60 * 24 * 7
+    "ror": 60 * 60 * 24 * 7,
+    "sa_negative": 60 * 60 * 24 * 7,
+    "sa_positive": 60 * 60 * 24 * 7
 }
 
 DATASOURCE_PATH = {
     "crossref" : os.path.join(DATABASES, "crossref"),
     "doaj" : os.path.join(DATABASES, "doaj"),
+    "doaj_inprogress": os.path.join(DATABASES, "doaj_inprogress"),
     "tj" : os.path.join(DATABASES, "tj"),
     "ta" : os.path.join(DATABASES, "ta"),
-    "ror": os.path.join(DATABASES, "ror")
+    "ror": os.path.join(DATABASES, "ror"),
+    "sa_negative": os.path.join(DATABASES, "sa_negative"),
+    "sa_positive": os.path.join(DATABASES, "sa_positive")
+}
+
+DATASOURCE_HISTORY = {
+    "crossref" : 3,
+    "doaj" : 3,
+    "doaj_inprogress": 3,
+    "tj" : 3,
+    "ta" : 3,
+    "ror": 3,
+    "sa_negative": 3,
+    "sa_positive": 3
 }
 
 CROSSREF_OLDEST_DOI = 2019
@@ -45,10 +62,20 @@ TJ_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2SPOjVU4CKhP7FHOga
 
 TA_INDEX_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vStezELi7qnKcyE8OiO2OYx2kqQDOnNsDX1JfAsK487n2uB_Dve5iDTwhUFfJ7eFPDhEjkfhXhqVTGw/pub?gid=1130349201&single=true&output=csv"
 
+DOAJ_IN_PROGRESS_URL = "https://doaj.org/jct/inprogress"
+
+DOAJ_IN_PROGRESS_KEYFILE = "../keyfiles/doaj_inprogress.txt"
+
+SA_NEGATIVE_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0EEMZTikcQZV28BiCL4huv-r0RnHiDrU08j3W1fyERNasoJYuAZek5G3oQH1TUKmf_X-yC5SiHaBM/pub?gid=0&single=true&output=csv"
+
+SA_POSITIVE_SHEET ="https://docs.google.com/spreadsheets/d/e/2PACX-1vTm6sDI16Kin3baNWaAiMUfGdMEUEGXy0LRvSDnvAQTWDN_exlYGyv4gnstGKdv3rXshjSa7AUWtAc5/pub?gid=0&single=true&output=csv"
+
 JAC_PREF_ORDER = [
     "doaj",
     "crossref"
 ]
+
+JAC_HISTORY = 5
 
 DEFAULT_MAPPING = {
     "dynamic_templates": [

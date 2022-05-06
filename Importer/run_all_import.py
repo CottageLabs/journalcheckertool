@@ -23,6 +23,7 @@ index_latest_with_alias('iac', settings.ES_INDEX_SUFFIX)
 messages.append("{x}: Indexed institution autocomplete data.".format(x=datetime.utcnow()))
 
 # Start jct import
+print('Starting JCT import')
 request = requests.get(settings.JCT_IMPORT_URL)
 if request.status_code == 200:
     messages.append("{x}: Started JCT import.".format(x=datetime.utcnow()))
@@ -33,6 +34,11 @@ else:
 
 messages.append("{x}: Finished importer run.".format(x=datetime.utcnow()))
 
+print('Sending email')
 subject = "Importer run : {a}".format(a=status)
-send_mail(subject, json.dumps(messages, indent=4), None)
+request = send_mail(subject, json.dumps(messages, indent=4), None)
+if request.status_code != 200:
+    print("error sending email")
+    print("Messages from import run")
+    print(json.dumps(messages, indent=4))
 

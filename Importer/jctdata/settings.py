@@ -98,3 +98,13 @@ DEFAULT_MAPPING = {
 ES_HOST = "http://localhost:9200"
 INDEX_SUFFIX_DATE_FORMAT = "%Y%m%d%H%M%S"
 INDEX_KEEP_OLD_INDICES = 2
+ES_INDEX_SUFFIX = 'dev'
+
+JCT_IMPORT_URL = 'http://localhost:3002/api/service/jct/import?refresh=true'
+JCT_TA_IMPORT_URL = 'http://localhost:3002/api/service/jct/ta/import'
+
+MAILGUN_KEY = ""
+MAILGUN_DOMAIN = ""
+STATUS_EMAIL_RECEIVER = ''
+STATUS_EMAIL_SENDER = ''
+MAILGUN_SUBJECT_PREFIX = 'jct dev'

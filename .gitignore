@@ -1,7 +1,8 @@
 .idea
 Importer/databases
-*/venv
-*.pyc
-*.egg-info
 Importer/keyfiles/*
 !Importer/keyfiles/.keep
+*/venv
+**/*.pyc
+**/*.egg-info
+

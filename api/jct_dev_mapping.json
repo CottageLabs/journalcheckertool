@@ -1,0 +1,2180 @@
+{
+  "jct_dev": {
+    "mappings": {
+      "match": {
+        "dynamic_templates": [
+          {
+            "default": {
+              "mapping": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "{dynamic_type}",
+                    "index": "not_analyzed",
+                    "store": "no",
+                    "ignore_above": 1024
+                  }
+                }
+              },
+              "match": "*",
+              "match_mapping_type": "string",
+              "unmatch": "_raw_result"
+            }
+          }
+        ],
+        "date_detection": false,
+        "properties": {
+          "attachment": {
+            "type": "attachment",
+            "path": "full",
+            "fields": {
+              "attachment": {
+                "type": "string"
+              },
+              "author": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "date": {
+                "type": "date",
+                "format": "dateOptionalTime"
+              },
+              "keywords": {
+                "type": "string"
+              },
+              "content_type": {
+                "type": "string"
+              },
+              "content_length": {
+                "type": "integer"
+              },
+              "language": {
+                "type": "string"
+              }
+            }
+          },
+          "createdAt": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          },
+          "created_date": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          },
+          "location": {
+            "properties": {
+              "geo": {
+                "type": "geo_point",
+                "lat_lon": true
+              }
+            }
+          },
+          "updatedAt": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          },
+          "updated_date": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          }
+        }
+      },
+      "institution": {
+        "dynamic_templates": [
+          {
+            "default": {
+              "mapping": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "{dynamic_type}",
+                    "index": "not_analyzed",
+                    "store": "no",
+                    "ignore_above": 1024
+                  }
+                }
+              },
+              "match": "*",
+              "match_mapping_type": "string",
+              "unmatch": "_raw_result"
+            }
+          }
+        ],
+        "date_detection": false,
+        "properties": {
+          "alternate": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "attachment": {
+            "type": "attachment",
+            "path": "full",
+            "fields": {
+              "attachment": {
+                "type": "string"
+              },
+              "author": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "date": {
+                "type": "date",
+                "format": "dateOptionalTime"
+              },
+              "keywords": {
+                "type": "string"
+              },
+              "content_type": {
+                "type": "string"
+              },
+              "content_length": {
+                "type": "integer"
+              },
+              "language": {
+                "type": "string"
+              }
+            }
+          },
+          "country": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "createdAt": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          },
+          "created_date": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          },
+          "description": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "id": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "location": {
+            "properties": {
+              "geo": {
+                "type": "geo_point",
+                "lat_lon": true
+              }
+            }
+          },
+          "title": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "updatedAt": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          },
+          "updated_date": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          },
+          "values": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "wid": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          }
+        }
+      },
+      "agreement": {
+        "dynamic_templates": [
+          {
+            "default": {
+              "mapping": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "{dynamic_type}",
+                    "index": "not_analyzed",
+                    "store": "no",
+                    "ignore_above": 1024
+                  }
+                }
+              },
+              "match": "*",
+              "match_mapping_type": "string",
+              "unmatch": "_raw_result"
+            }
+          }
+        ],
+        "date_detection": false,
+        "properties": {
+          "C/A Only": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "Data URL": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "ESAC ID": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "End Date": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "ISSN (Online)": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "ISSN (Print)": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "Institution First Seen": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "Institution Name": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "Journal First Seen": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "Journal Name": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "Last Reviewed": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "ROR ID": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "Relationship": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "attachment": {
+            "type": "attachment",
+            "path": "full",
+            "fields": {
+              "attachment": {
+                "type": "string"
+              },
+              "author": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "date": {
+                "type": "date",
+                "format": "dateOptionalTime"
+              },
+              "keywords": {
+                "type": "string"
+              },
+              "content_type": {
+                "type": "string"
+              },
+              "content_length": {
+                "type": "integer"
+              },
+              "language": {
+                "type": "string"
+              }
+            }
+          },
+          "corresponding_authors": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          },
+          "created_date": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          },
+          "institution": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "issn": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "journal": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "location": {
+            "properties": {
+              "geo": {
+                "type": "geo_point",
+                "lat_lon": true
+              }
+            }
+          },
+          "rid": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "ror": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "updatedAt": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          },
+          "updated_date": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          }
+        }
+      },
+      "unknown": {
+        "dynamic_templates": [
+          {
+            "default": {
+              "mapping": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "{dynamic_type}",
+                    "index": "not_analyzed",
+                    "store": "no",
+                    "ignore_above": 1024
+                  }
+                }
+              },
+              "match": "*",
+              "match_mapping_type": "string",
+              "unmatch": "_raw_result"
+            }
+          }
+        ],
+        "date_detection": false,
+        "properties": {
+          "attachment": {
+            "type": "attachment",
+            "path": "full",
+            "fields": {
+              "attachment": {
+                "type": "string"
+              },
+              "author": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "date": {
+                "type": "date",
+                "format": "dateOptionalTime"
+              },
+              "keywords": {
+                "type": "string"
+              },
+              "content_type": {
+                "type": "string"
+              },
+              "content_length": {
+                "type": "integer"
+              },
+              "language": {
+                "type": "string"
+              }
+            }
+          },
+          "compliant": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "counter": {
+            "type": "long"
+          },
+          "createdAt": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          },
+          "created_date": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          },
+          "ended": {
+            "type": "long"
+          },
+          "funder": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "issn": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "lastsend": {
+            "type": "long"
+          },
+          "location": {
+            "properties": {
+              "geo": {
+                "type": "geo_point",
+                "lat_lon": true
+              }
+            }
+          },
+          "log": {
+            "properties": {
+              "action": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "ignore_above": 1024
+                  }
+                }
+              },
+              "code": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "ignore_above": 1024
+                  }
+                }
+              },
+              "parameters": {
+                "properties": {
+                  "missing": {
+                    "type": "string",
+                    "fields": {
+                      "exact": {
+                        "type": "string",
+                        "index": "not_analyzed",
+                        "ignore_above": 1024
+                      }
+                    }
+                  }
+                }
+              },
+              "result": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "ignore_above": 1024
+                  }
+                }
+              }
+            }
+          },
+          "ror": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "route": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "started": {
+            "type": "long"
+          },
+          "took": {
+            "type": "long"
+          },
+          "updatedAt": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          },
+          "updated_date": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          }
+        }
+      },
+      "journal": {
+        "dynamic_templates": [
+          {
+            "default": {
+              "mapping": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "{dynamic_type}",
+                    "index": "not_analyzed",
+                    "store": "no",
+                    "ignore_above": 1024
+                  }
+                }
+              },
+              "match": "*",
+              "match_mapping_type": "string",
+              "unmatch": "_raw_result"
+            }
+          }
+        ],
+        "date_detection": false,
+        "properties": {
+          "ISSN": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "attachment": {
+            "type": "attachment",
+            "path": "full",
+            "fields": {
+              "attachment": {
+                "type": "string"
+              },
+              "author": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "date": {
+                "type": "date",
+                "format": "dateOptionalTime"
+              },
+              "keywords": {
+                "type": "string"
+              },
+              "content_type": {
+                "type": "string"
+              },
+              "content_length": {
+                "type": "integer"
+              },
+              "language": {
+                "type": "string"
+              }
+            }
+          },
+          "breakdowns": {
+            "properties": {
+              "dois-by-issued-year": {
+                "type": "long"
+              }
+            }
+          },
+          "counts": {
+            "properties": {
+              "backfile-dois": {
+                "type": "long"
+              },
+              "current-dois": {
+                "type": "long"
+              },
+              "total-dois": {
+                "type": "long"
+              }
+            }
+          },
+          "coverage": {
+            "properties": {
+              "abstracts-backfile": {
+                "type": "long"
+              },
+              "abstracts-current": {
+                "type": "long"
+              },
+              "affiliations-backfile": {
+                "type": "double"
+              },
+              "affiliations-current": {
+                "type": "double"
+              },
+              "award-numbers-backfile": {
+                "type": "double"
+              },
+              "award-numbers-current": {
+                "type": "double"
+              },
+              "descriptions-backfile": {
+                "type": "long"
+              },
+              "descriptions-current": {
+                "type": "long"
+              },
+              "funders-backfile": {
+                "type": "double"
+              },
+              "funders-current": {
+                "type": "double"
+              },
+              "licenses-backfile": {
+                "type": "double"
+              },
+              "licenses-current": {
+                "type": "double"
+              },
+              "open-references-backfile": {
+                "type": "long"
+              },
+              "open-references-current": {
+                "type": "long"
+              },
+              "orcids-backfile": {
+                "type": "double"
+              },
+              "orcids-current": {
+                "type": "double"
+              },
+              "references-backfile": {
+                "type": "double"
+              },
+              "references-current": {
+                "type": "double"
+              },
+              "resource-links-backfile": {
+                "type": "double"
+              },
+              "resource-links-current": {
+                "type": "double"
+              },
+              "ror-ids-backfile": {
+                "type": "long"
+              },
+              "ror-ids-current": {
+                "type": "long"
+              },
+              "similarity-checking-backfile": {
+                "type": "double"
+              },
+              "similarity-checking-current": {
+                "type": "double"
+              },
+              "update-policies-backfile": {
+                "type": "double"
+              },
+              "update-policies-current": {
+                "type": "double"
+              }
+            }
+          },
+          "coverage-type": {
+            "properties": {
+              "all": {
+                "properties": {
+                  "abstracts": {
+                    "type": "long"
+                  },
+                  "affiliations": {
+                    "type": "double"
+                  },
+                  "award-numbers": {
+                    "type": "double"
+                  },
+                  "descriptions": {
+                    "type": "long"
+                  },
+                  "funders": {
+                    "type": "double"
+                  },
+                  "last-status-check-time": {
+                    "type": "long"
+                  },
+                  "licenses": {
+                    "type": "double"
+                  },
+                  "open-references": {
+                    "type": "long"
+                  },
+                  "orcids": {
+                    "type": "double"
+                  },
+                  "references": {
+                    "type": "double"
+                  },
+                  "resource-links": {
+                    "type": "double"
+                  },
+                  "ror-ids": {
+                    "type": "long"
+                  },
+                  "similarity-checking": {
+                    "type": "double"
+                  },
+                  "update-policies": {
+                    "type": "double"
+                  }
+                }
+              },
+              "backfile": {
+                "properties": {
+                  "abstracts": {
+                    "type": "long"
+                  },
+                  "affiliations": {
+                    "type": "double"
+                  },
+                  "award-numbers": {
+                    "type": "double"
+                  },
+                  "descriptions": {
+                    "type": "long"
+                  },
+                  "funders": {
+                    "type": "double"
+                  },
+                  "last-status-check-time": {
+                    "type": "long"
+                  },
+                  "licenses": {
+                    "type": "double"
+                  },
+                  "open-references": {
+                    "type": "long"
+                  },
+                  "orcids": {
+                    "type": "double"
+                  },
+                  "references": {
+                    "type": "double"
+                  },
+                  "resource-links": {
+                    "type": "double"
+                  },
+                  "ror-ids": {
+                    "type": "long"
+                  },
+                  "similarity-checking": {
+                    "type": "double"
+                  },
+                  "update-policies": {
+                    "type": "double"
+                  }
+                }
+              },
+              "current": {
+                "properties": {
+                  "abstracts": {
+                    "type": "long"
+                  },
+                  "affiliations": {
+                    "type": "double"
+                  },
+                  "award-numbers": {
+                    "type": "double"
+                  },
+                  "descriptions": {
+                    "type": "long"
+                  },
+                  "funders": {
+                    "type": "double"
+                  },
+                  "last-status-check-time": {
+                    "type": "long"
+                  },
+                  "licenses": {
+                    "type": "double"
+                  },
+                  "open-references": {
+                    "type": "long"
+                  },
+                  "orcids": {
+                    "type": "double"
+                  },
+                  "references": {
+                    "type": "double"
+                  },
+                  "resource-links": {
+                    "type": "double"
+                  },
+                  "ror-ids": {
+                    "type": "long"
+                  },
+                  "similarity-checking": {
+                    "type": "double"
+                  },
+                  "update-policies": {
+                    "type": "double"
+                  }
+                }
+              }
+            }
+          },
+          "createdAt": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          },
+          "created_date": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          },
+          "crossref": {
+            "type": "boolean"
+          },
+          "discontinued": {
+            "type": "boolean"
+          },
+          "doaj": {
+            "properties": {
+              "admin": {
+                "properties": {
+                  "seal": {
+                    "type": "boolean"
+                  },
+                  "ticked": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "bibjson": {
+                "properties": {
+                  "alternative_title": {
+                    "type": "string",
+                    "fields": {
+                      "exact": {
+                        "type": "string",
+                        "index": "not_analyzed",
+                        "ignore_above": 1024
+                      }
+                    }
+                  },
+                  "apc": {
+                    "properties": {
+                      "has_apc": {
+                        "type": "boolean"
+                      },
+                      "max": {
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "fields": {
+                              "exact": {
+                                "type": "string",
+                                "index": "not_analyzed",
+                                "ignore_above": 1024
+                              }
+                            }
+                          },
+                          "price": {
+                            "type": "long"
+                          }
+                        }
+                      },
+                      "url": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "article": {
+                    "properties": {
+                      "i4oc_open_citations": {
+                        "type": "boolean"
+                      },
+                      "license_display": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      },
+                      "license_display_example_url": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      },
+                      "orcid": {
+                        "type": "boolean"
+                      }
+                    }
+                  },
+                  "boai": {
+                    "type": "boolean"
+                  },
+                  "copyright": {
+                    "properties": {
+                      "author_retains": {
+                        "type": "boolean"
+                      },
+                      "url": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "deposit_policy": {
+                    "properties": {
+                      "has_policy": {
+                        "type": "boolean"
+                      },
+                      "service": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      },
+                      "url": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "discontinued_date": {
+                    "type": "string",
+                    "fields": {
+                      "exact": {
+                        "type": "string",
+                        "index": "not_analyzed",
+                        "ignore_above": 1024
+                      }
+                    }
+                  },
+                  "editorial": {
+                    "properties": {
+                      "board_url": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      },
+                      "review_process": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      },
+                      "review_url": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "eissn": {
+                    "type": "string",
+                    "fields": {
+                      "exact": {
+                        "type": "string",
+                        "index": "not_analyzed",
+                        "ignore_above": 1024
+                      }
+                    }
+                  },
+                  "institution": {
+                    "properties": {
+                      "country": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      },
+                      "name": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "is_replaced_by": {
+                    "type": "string",
+                    "fields": {
+                      "exact": {
+                        "type": "string",
+                        "index": "not_analyzed",
+                        "ignore_above": 1024
+                      }
+                    }
+                  },
+                  "keywords": {
+                    "type": "string",
+                    "fields": {
+                      "exact": {
+                        "type": "string",
+                        "index": "not_analyzed",
+                        "ignore_above": 1024
+                      }
+                    }
+                  },
+                  "language": {
+                    "type": "string",
+                    "fields": {
+                      "exact": {
+                        "type": "string",
+                        "index": "not_analyzed",
+                        "ignore_above": 1024
+                      }
+                    }
+                  },
+                  "license": {
+                    "properties": {
+                      "BY": {
+                        "type": "boolean"
+                      },
+                      "NC": {
+                        "type": "boolean"
+                      },
+                      "ND": {
+                        "type": "boolean"
+                      },
+                      "SA": {
+                        "type": "boolean"
+                      },
+                      "type": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      },
+                      "url": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "oa_start": {
+                    "type": "long"
+                  },
+                  "other_charges": {
+                    "properties": {
+                      "has_other_charges": {
+                        "type": "boolean"
+                      },
+                      "url": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "pid_scheme": {
+                    "properties": {
+                      "has_pid_scheme": {
+                        "type": "boolean"
+                      },
+                      "scheme": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "pissn": {
+                    "type": "string",
+                    "fields": {
+                      "exact": {
+                        "type": "string",
+                        "index": "not_analyzed",
+                        "ignore_above": 1024
+                      }
+                    }
+                  },
+                  "plagiarism": {
+                    "properties": {
+                      "detection": {
+                        "type": "boolean"
+                      },
+                      "url": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "preservation": {
+                    "properties": {
+                      "has_preservation": {
+                        "type": "boolean"
+                      },
+                      "national_library": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      },
+                      "service": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      },
+                      "url": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "publication_time_weeks": {
+                    "type": "long"
+                  },
+                  "publisher": {
+                    "properties": {
+                      "country": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      },
+                      "name": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "ref": {
+                    "properties": {
+                      "aims_scope": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      },
+                      "author_instructions": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      },
+                      "journal": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      },
+                      "license_terms": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      },
+                      "oa_statement": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "replaces": {
+                    "type": "string",
+                    "fields": {
+                      "exact": {
+                        "type": "string",
+                        "index": "not_analyzed",
+                        "ignore_above": 1024
+                      }
+                    }
+                  },
+                  "subject": {
+                    "properties": {
+                      "code": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      },
+                      "scheme": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      },
+                      "term": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "title": {
+                    "type": "string",
+                    "fields": {
+                      "exact": {
+                        "type": "string",
+                        "index": "not_analyzed",
+                        "ignore_above": 1024
+                      }
+                    }
+                  },
+                  "waiver": {
+                    "properties": {
+                      "has_waiver": {
+                        "type": "boolean"
+                      },
+                      "url": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "created_date": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "ignore_above": 1024
+                  }
+                }
+              },
+              "id": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "ignore_above": 1024
+                  }
+                }
+              },
+              "last_updated": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "ignore_above": 1024
+                  }
+                }
+              }
+            }
+          },
+          "doajinprogress": {
+            "type": "boolean"
+          },
+          "doajprogress": {
+            "properties": {
+              "author_retains_copyright": {
+                "type": "boolean"
+              },
+              "doaj_id": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "ignore_above": 1024
+                  }
+                }
+              },
+              "eissn": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "ignore_above": 1024
+                  }
+                }
+              },
+              "license_embedded": {
+                "type": "boolean"
+              },
+              "pids": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "ignore_above": 1024
+                  }
+                }
+              },
+              "pissn": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "ignore_above": 1024
+                  }
+                }
+              },
+              "preservation": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "ignore_above": 1024
+                  }
+                }
+              },
+              "pricing_info": {
+                "type": "boolean"
+              },
+              "publishing_license": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "ignore_above": 1024
+                  }
+                }
+              },
+              "waiver": {
+                "type": "boolean"
+              }
+            }
+          },
+          "dois": {
+            "type": "long"
+          },
+          "flags": {
+            "properties": {
+              "deposits": {
+                "type": "boolean"
+              },
+              "deposits-abstracts-backfile": {
+                "type": "boolean"
+              },
+              "deposits-abstracts-current": {
+                "type": "boolean"
+              },
+              "deposits-affiliations-backfile": {
+                "type": "boolean"
+              },
+              "deposits-affiliations-current": {
+                "type": "boolean"
+              },
+              "deposits-articles": {
+                "type": "boolean"
+              },
+              "deposits-award-numbers-backfile": {
+                "type": "boolean"
+              },
+              "deposits-award-numbers-current": {
+                "type": "boolean"
+              },
+              "deposits-descriptions-backfile": {
+                "type": "boolean"
+              },
+              "deposits-descriptions-current": {
+                "type": "boolean"
+              },
+              "deposits-funders-backfile": {
+                "type": "boolean"
+              },
+              "deposits-funders-current": {
+                "type": "boolean"
+              },
+              "deposits-licenses-backfile": {
+                "type": "boolean"
+              },
+              "deposits-licenses-current": {
+                "type": "boolean"
+              },
+              "deposits-open-references-backfile": {
+                "type": "boolean"
+              },
+              "deposits-open-references-current": {
+                "type": "boolean"
+              },
+              "deposits-orcids-backfile": {
+                "type": "boolean"
+              },
+              "deposits-orcids-current": {
+                "type": "boolean"
+              },
+              "deposits-references-backfile": {
+                "type": "boolean"
+              },
+              "deposits-references-current": {
+                "type": "boolean"
+              },
+              "deposits-resource-links-backfile": {
+                "type": "boolean"
+              },
+              "deposits-resource-links-current": {
+                "type": "boolean"
+              },
+              "deposits-ror-ids-backfile": {
+                "type": "boolean"
+              },
+              "deposits-ror-ids-current": {
+                "type": "boolean"
+              },
+              "deposits-similarity-checking-backfile": {
+                "type": "boolean"
+              },
+              "deposits-similarity-checking-current": {
+                "type": "boolean"
+              },
+              "deposits-update-policies-backfile": {
+                "type": "boolean"
+              },
+              "deposits-update-policies-current": {
+                "type": "boolean"
+              }
+            }
+          },
+          "indoaj": {
+            "type": "boolean"
+          },
+          "issn": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "issn-type": {
+            "properties": {
+              "type": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "ignore_above": 1024
+                  }
+                }
+              },
+              "value": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "ignore_above": 1024
+                  }
+                }
+              }
+            }
+          },
+          "last-status-check-time": {
+            "type": "long"
+          },
+          "location": {
+            "properties": {
+              "geo": {
+                "type": "geo_point",
+                "lat_lon": true
+              }
+            }
+          },
+          "publisher": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "subjects": {
+            "properties": {
+              "ASJC": {
+                "type": "long"
+              },
+              "name": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "ignore_above": 1024
+                  }
+                }
+              }
+            }
+          },
+          "ta": {
+            "type": "boolean"
+          },
+          "title": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "tj": {
+            "type": "boolean"
+          },
+          "updatedAt": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          },
+          "updated_date": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          },
+          "years": {
+            "type": "long"
+          }
+        }
+      },
+      "compliance": {
+        "dynamic_templates": [
+          {
+            "default": {
+              "mapping": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "{dynamic_type}",
+                    "index": "not_analyzed",
+                    "store": "no",
+                    "ignore_above": 1024
+                  }
+                }
+              },
+              "match": "*",
+              "match_mapping_type": "string",
+              "unmatch": "_raw_result"
+            }
+          }
+        ],
+        "date_detection": false,
+        "properties": {
+          "attachment": {
+            "type": "attachment",
+            "path": "full",
+            "fields": {
+              "attachment": {
+                "type": "string"
+              },
+              "author": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "date": {
+                "type": "date",
+                "format": "dateOptionalTime"
+              },
+              "keywords": {
+                "type": "string"
+              },
+              "content_type": {
+                "type": "string"
+              },
+              "content_length": {
+                "type": "integer"
+              },
+              "language": {
+                "type": "string"
+              }
+            }
+          },
+          "cache": {
+            "type": "boolean"
+          },
+          "checks": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "compliant": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          },
+          "created_date": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          },
+          "funder": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "institution": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "journal": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "location": {
+            "properties": {
+              "geo": {
+                "type": "geo_point",
+                "lat_lon": true
+              }
+            }
+          },
+          "results": {
+            "properties": {
+              "compliant": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "ignore_above": 1024
+                  }
+                }
+              },
+              "funder": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "ignore_above": 1024
+                  }
+                }
+              },
+              "issn": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "ignore_above": 1024
+                  }
+                }
+              },
+              "log": {
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "fields": {
+                      "exact": {
+                        "type": "string",
+                        "index": "not_analyzed",
+                        "ignore_above": 1024
+                      }
+                    }
+                  },
+                  "code": {
+                    "type": "string",
+                    "fields": {
+                      "exact": {
+                        "type": "string",
+                        "index": "not_analyzed",
+                        "ignore_above": 1024
+                      }
+                    }
+                  },
+                  "parameters": {
+                    "properties": {
+                      "embargo": {
+                        "type": "long"
+                      },
+                      "licence": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      },
+                      "missing": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      },
+                      "version": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "result": {
+                    "type": "string",
+                    "fields": {
+                      "exact": {
+                        "type": "string",
+                        "index": "not_analyzed",
+                        "ignore_above": 1024
+                      }
+                    }
+                  }
+                }
+              },
+              "qualifications": {
+                "properties": {
+                  "corresponding_authors": {
+                    "type": "object"
+                  },
+                  "doaj_under_review": {
+                    "type": "object"
+                  },
+                  "rights_retention_funder_implementation": {
+                    "properties": {
+                      "date": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      },
+                      "funder": {
+                        "type": "string",
+                        "fields": {
+                          "exact": {
+                            "type": "string",
+                            "index": "not_analyzed",
+                            "ignore_above": 1024
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "requiresaffiliation": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "ignore_above": 1024
+                  }
+                }
+              },
+              "ror": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "ignore_above": 1024
+                  }
+                }
+              },
+              "route": {
+                "type": "string",
+                "fields": {
+                  "exact": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "ignore_above": 1024
+                  }
+                }
+              }
+            }
+          },
+          "retention": {
+            "type": "boolean"
+          },
+          "rq": {
+            "type": "string",
+            "fields": {
+              "exact": {
+                "type": "string",
+                "index": "not_analyzed",
+                "ignore_above": 1024
+              }
+            }
+          },
+          "updatedAt": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          },
+          "updated_date": {
+            "type": "date",
+            "format": "yyyy-MM-dd HHmm||yyyy-MM-dd HHmm.ss||date_optional_time"
+          }
+        }
+      }
+    }
+  }
+}

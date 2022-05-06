@@ -1,0 +1,7 @@
+// Misc. variables used throughout the UI
+
+$border:            5px; // Border width
+$gradient:          linear-gradient(140deg, $orange 20%, $yellow 100%); // Orange to yellow gradient
+$gradient-reverse:  linear-gradient(140deg, $yellow 20%, $orange 100%); // Yellow to orange gradient
+$transition:        all 0.25s ease-in-out; // Simple transtion for things like hovers
+$animation:         pulse 1.15s infinite; // Pulsating animation

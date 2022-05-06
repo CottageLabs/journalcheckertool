@@ -1,0 +1,53 @@
+// Grid: to be used for general layout only
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.container {
+  padding-left: $gutter;
+  padding-right: $gutter;
+}
+
+.row {
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+  flex-wrap: wrap;
+  margin-left: $gutter-negative;
+  margin-right: $gutter-negative;
+}
+
+.row--centered {
+  justify-content: center;
+}
+
+.col {
+  flex: 0 0 auto;
+  padding: 0 $gutter;
+  flex-basis: 100%;
+  max-width: 100%;
+}
+
+.col--right {
+  text-align: left;
+}
+
+.col--centered {
+  text-align: center;
+}
+
+.col--group {
+  padding: 0;
+}
+
+.col--1of1,
+.col--2of2,
+.col--3of3,
+.col--4of4,
+.col--6of6 {
+  flex-basis: 100%;
+  max-width: 100%;
+}

@@ -1,0 +1,59 @@
+// Screen reader-only / a11y utilities
+
+@mixin sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+@mixin sr-only-focusable {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+}
+
+// Remove all default form element styling
+
+@mixin unstyled-input {
+  border: none;
+  border-radius: none;
+  background-image: none;
+  background-color: transparent;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+// Remove all default list styles
+
+@mixin unstyled-list($inline: false) {
+  padding-left: 0;
+  margin: 0 0 $spacing-03 0;
+  list-style: none;
+  @if $inline {
+
+    li {
+      display: inline-block;
+    }
+  }
+}
+
+// Keyframes for pulsating animation
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.9);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}

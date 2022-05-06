@@ -1,0 +1,10 @@
+id: highercouncilforscienceandtechnologyhcstjordan
+name: Higher Council for Science and Technology
+abbr: HCST
+country: Jordan
+plan_s: 2021-01-01
+apc:
+  tj: false # says N/A in implementation roadmap, which I'm interpreting as false for practical purposes
+routes:
+  self_archiving:
+    rights_retention: 2100-01-01  # implementation roadmap

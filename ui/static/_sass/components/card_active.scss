@@ -1,0 +1,36 @@
+// Additional card widgetry to make them active and offer explanation of results
+
+.explainable_card {
+  // for main site only
+  border: 2px solid transparent;
+  border-radius: 15px;
+  padding: 10px 10px 1.5rem 10px;
+
+  // for main site only
+  .read_more_banner {
+    display: none;
+    text-align: center;
+    background: $yellow;
+    margin: 0 -10px 0 -10px;
+    border-radius: 0 0 11px 11px;
+    height: 1.5rem;
+
+    a {
+      color: $white;
+      font-size: 0.7rem;
+      text-decoration: none;
+      font-weight: bold;
+      line-height: 1.5rem;
+    }
+  }
+}
+
+// for main site only
+.explainable_card:hover {
+  border: 2px solid $yellow;
+  padding: 10px 10px 0 10px;
+
+  .read_more_banner {
+    display: block;
+  }
+}

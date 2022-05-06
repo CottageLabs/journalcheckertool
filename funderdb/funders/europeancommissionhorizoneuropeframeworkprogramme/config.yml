@@ -1,0 +1,8 @@
+id: europeancommissionhorizoneuropeframeworkprogramme
+name: European Commission (Horizon Europe Framework Programme)
+plan_s: 2021-01-01
+apc:
+  tj: false # 4, 13
+routes:
+  self_archiving:
+    rights_retention: 2021-01-01

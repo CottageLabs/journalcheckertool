@@ -1,0 +1,11 @@
+// Alerts & warnings that stand out
+
+.alert {
+  padding: $spacing-04;
+  margin: $spacing-05 $gutter;
+  background: $orange;
+  background: $gradient-reverse;
+  border-radius: $spacing-03;
+  text-align: center;
+  font-size: $typescale-06;
+}

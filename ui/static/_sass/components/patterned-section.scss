@@ -1,0 +1,17 @@
+// Section with brand pattern
+
+.patterned-section {
+  background-image: url('../img/bg.png');
+  background-size: cover;
+  mix-blend-mode: multiply;
+
+  .wave {
+    margin-top: $gutter-negative;
+    width: 100%;
+
+    svg path {
+      stroke: $white;
+      fill: $white;
+    }
+  }
+}

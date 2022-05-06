@@ -1,0 +1,10 @@
+icon: self_archiving
+title: Self-archiving
+body:
+  default: "<p>Upon acceptance, you can deposit your Author Accepted Manuscript in a repository without embargo
+            and with a <a href=\"https://creativecommons.org/licenses/by/2.0/\" target=\"_blank\" rel=\"noopener\">
+            CC BY licence</a>. Publishing fees do not apply with this route. </p>"
+explain:
+  title: Self-archiving
+  text: This way to comply is available to you because the journal is not fully open access, but has a suitable policy
+        for enabling Self-Archiving

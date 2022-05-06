@@ -1,0 +1,37 @@
+// Card layout: used for results
+
+.card {
+  margin-bottom: $spacing-05;
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    height: $card-icon-height;
+    width: $card-icon-height;
+    border-radius: $card-icon-height/2;
+    background: $orange;
+    background: $gradient;
+
+    svg {
+      margin: 0 auto;
+      width: $card-svg-icon-width;
+    }
+  }
+
+  h4 {
+    margin-top: $spacing-04;
+    padding-left: $border * 3;
+    border-left: $border solid $yellow;
+    font-size: $typescale-06;
+  }
+
+  p {
+    padding-left: $border * 3;
+    color: $coal;
+    font-size: $typescale-06;
+  }
+
+  a.modal-trigger {
+    color: $black;
+  }
+}

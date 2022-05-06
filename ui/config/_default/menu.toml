@@ -1,0 +1,43 @@
+[[main]]
+    name = "Transformative Journals"
+    url = "/transformative-journals"
+    weight = 1
+[[main]]
+    name = "Transformative Agreements"
+    pre = " • "
+    url = "/transformative-agreements"
+    weight = 2
+[[main]]
+    name = "Self Archiving Exceptions"
+    pre = " • "
+    url = "/self-archiving-exceptions"
+    weight = 2.1
+[[main]]
+    name = "API Documentation"
+    pre = " • "
+    url = "/apidocs"
+    weight = 3
+[[main]]
+    name = "Embeddable Widget"
+    pre = " • "
+    url = "/widget"
+    weight = 4
+[[main]]
+    name = "FAQ"
+    pre = " • "
+    url = "/faq"
+    weight = 5
+[[main]]
+    name = "Privacy Notice"
+    url = "/notices#privacy_notice"
+    weight = 6
+[[main]]
+    name = "Disclaimer & Copyright"
+    pre = " • "
+    url = "/notices#disclaimer_and_copyright"
+    weight = 7
+[[main]]
+    name = "Release History"
+    pre = " • "
+    url = "/release-history"
+    weight = 8

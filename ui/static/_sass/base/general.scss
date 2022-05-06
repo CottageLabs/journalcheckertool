@@ -1,0 +1,159 @@
+// Basic HTML elements
+
+html {
+  font-size: 18px;
+  scroll-behavior: smooth;
+
+  @media only screen and (min-width: 1024px) {
+    font-size: 20px;
+  }
+}
+
+body {
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Open Sans', sans-serif;
+
+  > header {
+    height: 50px;
+    background-color: $yellow;
+    text-align: center;
+
+    h2 {
+      margin-top: 0;
+      line-height: 50px;
+    }
+
+    .sticky {
+      background-color: rgba(255,255,255,0.5);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1;
+      height: 80px;
+
+      > * label {
+        display: none;
+      }
+
+      > * .expression__checkbox {
+        display: none;
+      }
+
+      > * .expression__operator {
+        margin-top: 0.625rem;
+      }
+    }
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 2.75rem 0 1rem;
+  font-weight: 300;
+  line-height: 1.15;
+
+  a {
+    text-decoration: none;
+    border-bottom: $border solid $orange;
+  }
+}
+
+h1 {
+  font-size: $typescale-01;
+}
+
+h2 {
+  font-size: $typescale-02;
+}
+
+h3 {
+  font-size: $typescale-03;
+}
+
+h4 {
+  font-size: $typescale-04;
+}
+
+h5 {
+  font-size: $typescale-05;
+}
+
+h6, small {
+  font-size: $typescale-06;
+}
+
+p {
+  margin: 0 0 $gutter 0;
+}
+
+pre {
+  display: block;
+  padding: $spacing-04 $spacing-03;
+  background-color: $light-grey;
+}
+
+address {
+  margin-bottom: $gutter;
+}
+
+a {
+  color: inherit;
+}
+
+label {
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+input {
+  @include unstyled-input;
+  padding-left: 25px;
+  padding-right: 25px;
+  height: 70px;
+  border-radius: 35px;
+}
+
+input,
+select,
+button {
+  &:focus {
+    outline: none;
+  }
+}
+
+textarea {
+  @include unstyled-input;
+  padding: 25px;
+  height: 140px;
+  border-radius: 35px;
+}
+
+section {
+  padding-top: $gutter;
+  padding-bottom: $gutter;
+}
+
+footer {
+  padding-top: 2.5vw;
+  padding-bottom: 2.5vw;
+  background: $dark-grey;
+  color: $white;
+  font-size: $typescale-06;
+
+  a {
+    text-decoration: none;
+  }
+
+  .button {
+    background: $white;
+    color: $dark-grey;
+
+    svg {
+      fill: $dark-grey;
+    }
+  }
+}
+
+

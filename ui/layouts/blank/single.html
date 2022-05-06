@@ -1,0 +1,38 @@
+{{ define "head" }}
+    {{- partial "blank-head.html" . -}}
+{{ end }}
+
+{{ define "header" }}
+    {{- partial "static-header.html" . -}}
+{{ end }}
+
+{{ define "main" }}
+<main class="container">
+    <div class="row row--centered">
+        <div class="col col--1of2">
+            <h1>Journal Checker Widget</h1>
+        </div>
+    </div>
+    <div class="row row--centered">
+        <div class="col col--1of2">
+            {{ .Content }}
+        </div>
+        <div class="col col--1of2">
+            <div id="jct_plugin"></div>
+        </div>
+        {{- partial "content-alert.html" . -}}
+    </div>
+</main>
+{{ end }}
+
+{{ define "footer" }}
+    {{- partial "main-footer.html" . -}}
+{{ end }}
+
+{{ define "modal" }}
+    {{- partial "modal.html" . -}}
+{{ end }}
+
+{{ define "script" }}
+    {{- partial "widget-example-initialize-js.html" . -}}
+{{ end }}

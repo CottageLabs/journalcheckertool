@@ -220,7 +220,7 @@ jct._yourQuery = (q) => {
         }
     }
 
-    let issns = jct.chosen.journal.issn.join(", ");
+    let issns = jct.chosen.journal.issns.join(", ");
     let publisher = jct.chosen.journal.publisher !== undefined ? jct.chosen.journal.publisher : jct.lang.explain.your_query.publisher_not_known;
 
     let journal = jct.lang.explain.your_query.journal_title_unknown;

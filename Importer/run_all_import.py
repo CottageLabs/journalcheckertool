@@ -36,9 +36,5 @@ messages.append("{x}: Finished importer run.".format(x=datetime.utcnow()))
 
 print('Sending email')
 subject = "Importer run : {a}".format(a=status)
-request = send_mail(subject, json.dumps(messages, indent=4), None)
-if request.status_code != 200:
-    print("error sending email")
-    print("Messages from import run")
-    print(json.dumps(messages, indent=4))
+send_mail(subject, json.dumps(messages, indent=4), None)
 

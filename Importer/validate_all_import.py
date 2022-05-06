@@ -69,6 +69,7 @@ def check_index(index, t, old_count):
 
 
 def check_indices():
+    print("Checking all indices for date of records and count")
     index_suffix = settings.ES_INDEX_SUFFIX
     if index_suffix and not index_suffix.startswith('_'):
         index_suffix = "_" + index_suffix
@@ -114,6 +115,7 @@ def check_indices():
 
 
 def run_jct_tests():
+    print("Starting JCT api test run")
     messages = []
     status = ''
     messages.append("{x}: Starting JCT tests.".format(x=datetime.utcnow()))

@@ -17,7 +17,7 @@ server {
 server {
   listen 443 ssl;
   server_name jct.cottagelabs.com;
-  root /home/cloo/dev/jct/public;
+  root /home/cloo/dev/journalcheckertool/ui/public;
 
   ssl_certificate /etc/letsencrypt/live/jct.cottagelabs.com/fullchain.pem;
   ssl_certificate_key /etc/letsencrypt/live/jct.cottagelabs.com/privkey.pem;

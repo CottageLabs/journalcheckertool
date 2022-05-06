@@ -25,6 +25,9 @@ funderdb/language/
 
 # importer
 Importer/databases
+Importer/keyfiles/*
+!Importer/keyfiles/.keep
 */venv
 **/*.pyc
 **/*.egg-info
+

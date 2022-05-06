@@ -100,8 +100,11 @@ INDEX_SUFFIX_DATE_FORMAT = "%Y%m%d%H%M%S"
 INDEX_KEEP_OLD_INDICES = 2
 ES_INDEX_SUFFIX = 'dev'
 
-JCT_IMPORT_URL = 'http://localhost:3002/api/service/jct/import?refresh=true'
-JCT_TA_IMPORT_URL = 'http://localhost:3002/api/service/jct/ta/import'
+JCT_BASE_URL = 'http://localhost:3002/api/service/jct/' # end in slash
+JCT_IMPORT_URL = JCT_BASE_URL + 'import?refresh=true'
+JCT_TA_IMPORT_URL = JCT_BASE_URL + 'ta/import'
+JCT_TEST_URL = JCT_BASE_URL + 'test'
+JCT_TEST_TIMEOUT = 120 #2 minutes
 
 MAILGUN_KEY = ""
 MAILGUN_DOMAIN = ""

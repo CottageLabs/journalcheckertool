@@ -2033,7 +2033,7 @@ API.service.jct.funder_config = (id, refresh) ->
 # The funder's specific config file gets merged with the default config file, to create the final config file
 # This is saved in elastic search
 API.service.jct.funder_config.import = () ->
-  funderdb_path = path.join(process.env.PWD, API.settings.funderdb)
+  funderdb_path = API.settings.funderdb
   default_config_file = path.join(funderdb_path, 'default', 'config.yml')
   default_config = jsYaml.load(fs.readFileSync(default_config_file, 'utf8'));
   funders_config = []

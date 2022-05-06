@@ -24,5 +24,5 @@
       "sa_prohibited": "add gsheets link to self archiving - rights retention prohibited spreadsheet published as csv"
     }
   },
-  "funderdb": "../funderdb/funders"
+  "funderdb": "/home/jct/funderdb/funders"
 }

@@ -2070,7 +2070,7 @@ API.service.jct.funder_language = (id, refresh) ->
 # The funder's specific language files get merged with the default language files, to create the final language file
 # This is saved in elastic search
 API.service.jct.funder_language.import = () ->
-  funderdb_path = path.join(process.env.PWD, API.settings.funderdb)
+  funderdb_path = API.settings.funderdb
   default_lang_files_path = path.join(funderdb_path, 'default', 'lang')
   default_language = _flatten_yaml_files(default_lang_files_path)
   funders_language = []

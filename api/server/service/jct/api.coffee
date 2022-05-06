@@ -509,8 +509,8 @@ API.service.jct.calculate = (params={}, refresh) ->
       if sg = API.service.jct.suggest[p] v
         if sg.data and sg.data.length
           ad = sg.data[0]
-          res.request[p].push {id: ad.id, title: ad.title, issn: ad.issn, publisher: ad.publisher}
-          issnsets[v] ?= ad.issn if p is 'journal' and _.isArray(ad.issn) and ad.issn.length
+          res.request[p].push {id: ad.id, title: ad.title, issn: ad.issns, publisher: ad.publisher}
+          issnsets[v] ?= ad.issns if p is 'journal' and _.isArray(ad.issns) and ad.issns.length
       res.request[p].push({id: v}) if not sg?.data
 
   # calculate compliance for each combo, for all the routes

@@ -3,7 +3,7 @@ from jctdata import settings
 
 
 def send_mail(subject, message, attachment):
-    print("Sending email: #{subject}".format(subject=subject))
+    print("Sending email: {subject}".format(subject=subject))
     key = settings.MAILGUN_KEY
     url = settings.MAILGUN_DOMAIN
     recipient = settings.STATUS_EMAIL_RECEIVER

@@ -34,7 +34,6 @@ else:
 
 messages.append("{x}: Finished importer run.".format(x=datetime.utcnow()))
 
-print('Sending email')
 subject = "Importer run : {a}".format(a=status)
 send_mail(subject, json.dumps(messages, indent=4), None)
 

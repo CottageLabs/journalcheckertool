@@ -69,7 +69,7 @@ def check_index(index, t, old_count):
 
 
 def check_indices():
-    print("Checking all indices for date of records and count")
+    print("{x}: Checking all indices for date of records and count".format(x=datetime.utcnow()))
     index_suffix = settings.ES_INDEX_SUFFIX
     if index_suffix and not index_suffix.startswith('_'):
         index_suffix = "_" + index_suffix
@@ -91,10 +91,10 @@ def check_indices():
     for typ in types:
         ans = check_index(types[typ][0], types[typ][1], old_counts.get(typ, 0))
         if ans[0]:
-            messages.append("Index {0}: passed".format(typ))
+            messages.append("{x}: Index {y} passed.".format(x=datetime.utcnow(), y=typ))
         else:
             status = 'failed'
-            messages.append("Index {0}: failed".format(typ))
+            messages.append("{x}: Index {y} failed".format(x=datetime.utcnow(), y=typ))
         details.append({
             'index': typ,
             'outcome': ans[0],
@@ -115,7 +115,7 @@ def check_indices():
 
 
 def run_jct_tests():
-    print("Starting JCT api test run")
+    print("{x}: Starting JCT api test run".format(x=datetime.utcnow()))
     messages = []
     status = ''
     messages.append("{x}: Starting JCT tests.".format(x=datetime.utcnow()))

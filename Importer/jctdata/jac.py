@@ -10,7 +10,7 @@ ISSN_RX = "\d{4}-\d{3}[\dxX]"
 
 def jac_index_data():
     print('JAC: Data for journal autocomplete start')
-    paths = resolver.gather_data(["crossref", "doaj", "tj", "ta", "doaj_inprogress", "sa_negative", "sa_positive"])
+    paths = resolver.gather_data(["crossref", "doaj", "tj", "ta", "doaj_inprogress", "sa_negative", "sa_positive"], True)
 
     ISSNS = []
     TITLE = []
@@ -57,9 +57,12 @@ def journals(coincident_issn_files, title_files, publisher_files):
 
             record = {"issns": vissns}
             main, alts = _get_titles(vissns, titles, preference_order)
-            if main is None:
-                continue
-            record["title"] = main
+            # if main is None:
+            #     continue
+            if main is not None:
+                record["title"] = main
+            else:
+                record["title"] = ""
             if len(alts) > 0:
                 record["alts"] = alts
 
@@ -223,7 +226,7 @@ def _index(record):
     idx["issns"] = [issn.lower() for issn in record["issns"]]
     idx["issns"] += [issn.replace("-", "") for issn in idx["issns"]]
 
-    idx["title"] = title_variants(record["title"])
+    idx["title"] = title_variants(record.get("title", ""))
 
     if "alts" in record:
         idx["alts"] = []

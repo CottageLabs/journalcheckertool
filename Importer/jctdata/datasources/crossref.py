@@ -53,7 +53,7 @@ class Crossref(datasource.Datasource):
                     issns = entry.get("ISSN")
                     issns = list(set(issns))    # because sometimes the issns are duplicated
                     doi_years = [pair[0] for pair in entry.get("breakdowns", {}).get("dois-by-issued-year", [])]
-                    last_doi = max(doi_years) if len(doi_years) > 1 else 0
+                    last_doi = max(doi_years) if len(doi_years) > 0 else 0
                     discontinued = entry.get("discontinued", False)
                     if len(issns) > 2:
                         print("CROSSREF: more than 2 ISSNs found: " + ",".join(issns))

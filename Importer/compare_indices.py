@@ -38,9 +38,9 @@ if __name__ == "__main__":
 
     print(f'Index {args.index1} has a total of {len(docset1)} documents of type {args.type1}')
     print(f'Index {args.index2} has a total of {len(docset2)} documents of type {args.type2}')
-    print(f'Intersection count: {len(docset1.intersection(docs2))}')
-    print(f'Unique to {args.index1}: {len(docset1.difference(docs2))}')
-    print(f'Unique to {args.index2}: {len(docset2.difference(docs1))}')
+    print(f'Intersection count: {len(docset1.intersection(docset2))}')
+    print(f'Unique to {args.index1}: {len(docset1.difference(docset2))}')
+    print(f'Unique to {args.index2}: {len(docset2.difference(docset1))}')
 
     with open(f'{args.index1}_only', 'w') as f:
         json.dump([v for k, v in docs1.items() if k in docset1.difference(docs2)], f, indent=2)

@@ -83,7 +83,7 @@ class Crossref(datasource.Datasource):
             reader = csv.reader(f)
 
             for row in reader:
-                if int(row[4]) < oldest_doi:
+                if int(row[4]) != 0 and int(row[4]) < oldest_doi:
                     continue
 
                 if row[0] and row[1]:

@@ -14,7 +14,7 @@ def get_docs(es_conn: esprit.raw.Connection, es_type: str, doc_field=None, limit
         isdead = False
         dois = sorted(doc.get("breakdowns", {}).get("dois-by-issued-year", []), key=lambda x: x[0], reverse=True)
         if len(dois) > 0:
-            if dois[0][0] <= 2019:
+            if dois[0][0] < 2019:
                 isdead = True
 
         if isinstance(doc.get(doc_field), list):
@@ -27,7 +27,7 @@ def get_docs(es_conn: esprit.raw.Connection, es_type: str, doc_field=None, limit
                 dead.add(doc.get(doc_field))
             else:
                 i.add(doc.get(doc_field))
-        if not i:
+        if not i and not dead:
             continue
 
         issns.update(i)
@@ -60,6 +60,7 @@ if __name__ == "__main__":
     print(f'Intersection count: {len(issns1.intersection(issns2))}')
     print(f'Unique to {args.index1}: {len(unique1)}')
     print(f'Unique to {args.index2}: {len(unique2)}')
+    print(f'Dead in {args.index1}: {len(dead1)}')
 
     with open(f'{args.index1}_only', 'w') as f:
         f.write(str(unique1))
@@ -68,7 +69,7 @@ if __name__ == "__main__":
         g.write(str(unique2))
 
     with open(f'{args.index1}_dead', 'w') as h:
-        h.write(str(dead1))
+        h.write(str(list(dead1)))
 
     print(f"Differences written to {f.name} and {g.name}")
 

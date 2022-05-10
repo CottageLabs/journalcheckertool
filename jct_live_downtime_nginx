@@ -32,7 +32,6 @@ server {
   listen 443 ssl;
   server_name journalcheckertool.org;
   root /home/cloo/live/journalcheckertool/ui/public;
-  index /home/cloo/live/journalcheckertool/ui/public/downtime/index.html;
 
   error_log /var/log/nginx/jct_error.log;
   access_log /var/log/nginx/jct_access.log;
@@ -49,6 +48,10 @@ server {
   }
   location = /static/css/plugin.css {
     return 301 /css/plugin.css;
+  }
+  # Redirect all UI paths to the downtime page.
+  location = / {
+    return 307 /downtime/;
   }
 }
 

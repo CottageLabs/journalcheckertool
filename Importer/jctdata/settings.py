@@ -111,20 +111,3 @@ MAILGUN_DOMAIN = ""
 STATUS_EMAIL_RECEIVER = ''
 STATUS_EMAIL_SENDER = ''
 MAILGUN_SUBJECT_PREFIX = 'jct dev'
-
-
-##################################################
-# THIS MUST COME AT THE END
-##################################################
-# Load local configuration from an optional local.py
-# in the root of the application module
-
-try:
-    from jctdata import local
-    current_module = __import__(__name__)
-
-    for k, v in local.__dict__.items():
-        if not k.startswith("__"):
-            setattr(current_module, k, v)
-except:
-    pass

@@ -1,0 +1,9 @@
+id: slovenianresearchagencyarrs
+name: Slovenian Research Agency
+abbr: ARRS
+plan_s: 2021-01-01
+apc:
+  tj: true # implementation roadmap
+routes:
+  self_archiving:
+    rights_retention: 2100-01-01  # implementation roadmap

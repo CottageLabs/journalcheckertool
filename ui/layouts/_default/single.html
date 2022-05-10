@@ -1,0 +1,30 @@
+{{ define "head" }}
+    {{- partial "head.html" . -}}
+{{ end }}
+
+{{ define "header" }}
+    {{- partial "static-header.html" . -}}
+{{ end }}
+
+{{ define "main" }}
+<main class="container">
+    <div class="row row--centered">
+        <div class="col col--1of2">
+            {{ .Content | safeHTML }}
+        </div>
+        {{- partial "content-alert.html" . -}}
+    </div>
+</main>
+{{ end }}
+
+{{ define "footer" }}
+    {{- partial "main-footer.html" . -}}
+{{ end }}
+
+{{ define "modal" }}
+    {{- partial "modal.html" . -}}
+{{ end }}
+
+{{ define "script" }}
+    {{- partial "static-initialize-js.html" . -}}
+{{ end }}

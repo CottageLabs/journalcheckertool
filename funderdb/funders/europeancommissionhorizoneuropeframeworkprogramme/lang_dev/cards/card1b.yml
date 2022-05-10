@@ -1,0 +1,13 @@
+icon: fully_oa
+title: "ALLOWS COMPLIANCE WITH THE HORIZON EUROPE OPEN ACCESS MANDATE"
+body:
+  default: "<p>Remember to select a CC BY licence (or equivalent).</p>
+            <p>Remember to also ensure, at the time of publication, the immediate deposition and open access of the
+            Author Accepted Manuscript or the Version of Record in a trusted repository.</p>
+            <p>If incurred, Article Processing Charges may be covered by your institution.
+            <a href=\"#\" class=\"modal-trigger\" data-modal=\"he_1b\">More information</a></p>
+            <p>Alternatively, Article Processing Charges might be eligible costs under Horizon Europe</p>"
+explain:
+  title: Fully Open Access
+  text: This way to comply is available to you because the journal is fully Open Access, and your selected journal and
+    institution are part of a Transformative Agreement

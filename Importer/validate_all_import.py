@@ -1,6 +1,7 @@
 import os
 import json
 from datetime import datetime
+import requests
 import esprit
 from jctdata import settings
 from lib.send_mail import send_mail
@@ -37,15 +38,15 @@ def get_records(index, t, from_count):
 
 
 def do_check(result, old_count):
-    # new check
+    # New check - check record is in the last 3 hours
     new = True
     if result['created']:
         dt_obj = datetime.strptime(result['created'], '%Y-%m-%d %H%M.%S')
         delta = datetime.utcnow() - dt_obj
-        if delta.total_seconds() / 3600 > 2:
+        if delta.total_seconds() / 3600 > 3:
             new = False
     result['new_check'] = new
-    # count check
+    # count check - check number of records is more than 90% of previous number
     count_check = False
     if result['count'] > old_count*0.9:
         count_check = True
@@ -54,6 +55,8 @@ def do_check(result, old_count):
 
 
 def check_index(index, t, old_count):
+    # For the index with type,
+    # Check first and last record for newness and number of records
     res1 = get_records(index, t, 0)
     do_check(res1, old_count)
     res2 = {}
@@ -65,7 +68,8 @@ def check_index(index, t, old_count):
     return False, res1, res2
 
 
-def check_all():
+def check_indices():
+    print("{x}: Checking all indices for date of records and count".format(x=datetime.utcnow()))
     index_suffix = settings.ES_INDEX_SUFFIX
     if index_suffix and not index_suffix.startswith('_'):
         index_suffix = "_" + index_suffix
@@ -80,21 +84,17 @@ def check_all():
     }
 
     old_counts = get_old_counts()
-    print(old_counts)
-    print()
     new_counts = {}
     messages = []
     details = []
     status = 'passed'
     for typ in types:
-        print(typ)
         ans = check_index(types[typ][0], types[typ][1], old_counts.get(typ, 0))
-        print(ans)
         if ans[0]:
-            messages.append("Index {0}: passed".format(typ))
+            messages.append("{x}: Index {y} passed.".format(x=datetime.utcnow(), y=typ))
         else:
             status = 'failed'
-            messages.append("Index {0}: failed".format(typ))
+            messages.append("{x}: Index {y} failed".format(x=datetime.utcnow(), y=typ))
         details.append({
             'index': typ,
             'outcome': ans[0],
@@ -114,6 +114,28 @@ def check_all():
     send_mail(subject, json.dumps(messages, indent=4), outcome_file)
 
 
+def run_jct_tests():
+    print("{x}: Starting JCT api test run".format(x=datetime.utcnow()))
+    messages = []
+    status = ''
+    messages.append("{x}: Starting JCT tests.".format(x=datetime.utcnow()))
+    request = requests.get(settings.JCT_TEST_URL, timeout=settings.JCT_TEST_TIMEOUT)
+    if request.status_code == 200:
+        messages.append("{x}: JCT tests completed.".format(x=datetime.utcnow()))
+        response_data = request.json()
+        outcome_file = os.path.join(settings.DATABASES, 'test_outcome.json')
+        with open(outcome_file, 'w') as f:
+            json.dump(response_data, f, indent=4)
+        status = 'completed'
+    else:
+        messages.append("{x}: ERROR completing JCT tests.".format(x=datetime.utcnow()))
+        status = 'ERROR'
+    subject = "JCT tests after import : {a}".format(a=status)
+    send_mail(subject, json.dumps(messages, indent=4), outcome_file)
+    return
+
+
 if __name__ == "__main__":
-    check_all()
+    check_indices()
+    run_jct_tests()
 

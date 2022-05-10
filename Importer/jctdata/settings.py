@@ -26,23 +26,56 @@ ROR_DATA_FILE = os.path.join(RESOURCES, "ror", "v1.0-2022-03-17-ror-data.json.zi
 MAX_DATASOURCE_AGE = {
     "crossref" : 60 * 60 * 24 * 7,
     "doaj" : 60 * 60 * 24 * 7,
+    "doaj_inprogress": 60 * 60 * 24 * 7,
     "tj" : 60 * 60 * 24 * 7,
-    "ror": 60 * 60 * 24 * 7
+    "ta" : 60 * 60 * 24 * 7,
+    "ror": 60 * 60 * 24 * 7,
+    "sa_negative": 60 * 60 * 24 * 7,
+    "sa_positive": 60 * 60 * 24 * 7
 }
 
 DATASOURCE_PATH = {
     "crossref" : os.path.join(DATABASES, "crossref"),
     "doaj" : os.path.join(DATABASES, "doaj"),
+    "doaj_inprogress": os.path.join(DATABASES, "doaj_inprogress"),
     "tj" : os.path.join(DATABASES, "tj"),
-    "ror": os.path.join(DATABASES, "ror")
+    "ta" : os.path.join(DATABASES, "ta"),
+    "ror": os.path.join(DATABASES, "ror"),
+    "sa_negative": os.path.join(DATABASES, "sa_negative"),
+    "sa_positive": os.path.join(DATABASES, "sa_positive")
+}
+
+DATASOURCE_HISTORY = {
+    "crossref" : 3,
+    "doaj" : 3,
+    "doaj_inprogress": 3,
+    "tj" : 3,
+    "ta" : 3,
+    "ror": 3,
+    "sa_negative": 3,
+    "sa_positive": 3
 }
 
 CROSSREF_OLDEST_DOI = 2019
+
+TJ_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2SPOjVU4CKhP7FHOgaf0aRsjSOt-ApwLOy44swojTDFsWlZAIZViC0gdbmxJaEWxdJSnUmNoAnoo9/pub?gid=0&single=true&output=csv"
+
+TA_INDEX_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vStezELi7qnKcyE8OiO2OYx2kqQDOnNsDX1JfAsK487n2uB_Dve5iDTwhUFfJ7eFPDhEjkfhXhqVTGw/pub?gid=1130349201&single=true&output=csv"
+
+DOAJ_IN_PROGRESS_URL = "https://doaj.org/jct/inprogress"
+
+DOAJ_IN_PROGRESS_KEYFILE = "../keyfiles/doaj_inprogress.txt"
+
+SA_NEGATIVE_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0EEMZTikcQZV28BiCL4huv-r0RnHiDrU08j3W1fyERNasoJYuAZek5G3oQH1TUKmf_X-yC5SiHaBM/pub?gid=0&single=true&output=csv"
+
+SA_POSITIVE_SHEET ="https://docs.google.com/spreadsheets/d/e/2PACX-1vTm6sDI16Kin3baNWaAiMUfGdMEUEGXy0LRvSDnvAQTWDN_exlYGyv4gnstGKdv3rXshjSa7AUWtAc5/pub?gid=0&single=true&output=csv"
 
 JAC_PREF_ORDER = [
     "doaj",
     "crossref"
 ]
+
+JAC_HISTORY = 5
 
 DEFAULT_MAPPING = {
     "dynamic_templates": [
@@ -67,8 +100,11 @@ INDEX_SUFFIX_DATE_FORMAT = "%Y%m%d%H%M%S"
 INDEX_KEEP_OLD_INDICES = 2
 ES_INDEX_SUFFIX = 'dev'
 
-JCT_IMPORT_URL = 'http://localhost:3002/api/service/jct/import?refresh=true'
-JCT_TA_IMPORT_URL = 'http://localhost:3002/api/service/jct/ta/import'
+JCT_BASE_URL = 'http://localhost:3002/api/service/jct/' # end in slash
+JCT_IMPORT_URL = JCT_BASE_URL + 'import?refresh=true'
+JCT_TA_IMPORT_URL = JCT_BASE_URL + 'ta/import'
+JCT_TEST_URL = JCT_BASE_URL + 'test'
+JCT_TEST_TIMEOUT = 120 #2 minutes
 
 MAILGUN_KEY = ""
 MAILGUN_DOMAIN = ""

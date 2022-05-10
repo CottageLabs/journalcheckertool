@@ -1,0 +1,171 @@
+# Specific funder implementations should be merged over this file, with the following rules:
+# 1. merge objects as far down the tree as possible
+# 2. Only merge objects, do not attempt to merge lists
+#
+# that is, the following merges would work
+#
+# apc:
+#    ta: false
+# would merge with this file to produce an output
+# apc:
+#    ta: false
+#    tj: false
+#
+# similarly, to turn `rights_retention` ON for the sa route, you could
+#
+# routes:
+#   self_archiving:
+#     rights_retention: true
+#
+# If the property of an object is a list, you MAY NOT merge it, you must
+# provide the full configuration.  That means if you wish to provide custom
+# `card`s for example, you must provide them all
+
+routes:
+  self_archiving:
+    calculate: true
+    rights_retention: 2100-01-01
+    license:
+      - cc-by
+      - cc-by-sa
+      - cc0
+    embargo: 0
+  fully_oa:
+    calculate: true
+    license:
+      - cc-by
+      - cc-by-sa
+      - cc0
+  hybrid:
+    calculate: false
+    license:
+      - cc-by
+      - cc-by-sa
+      - cc0
+  ta:
+    calculate: true
+    license:  # FIXME: we calculate this outside the system, so we cannot trivially give funders the opportunity to customise this
+      - cc-by
+      - cc-by-sa
+      - cc0
+  tj:
+    calculate: true
+card_order:
+  - fully_oa
+  - ta
+  - ta_aq
+  - tj
+  - self_archiving
+  - sa_rr
+  - journal_non_compliant
+  - funder_non_compliant
+  - institution_non_compliant
+  - rights_retention_non_compliant
+cards:
+  # Card to display if the Journal is Fully Open Access
+  - id: fully_oa     # aka Card A
+    compliant: true
+    match_routes:
+      must:
+        - fully_oa
+    preferred: true
+
+  # Self-Archiving Rights Retention, for when the self-archiving route can only be achieved via
+  # the RR strategy.  Only this or `sa` will be displayed, never both
+  - id: sa_rr     # aka Card D
+    compliant: true
+    match_routes:
+      must:
+        - self_archiving
+      not:
+        - fully_oa
+    match_qualifications:
+      must:
+        - self_archiving.rights_retention_author_advice
+    modal: sa_rr
+
+  # Standard policy-based Self-Archiving route, when RRS is not required.  Only this OR `sa_rr` will
+  # be displayed, never both.
+  - id: self_archiving    # aka Card C
+    compliant: true
+    match_routes:
+      must:
+        - self_archiving
+      not:
+        - fully_oa
+    match_qualifications:
+      not:
+        - self_archiving.rights_retention_author_advice
+    preferred: false
+    modal: sa
+
+  # Transformative Agreements tiles (with and without author qualifications)
+  - id: ta    # aka Card F (corresponding_authors difference is not modelled in the specification)
+    compliant: true
+    match_routes:
+      must:
+        - ta
+    match_qualifications:
+      not:
+        - ta.corresponding_authors
+    preferred: true
+
+  - id: ta_aq     # aka Card F (corresponding_authors difference is not modelled in the specification)
+    compliant: true
+    match_routes:
+      must:
+        - ta
+    match_qualifications:
+      must:
+        - ta.corresponding_authors
+    preferred: true
+
+  # Transformative Journals tile
+  - id: tj      # aka Card B
+    compliant: true
+    match_routes:
+      must:
+        - tj
+    preferred: true
+    modal: tj
+
+  # Set of cards to display if there are no compliant results
+  - id: journal_non_compliant
+    compliant: false
+    match_routes:
+      not:
+        - self_archiving
+        - fully_oa
+        - ta
+        - tj
+    preferred: false
+
+  - id: funder_non_compliant
+    compliant: false
+    match_routes:
+      not:
+        - self_archiving
+        - fully_oa
+        - ta
+        - tj
+    preferred: false
+
+  - id: institution_non_compliant
+    compliant: false
+    match_routes:
+      not:
+        - self_archiving
+        - fully_oa
+        - ta
+        - tj
+    preferred: false
+
+  - id: rights_retention_non_compliant
+    compliant: false
+    match_routes:
+      not:
+        - self_archiving
+        - fully_oa
+        - ta
+        - tj
+    preferred: false

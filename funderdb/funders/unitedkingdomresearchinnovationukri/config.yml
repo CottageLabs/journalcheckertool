@@ -1,0 +1,150 @@
+id: unitedkingdomresearchinnovationukri
+name: UK Research and Innovation.
+abbr: UKRI
+aka:
+  - name: Arts and Humanities Research Council
+    abbr: AHRC (UKRI)
+  - name: Biotechnology and Biological Sciences Research Council
+    abbr: BBSRC (UKRI)
+  - name: Economic and Social Research Council
+    abbr: ESRC (UKRI)
+  - name: Engineering and Physical Sciences Research Council
+    abbr: EPSRC (UKRI)
+  - name: Innovate UK
+    abbr: UKRI
+  - name: Medical Research Council
+    abbr: MRC (UKRI)
+  - name: Natural Environment Research Council
+    abbr: NERC (UKRI)
+  - name: Research England
+    abbr: UKRI
+  - name: Science and Technology Facilities Council
+    abbr: STFC (UKRI)
+plan_s: 2022-01-01 # Awaiting outcome of OA review
+apc:
+  tj: false # Awaiting outcome of OA review
+routes:
+  self_archiving:
+    rights_retention: 2100-01-01
+  hybrid:
+    calculate: true
+card_order:
+  - ta
+  - ta_aq
+  - fully_oa_sa
+  - tj
+  - hybrid
+  - self_archiving
+  - journal_non_compliant
+  - funder_non_compliant
+  - institution_non_compliant
+  - sa_rr
+cards:
+  # Card to display if the Journal is Fully Open Access
+  - id: fully_oa_sa   # derived from fully_oa
+    compliant: true
+    match_routes:
+      must:
+        - fully_oa
+    preferred: false
+
+  # Transformative Journals tile
+  - id: tj      # derived from tj
+    compliant: true
+    match_routes:
+      must:
+        - tj
+    preferred: false
+    modal: tj
+
+    # Standard policy-based Self-Archiving route, when RRS is not required.  Only this OR `sa_rr` will
+    # be displayed, never both.
+  - id: self_archiving
+    compliant: true
+    match_routes:
+      must:
+        - self_archiving
+      not:
+        - tj
+        - fully_oa
+        - ta
+        - hybrid
+    preferred: false
+
+  - id: hybrid
+    compliant: true
+    match_routes:
+      must:
+        - hybrid
+      not:
+        - tj
+        - ta
+    preferred: false
+
+  # Transformative Agreements tiles (with and without author qualifications)
+  - id: ta    # derived from ta
+    compliant: true
+    match_routes:
+      must:
+        - ta
+    match_qualifications:
+      not:
+        - ta.corresponding_authors
+    preferred: true
+
+  - id: ta_aq     # derived from ta_aq
+    compliant: true
+    match_routes:
+      must:
+        - ta
+    match_qualifications:
+      must:
+        - ta.corresponding_authors
+    preferred: true
+
+  # Set of cards to display if there are no compliant results
+  - id: journal_non_compliant
+    compliant: false
+    match_routes:
+      not:
+        - fully_oa
+        - ta
+        - tj
+        - hybrid
+        - self_archiving
+    preferred: false
+
+  - id: funder_non_compliant
+    compliant: false
+    match_routes:
+      not:
+        - fully_oa
+        - ta
+        - tj
+        - hybrid
+        - self_archiving
+    preferred: false
+
+  - id: institution_non_compliant
+    compliant: false
+    match_routes:
+      not:
+        - fully_oa
+        - ta
+        - tj
+        - hybrid
+        - self_archiving
+    preferred: false
+
+  - id: sa_rr   # this is a non-compliant card similar to sa_rr, but non-compliant
+    compliant: false
+    match_routes:
+      not:
+        - fully_oa
+        - ta
+        - tj
+        - hybrid
+        - self_archiving
+    preferred: false
+    modal: sa_rr
+

@@ -1,0 +1,28 @@
+{{ define "head" }}
+    {{- partial "head.html" . -}}
+{{ end }}
+
+{{ define "header" }}
+    {{- partial "index-header.html" . -}}
+{{ end }}
+
+{{ define "main" }}
+<main class="container results" id="jct_results" style="display: none">
+    {{- partial "index-results.html" . -}}
+    {{- partial "index-results-explanation.html" . -}}
+    {{- partial "index-results-button.html" . -}}
+    {{- partial "content-alert.html" . -}}
+</main>
+{{ end }}
+
+{{ define "footer" }}
+    {{- partial "main-footer.html" . -}}
+{{ end }}
+
+{{ define "modal" }}
+    {{- partial "modal.html" . -}}
+{{ end }}
+
+{{ define "script" }}
+    {{- partial "index-initialize-js.html" . -}}
+{{ end }}

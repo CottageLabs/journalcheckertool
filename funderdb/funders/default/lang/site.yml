@@ -1,0 +1,6 @@
+compliant: "The following publishing options are aligned with your funder’s OA policy."
+non_compliant: "There are no publishing options aligned with your funder’s OA policy."
+preferred: <a href="#" class="modal-trigger" data-modal="preferred">Preferred</a>
+card_modal: More information
+card_institution_missing: No institution specified
+why_am_i_seeing_this: Why am I seeing this?

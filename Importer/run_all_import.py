@@ -23,6 +23,7 @@ index_latest_with_alias('iac', settings.ES_INDEX_SUFFIX)
 messages.append("{x}: Indexed institution autocomplete data.".format(x=datetime.utcnow()))
 
 # Start jct import
+print('Starting JCT import')
 request = requests.get(settings.JCT_IMPORT_URL)
 if request.status_code == 200:
     messages.append("{x}: Started JCT import.".format(x=datetime.utcnow()))

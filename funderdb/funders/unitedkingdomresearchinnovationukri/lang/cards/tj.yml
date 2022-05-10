@@ -1,0 +1,16 @@
+icon: tj
+title: "CHECK <a href=\"https://v2.sherpa.ac.uk/romeo/tjlists.html\" target=\"_blank\" rel=\"noopener\">SHERPA</a>
+            FOR TRANSFORMATIVE JOURNAL STATUS"
+body:
+  default: "<p>This may be a Jisc-approved transformative journal. Please check
+            <a href=\"https://v2.sherpa.ac.uk/romeo/tjlists.html\" target=\"_blank\" rel=\"noopener\">SHERPA</a>
+            to confirm.</p>
+            <p>If it is a Jisc-approved transformative journal, go ahead and submit. Remember to select the open access
+            publishing option with a <a href=\"https://creativecommons.org/licenses/by/2.0/\" target=\"_blank\" rel=\"noopener\">
+            CC BY licence</a> licence to ensure compliance.</p>
+            <p>If it is a Jisc-approved transformative journal, open access publishing charges are eligible costs for
+            the use of UKRI funds.</p>"
+explain:
+  title: Transformative journal
+  text: This way to comply is available to you because the journal has been identified as a cOAlition S Transformative
+        Journal that may also be a Jisc-approved Transformative Journal

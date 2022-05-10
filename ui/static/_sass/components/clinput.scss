@@ -1,0 +1,80 @@
+// Query form inputs
+
+.clinput__options {
+  padding: 0;
+  background-color: $black;
+  border-radius: $spacing-03;
+  list-style: none;
+  max-height: 200px;
+  overflow-y: scroll;
+
+  scrollbar-width: thin;
+  scrollbar-color: $orange $white;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $white;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $orange;
+  }
+}
+
+.clinput__option {
+  padding: 0;
+  height: auto;
+  overflow-wrap: break-word;
+  border-radius: $spacing-03;
+  cursor: pointer;
+
+  a {
+    display: block;
+    padding: $spacing-03 0;
+    margin: 0 $spacing-04;
+    color: $white;
+    font-size: $typescale-06;
+    line-height: 1.75;
+    border-bottom: $light-grey solid 1px;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: $yellow;
+    border-radius: 0;
+    outline: none;
+
+    a {
+      color: $black;
+      border: 0;
+    }
+  }
+
+  &:first-of-type {
+    border-radius: $spacing-03 $spacing-03 0 0;
+
+    &:hover,
+    &:focus,
+    &:active {
+      border-radius: $spacing-03;
+    }
+  }
+
+  &:last-of-type {
+    border-radius: 0 0 $spacing-03 $spacing-03;
+
+    &:hover,
+    &:focus,
+    &:active {
+      border-radius: $spacing-03;
+    }
+
+    a {
+      border-bottom: none;
+    }
+  }
+}

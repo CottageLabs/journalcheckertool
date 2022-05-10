@@ -1,31 +1,32 @@
-import csv, json, itertools, os, re
+import csv, json, itertools, os, re, shutil
 from datetime import datetime
 
 from jctdata import settings
 from jctdata import resolver
-from lib.title_variants import title_variants
+from jctdata.lib.title_variants import title_variants
 
 ISSN_RX = "\d{4}-\d{3}[\dxX]"
 
 
 def jac_index_data():
     print('JAC: Data for journal autocomplete start')
-    paths = resolver.gather_data(["crossref", "doaj"])
-    ISSNS = [
-        ("crossref", paths["crossref"].get("coincident_issns")),
-        ("doaj", paths["doaj"].get("coincident_issns"))#,
-        #("tj", paths["doaj"].get("coincident_issns"))
-    ]
-    TITLE = [
-        ("crossref", paths["crossref"].get("titles")),
-        ("doaj", paths["doaj"].get("titles"))#,
-        #("tj", paths["doaj"].get("titles"))
-    ]
-    PUB = [
-        ("crossref", paths["crossref"].get("publishers")),
-        ("doaj", paths["doaj"].get("publishers"))#,
-        #("tj", paths["doaj"].get("publishers"))
-    ]
+    paths = resolver.gather_data(["crossref", "doaj", "tj", "ta", "doaj_inprogress", "sa_negative", "sa_positive"], True)
+
+    ISSNS = []
+    TITLE = []
+    PUB = []
+
+    for source, files in paths.items():
+        if "coincident_issns" in files:
+            ISSNS.append((source, files["coincident_issns"]))
+        if "titles" in files:
+            TITLE.append((source, files["titles"]))
+        if "publishers" in files:
+            PUB.append((source, files["publishers"]))
+
+    print("JAC: ISSN sources: " + ", ".join([x[0] for x in ISSNS]))
+    print("JAC: TITLE sources: " + ", ".join([x[0] for x in TITLE]))
+    print("JAC: PUB sources: " + ", ".join([x[0] for x in PUB]))
     journals(ISSNS, TITLE, PUB)
     print('JAC: Data for journal autocomplete end')
 
@@ -49,16 +50,19 @@ def journals(coincident_issn_files, title_files, publisher_files):
 
     with open(issn_clusters_file, "r") as f, open(outfile, "w") as o:
         reader = csv.reader(f)
-        for row in reader:
-            vissns = valid_issns(row)
-            if len(vissns) == 0:
-                continue
+        for vissns in reader:
+            # vissns = valid_issns(row)
+            # if len(vissns) == 0:
+            #     continue
 
             record = {"issns": vissns}
             main, alts = _get_titles(vissns, titles, preference_order)
-            if main is None:
-                continue
-            record["title"] = main
+            # if main is None:
+            #     continue
+            if main is not None:
+                record["title"] = main
+            else:
+                record["title"] = ""
             if len(alts) > 0:
                 record["alts"] = alts
 
@@ -70,6 +74,32 @@ def journals(coincident_issn_files, title_files, publisher_files):
 
             o.write(json.dumps(record) + "\n")
 
+    _cleanup(os.path.join(settings.DATABASES, "jct", "jac"))
+
+
+def _cleanup(dir):
+    dirs = []
+    for entry in os.listdir(dir):
+        if os.path.isdir(os.path.join(dir, entry)):
+            dirs.append(entry)
+
+    if len(dirs) <= settings.JAC_HISTORY:
+        return
+
+    dirs.sort(reverse=True)
+    for remove in dirs[settings.JAC_HISTORY:]:
+        removing = os.path.join(dir, remove)
+        print("JAC: cleaning up old directory {x}".format(x=removing))
+        shutil.rmtree(removing)
+
+def _remove_invalid_issns(input):
+    valid = []
+    for row in input:
+        newrow = valid_issns(row)
+        if len(newrow) > 0:
+            valid.append(newrow)
+    return valid
+
 
 def valid_issns(issns):
     return [issn.upper() for issn in issns if re.match(ISSN_RX, issn)]
@@ -79,6 +109,7 @@ def issn_clusters(coincident_issn_files, clusters_file):
     issn_clusters = []
 
     inputs = _cat_and_dedupe(coincident_issn_files)
+    inputs = _remove_invalid_issns(inputs)
     inputs.sort(key=lambda x: x[0])
 
     current_issn_root = None
@@ -96,7 +127,7 @@ def issn_clusters(coincident_issn_files, clusters_file):
             current_cluster = [row[0]]
             current_issn_root = row[0]
 
-        if row[1]:
+        if len(row) > 1 and row[1]:
             current_cluster.append(row[1])
 
     issn_clusters.sort()
@@ -195,7 +226,7 @@ def _index(record):
     idx["issns"] = [issn.lower() for issn in record["issns"]]
     idx["issns"] += [issn.replace("-", "") for issn in idx["issns"]]
 
-    idx["title"] = title_variants(record["title"])
+    idx["title"] = title_variants(record.get("title", ""))
 
     if "alts" in record:
         idx["alts"] = []

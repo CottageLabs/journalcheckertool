@@ -1,0 +1,28 @@
+[main]
+    aosAssetsVersion = "4.1.0"
+    jctAssetsVersion = "4.1.0"
+    feedbackButton = "Send us feedback"
+    alert = "The information provided by the <em>Journal Checker Tool</em> represents cOAlition S’s current understanding in relation to the policies of the journals contained within it. We will endeavour to keep it up to date and accurate, but we do not accept any liability in relation to any errors or omissions."
+    comingSoon = "Coming Soon"
+    endpoint="_dev"
+[footer]
+    address = '''
+    cOAlition S Office<br/>
+    European Science Foundation<br/>
+    1, quai Lezay – Marnésia<br/>
+    67080 Strasbourg – France
+    '''
+    licenseText = "Content on this site is licensed under a"
+    licenseUrl = "https://creativecommons.org/licenses/by/4.0/"
+    licenseName = "Creative Commons (CC BY) Attribution 4.0 International license"
+[header]
+    pageTitle = "Journal Checker Tool"
+    Question = "Is this compliant with"
+    Organisation = "Plan S"
+[apidocs]
+    apiURL = "https://api.jct.cottagelabs.com/"
+[results]
+    restartButton = "Start over"
+    explainButton = "Explain this result"
+    printButton = "Print"
+    populate = false

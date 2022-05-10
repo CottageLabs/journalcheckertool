@@ -1,0 +1,57 @@
+// Query (page header)
+
+.query {
+  height: auto;
+  padding-top: $gutter;
+  padding-bottom: 0;
+  background: $dark-grey;
+  //min-height: 75vh;
+  color: $white;
+  text-align: center;
+
+  h2 {
+    margin-top: 0;
+  }
+
+  a {
+    color: $white;
+  }
+
+  &--compliant {
+    background: $yellow;
+    background-image: url('../img/confetti.svg');
+    background-size: contain;
+    color: $black;
+
+    label {
+      color: $black;
+    }
+
+    a {
+      color: $black;
+    }
+
+    .expression__operator path {
+      stroke: $black;
+      fill: $black;
+    }
+  }
+
+  &--non-compliant {
+    background: $light-grey;
+    color: $black;
+
+    label {
+      color: $black;
+    }
+
+    a {
+      color: $black;
+    }
+
+    .expression__operator path {
+      stroke: $black;
+      fill: $black;
+    }
+  }
+}

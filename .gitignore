@@ -1,5 +1,33 @@
-.idea
+# common files to ignore
+**/node_modules/
+**/.idea
+**/.DS_Store
+**/.sass-cache
+
+# api
+api/settings.json
+api/meteor/local
+
+# ui
+ui/static/inputit.js
+ui/data/
+ui/resources/
+ui/.hugo_build.lock
+ui/static/_sass/components/*.css
+ui/static/_sass/components/*.css.map
+ui/package-lock.json
+ui/package.json
+ui/public/*
+
+# funderdb
+funderdb/config/
+funderdb/language/
+
+# importer
 Importer/databases
+Importer/keyfiles/*
+!Importer/keyfiles/.keep
 */venv
-*.pyc
-*.egg-info
+**/*.pyc
+**/*.egg-info
+

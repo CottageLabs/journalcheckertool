@@ -1,0 +1,82 @@
+id: europeancommissionhorizoneuropeframeworkprogramme
+name: European Commission (Horizon Europe Framework Programme)
+plan_s: 2021-01-01
+apc:
+  tj: false # 4, 13
+routes:
+  self_archiving:
+    rights_retention: 2021-01-01
+    license:
+      - cc-by # SA is compliant if the licence is cc-by (6.1) / 6.7
+  fully_oa:
+    license:
+      - cc-by # 6.7
+  hybrid:
+    calculate: true
+    license:
+      - cc-by # 6.3 / 6.7
+card_order:
+  - card1a
+  - card1b
+  - card2a
+  - card2b
+  - card3
+  - card4
+cards:
+  - id: card1a
+    compliant: true
+    match_routes:
+      must:
+        - fully_oa
+      not:
+        - ta
+    preferred: false
+
+  - id: card1b
+    compliant: true
+    match_routes:
+      must:
+        - fully_oa
+        - ta
+    preferred: false
+
+  - id: card2a
+    compliant: true
+    match_routes:
+      or:
+        - hybrid
+        - tj
+      must:
+        - self_archiving
+      not:
+        - ta
+    preferred: false
+
+  - id: card2b
+    compliant: true
+    match_routes:
+      or:
+        - hybrid
+        - tj
+      must:
+        - self_archiving
+        - ta
+    preferred: false
+
+  - id: card3
+    compliant: true
+    match_routes:
+      not:
+        - fully_oa
+        - tj
+        - hybrid
+      must:
+        - self_archiving
+    preferred: false
+
+  - id: card4
+    compliant: false
+    match_routes:
+      not:
+        - self_archiving
+    preferred: false

@@ -1,0 +1,56 @@
+// Results (page body / main content)
+
+.results {
+  max-height: 0;
+  overflow: hidden;
+
+  header {
+    padding-top: $gutter;
+    padding-bottom: $gutter;
+    margin-left: $gutter-negative;
+    margin-right: $gutter-negative;
+    text-align: center;
+  }
+
+  h2 {
+    margin: 0;
+  }
+
+  .wave svg {
+    fill: $dark-grey;
+  }
+
+  &--compliant {
+    max-height: 100%;
+
+    header {
+      background-color: $yellow;
+      background-image: url('../img/confetti.svg');
+      background-size: contain;
+
+      // @media only screen and (min-width: 768px) {
+      //   padding-top: 175px; // For sticky header only on desktop
+      // }
+    }
+
+    .wave svg {
+      fill: $yellow;
+    }
+  }
+
+  &--non-compliant {
+    max-height: 100%;
+
+    header {
+      background-color: $light-grey;
+    }
+
+    .wave svg {
+      fill: $light-grey;
+    }
+  }
+}
+
+.show_detailed_results {
+  display: block;
+}

@@ -1,0 +1,100 @@
+// Expressions: "formula" used in header query
+
+.expression {
+  display: flex;
+  height: 100%;
+
+  label {
+    margin-top: $spacing-05;
+    margin-bottom: $spacing-03;
+  }
+
+  input, select {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 100%;
+    background-color: $black;
+  }
+
+  ::placeholder {
+    text-align: center;
+    color: rgba($white, 0.75);
+    font-size: $typescale-06;
+  }
+
+  &__input {
+    width: 90%;
+    text-align: center;
+    color: $white;
+
+    @media only screen and (max-width: 767px) {
+      width: 100%;
+    }
+  }
+
+  &__operator {
+    margin-top: $spacing-06;
+    margin-left: $gutter;
+    margin-right: $gutter-negative;
+
+    @media only screen and (max-width: 767px) {
+      display: none;
+    }
+
+  }
+
+  &__checkbox {
+    margin: $spacing-03 0;
+
+    label {
+      margin: 0;
+      display: inline-block;
+      text-align: left;
+      text-transform: none;
+      font-size: $typescale-06;
+      font-style: italic;
+      vertical-align: top;
+    }
+
+    input {
+      margin: 0 $spacing-03 0 0;
+      height: 15px;
+      width: 15px;
+    }
+  }
+
+  // Style equal btn (text-only on mobile)
+  &:last-child {
+    cursor: pointer;
+
+    .expression__operator {
+      margin: $spacing-04 $gutter;
+
+      span {
+        display: block;
+      }
+    }
+
+    @media only screen and (min-width: 768px) {
+      .expression__operator {
+        margin: $spacing-06 0 0 $gutter;
+
+        span {
+          @include sr-only; // Full-text for query submit btn is visible only on mobile
+        }
+      }
+    }
+
+    @media only screen and (max-width: 767px) {
+      flex-direction: column; // Display on its own line on smaller viewports
+
+      svg {
+        display: none;
+      }
+
+      .expression__operator {
+        display: block;
+      }
+    }
+  }
+}

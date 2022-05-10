@@ -6,7 +6,15 @@
     {{- partial "minimal-header.html" . -}}
 {{ end }}
 
-{{ define "main" }}{{ end }}
+{{ define "main" }}
+<main class="query">
+    <div class="row row--centered">
+        <div class="col col--1of2">
+            {{ .Content | safeHTML }}
+        </div>
+    </div>
+</main>
+{{ end }}
 
 {{ define "footer" }}
     {{- partial "minimal-footer.html" . -}}

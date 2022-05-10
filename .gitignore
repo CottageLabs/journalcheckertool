@@ -30,4 +30,5 @@ Importer/keyfiles/*
 */venv
 **/*.pyc
 **/*.egg-info
+Importer/jctdata/local.py
 

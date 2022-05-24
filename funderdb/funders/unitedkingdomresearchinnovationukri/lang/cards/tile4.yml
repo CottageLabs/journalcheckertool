@@ -1,8 +1,9 @@
 icon: false
 title: "Compliance through self-archiving"
 body:
-  default: "<p>Your funder’s grant conditions set out how you can seek to self-archive the Author Accepted Manuscript
-          with a compliant licence in an OA repository. Open access publishing charges do not apply with this route.</p>
+  default: "<p>Your funder’s grant conditions set out how you can self-archive the Author Accepted Manuscript
+          in a repository without embargo and with a CC BY licence. Publishing fees do not apply with this route. Ensure that the required statement
+          is included in the funding acknowledgement section of the manuscript to be compliant</p>
           <p><a href=\"#\" class=\"modal-trigger\" data-modal=\"ukri_route_2\">More information</a></p>"
 modal: '<svg width="20" height="20" viewBox="0 0 30 30" fill="none" style="vertical-align: middle; margin-right: 15px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <mask id="mask0_19_287" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="30" height="30">

@@ -22,6 +22,7 @@ ui/public/*
 # funderdb
 funderdb/config/
 funderdb/language/
+funderdb/autocomplete/
 
 # importer
 Importer/databases

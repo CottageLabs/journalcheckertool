@@ -17,8 +17,6 @@
     licenseName = "Creative Commons (CC BY) Attribution 4.0 International license"
 [header]
     pageTitle = "Journal Checker Tool"
-    Question = "Is this compliant with"
-    Organisation = "Plan S"
 [apidocs]
     apiURL = "https://api.jct.cottagelabs.com/"
 [results]

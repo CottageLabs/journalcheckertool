@@ -59,7 +59,7 @@ logs:
     SA.Compliant: This journal has indicated to cOAlition S that self-archiving is permitted.
     SA.RRException: This journal has stated that it will desk reject any manuscript which includes the Rights Retention language.
     SA.RRNoException: This journal is not known to reject the Rights Retention Strategy
-    SA.NotAsserted: This journal is not in our list of journals known to allow Self-Archiving, irrespective of their public policy
+    SA.NotAsserted: This journal is not in the cOAlition S-managed list of titles which have indicated to cOAlition S that they allow Self-Archiving, irrespective of their publicly stated policy
   ta:
     TA.NoTA: No Transformative Agreement containing the selected journal and institution was found within our database.
     TA.Exists: A Transformative Agreement containing the selected journal and institution was found within our database.

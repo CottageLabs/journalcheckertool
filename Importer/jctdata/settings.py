@@ -98,6 +98,7 @@ DEFAULT_MAPPING = {
 ES_HOST = "http://localhost:9200"
 INDEX_SUFFIX_DATE_FORMAT = "%Y%m%d%H%M%S"
 INDEX_KEEP_OLD_INDICES = 2
+ES_INDEX_PREFIX = 'jct'
 ES_INDEX_SUFFIX = 'dev'
 
 JCT_BASE_URL = 'http://localhost:3002/api/service/jct/' # end in slash

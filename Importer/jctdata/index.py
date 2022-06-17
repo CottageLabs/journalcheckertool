@@ -76,7 +76,10 @@ def index_latest_with_alias(target, index_suffix):
     if index_suffix and not index_suffix.startswith('_'):
         index_suffix = "_" + index_suffix
 
-    ALIAS = "jct_" + target + index_suffix
+    index_prefix = settings.ES_INDEX_PREFIX
+    if index_prefix and not index_prefix.endswith('_'):
+        index_prefix = index_prefix + "_"
+    ALIAS = index_prefix + target + index_suffix
     timestamped_index_name = ALIAS + datetime.strftime(datetime.utcnow(), settings.INDEX_SUFFIX_DATE_FORMAT)
 
     IN = os.path.join(target_dir, latest, target + ".json")

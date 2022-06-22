@@ -1,10 +1,15 @@
-icon: fully_oa
-title: "ALLOWS COMPLIANCE WITH THE HORIZON EUROPE OPEN ACCESS MANDATE"
+icon: self_archiving
+title: "OPEN ACCESS PUBLISHING IN THIS HYBRID JOURNAL ALLOWS COMPLIANCE WITH THE HORIZON EUROPE OPEN ACCESS MANDATE PROVIDED YOU HAVE ALTERNATIVE FUNDS"
 body:
-  default: "<p>Remember to select a CC BY licence (or equivalent).</p>
-            <p>Remember to also ensure, at the time of publication, the immediate deposition and open access of the
-            Author Accepted Manuscript or the Version of Record in a trusted repository.</p>
-            <p>No Article Processing Charges should be required.</p>"
+  default: "<p>Remember to select a <strong>CC BY</strong> licence (or equivalent).</p>
+            <p>Remember to also ensure, at the time of publication, the <strong>immediate deposition</strong> and open access of the
+            Author Accepted Manuscript or the Version of Record in a <strong>trusted repository</strong>.</p>
+            <p>Article Processing Charges in Hybrid journals are <strong>not eligible</strong> costs under Horizon
+            Europe and you must locate alternative funds. The journal’s subscription model does not allow compliance
+            with the Horizon Europe open access policy.
+            <a href=\"#\" class=\"modal-trigger\" data-modal=\"he_popup3\">More information</a></p>"
 explain:
-  title: Self-Archiving
-  text: This way to comply is available to you because the journal closed access, but has a suitable Self-Archving policy.
+  title: Hybrid Journal
+  text: This way to comply is available to you because the journal is a hybrid or Transformative Journal, with a suitable
+        Self-Archiving policy.  The journal is not part of a Transformative Agreement that applies to your selected
+        institution.

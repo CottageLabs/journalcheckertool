@@ -1,0 +1,10 @@
+icon: self_archiving
+title: "ALLOWS COMPLIANCE WITH THE HORIZON EUROPE OPEN ACCESS MANDATE THROUGH SELF-ARCHIVING"
+body:
+  default: "<p>Remember to select a <strong>CC BY</strong> licence (or equivalent).</p>
+            <p>Remember to also ensure, at the time of publication, the <strong>immediate deposition</strong> and open access of the
+            Author Accepted Manuscript in a <strong>trusted repository</strong>.</p>
+            <p>No Article Processing Charges should be required. <a href=\"#\" class=\"modal-trigger\" data-modal=\"he_popup5\">More information</a></p>"
+explain:
+  title: Self-Archiving
+  text: This way to comply is available to you because the journal closed access, but has a suitable Self-Archving policy.

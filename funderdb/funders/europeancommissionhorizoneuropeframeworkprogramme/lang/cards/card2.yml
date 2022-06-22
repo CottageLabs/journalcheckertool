@@ -1,4 +1,4 @@
-icon: fully_oa
+icon: ta
 title: "ALLOWS COMPLIANCE WITH THE HORIZON EUROPE OPEN ACCESS MANDATE"
 body:
   default: "<p>Remember to select a <strong>CC BY</strong> licence (or equivalent).</p>
@@ -8,6 +8,6 @@ body:
             <a href=\"#\" class=\"modal-trigger\" data-modal=\"he_popup2\">More information</a></p>
             <p>Alternatively, Article Processing Charges will be <strong>eligible</strong> costs under Horizon Europe</p>"
 explain:
-  title: Fully Open Access
+  title: Fully Open Access, supported by Transformative Agreement
   text: This way to comply is available to you because the journal is fully Open Access, and your selected journal and
     institution are part of a Transformative Agreement

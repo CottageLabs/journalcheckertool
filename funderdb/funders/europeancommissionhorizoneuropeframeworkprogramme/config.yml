@@ -16,67 +16,79 @@ routes:
     license:
       - cc-by # 6.3 / 6.7
 card_order:
-  - card1a
-  - card1b
-  - card2a
-  - card2b
+  - card1
+  - card2
   - card3
   - card4
+  - card5_hybrid
+  - card5_closed
+  - card6
 cards:
-  - id: card1a
+  - id: card1
     compliant: true
+    preferred: false
     match_routes:
       must:
-        - fully_oa
+        - fully_oa  # no need to consider the SA route, as this is implicit in Fully OA
       not:
         - ta
-    preferred: false
 
-  - id: card1b
+  - id: card2
     compliant: true
+    preferred: false
     match_routes:
       must:
-        - fully_oa
+        - fully_oa  # no need to consider the SA route, as this is implicit in Fully OA
         - ta
-    preferred: false
-
-  - id: card2a
-    compliant: true
-    match_routes:
-      or:
-        - hybrid
-        - tj
-      must:
-        - self_archiving
-      not:
-        - ta
-    preferred: false
-
-  - id: card2b
-    compliant: true
-    match_routes:
-      or:
-        - hybrid
-        - tj
-      must:
-        - self_archiving
-        - ta
-    preferred: false
 
   - id: card3
     compliant: true
+    preferred: false
     match_routes:
-      not:
-        - fully_oa
-        - tj
+      or:
         - hybrid
+        - tj
+      not:
+        - ta
       must:
         - self_archiving
-    preferred: false
 
   - id: card4
+    compliant: true
+    preferred: false
+    match_routes:
+      or:
+        - hybrid
+        - tj
+      must:
+        - ta
+        - self_archiving
+
+  - id: card5_hybrid
+    compliant: true
+    preferred: false
+    match_routes:
+      must:
+        - self_archiving
+      or:
+        - hybrid
+        - tj
+
+  - id: card5_closed
+    compliant: true
+    preferred: false
+    match_routes:
+      must:
+        - self_archiving
+      not:
+        - fully_oa
+        - hybrid
+        - tj
+        - ta
+
+  - id: card6
     compliant: false
+    preferred: false
     match_routes:
       not:
         - self_archiving
-    preferred: false

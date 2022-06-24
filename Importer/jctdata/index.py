@@ -3,6 +3,7 @@ import json
 import uuid
 import os
 import requests
+import re
 from datetime import datetime
 
 from jctdata import settings
@@ -43,7 +44,7 @@ def index(infile, bulkfile, conn, index_type, mapping, alias):
         print("INDEX: repointing existing alias {x} from {y} to {z}".format(x=alias, y=old_conn.index, z=conn.index))
         esprit.tasks.repoint_alias(old_conn, conn, alias)
 
-    removal_candidates = [idx for idx in aliases.keys() if idx.startswith(alias)]
+    removal_candidates = [idx for idx in aliases.keys() if re.match(rf'^{alias}\d+$', idx)]
     if len(removal_candidates) < settings.INDEX_KEEP_OLD_INDICES:
         print("INDEX: less than {x} old indices, none removed".format(x=settings.INDEX_KEEP_OLD_INDICES))
         return
@@ -102,7 +103,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Load data into the index')
     parser.add_argument('target')
-    parser.add_argument("-s", "--index_suffix")
+    parser.add_argument("-s", "--index_suffix", default='')
 
     args = parser.parse_args()
     index_latest_with_alias(args.target, args.index_suffix)

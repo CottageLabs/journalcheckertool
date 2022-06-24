@@ -1,5 +1,6 @@
 import os
 
+
 def rel2abs(file, *args):
     file = os.path.realpath(file)
     if os.path.isfile(file):
@@ -11,46 +12,49 @@ DATABASES = rel2abs(__file__, "..", "databases")
 RESOURCES = rel2abs(__file__, "..", "resources")
 
 DIR_DATE_FORMAT = "%Y-%m-%d_%H%M"
-ROR_DIR_DATE_FORMAT = "%Y-%m-%d"
-ROR_DOWNLOAD_PATH = "https://github.com/ror-community/ror-api/raw/master/rorapi/data/"
-# Using github api to get the list of files in dir
-#         To get the tree sha,
-#         git clone https://github.com/ror-community/ror-api.git
-#         cd ror-api/rorapi/
-#         git ls-tree HEAD | grep data
-#         > 040000 tree 8ec3e0e5bce8a33c644f1544b877d756eca1a2f6    data
-ROR_TREE_SHA = "8ec3e0e5bce8a33c644f1544b877d756eca1a2f6"
 
-ROR_DATA_FILE = os.path.join(RESOURCES, "ror", "v1.0-2022-03-17-ror-data.json.zip")
+# # === DEPRECATED: ROR switched to Zenodo to serve these data dumps, we can no longer use this GitHub repo
+# ROR_DIR_DATE_FORMAT = "%Y-%m-%d"
+# ROR_DOWNLOAD_PATH = "https://github.com/ror-community/ror-api/raw/master/rorapi/data/"
+# # Using github api to get the list of files in dir
+# #         To get the tree sha,
+# #         git clone https://github.com/ror-community/ror-api.git
+# #         cd ror-api/rorapi/
+# #         git ls-tree HEAD | grep data
+# #         > 040000 tree 8ec3e0e5bce8a33c644f1544b877d756eca1a2f6    data
+# ROR_TREE_SHA = "8ec3e0e5bce8a33c644f1544b877d756eca1a2f6"
+
+# Found at https://zenodo.org/record/6657125 - manually download and add to this repo when updated
+ROR_DATA_FILE = os.path.join(RESOURCES, "ror", "v1.1-2022-06-16-ror-data.zip")
 
 MAX_DATASOURCE_AGE = {
-    "crossref" : 60 * 60 * 24 * 7,
-    "doaj" : 60 * 60 * 24 * 7,
+    "crossref": 60 * 60 * 24 * 7,
+    "doaj": 60 * 60 * 24 * 7,
     "doaj_inprogress": 60 * 60 * 24 * 7,
-    "tj" : 60 * 60 * 24 * 7,
-    "ta" : 60 * 60 * 24 * 7,
+    "tj": 60 * 60 * 24 * 7,
+    "ta": 60 * 60 * 24 * 7,
     "ror": 60 * 60 * 24 * 7,
     "sa_negative": 60 * 60 * 24 * 7,
     "sa_positive": 60 * 60 * 24 * 7
 }
 
 DATASOURCE_PATH = {
-    "crossref" : os.path.join(DATABASES, "crossref"),
-    "doaj" : os.path.join(DATABASES, "doaj"),
+    "crossref": os.path.join(DATABASES, "crossref"),
+    "doaj": os.path.join(DATABASES, "doaj"),
     "doaj_inprogress": os.path.join(DATABASES, "doaj_inprogress"),
-    "tj" : os.path.join(DATABASES, "tj"),
-    "ta" : os.path.join(DATABASES, "ta"),
+    "tj": os.path.join(DATABASES, "tj"),
+    "ta": os.path.join(DATABASES, "ta"),
     "ror": os.path.join(DATABASES, "ror"),
     "sa_negative": os.path.join(DATABASES, "sa_negative"),
     "sa_positive": os.path.join(DATABASES, "sa_positive")
 }
 
 DATASOURCE_HISTORY = {
-    "crossref" : 3,
-    "doaj" : 3,
+    "crossref": 3,
+    "doaj": 3,
     "doaj_inprogress": 3,
-    "tj" : 3,
-    "ta" : 3,
+    "tj": 3,
+    "ta": 3,
     "ror": 3,
     "sa_negative": 3,
     "sa_positive": 3
@@ -105,7 +109,7 @@ JCT_BASE_URL = 'http://localhost:3002/api/service/jct/' # end in slash
 JCT_IMPORT_URL = JCT_BASE_URL + 'import?refresh=true'
 JCT_TA_IMPORT_URL = JCT_BASE_URL + 'ta/import'
 JCT_TEST_URL = JCT_BASE_URL + 'test'
-JCT_TEST_TIMEOUT = 120 #2 minutes
+JCT_TEST_TIMEOUT = 120  # 2 minutes
 
 MAILGUN_KEY = ""
 MAILGUN_DOMAIN = ""

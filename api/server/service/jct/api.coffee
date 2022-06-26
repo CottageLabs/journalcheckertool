@@ -120,9 +120,6 @@ API.add 'service/jct/tj/import',
     Meteor.setTimeout (() => API.service.jct.tj undefined, true), 1
     return true
 
-API.add 'service/jct/funder', get: () -> return API.service.jct.funders undefined, this.queryParams.refresh
-API.add 'service/jct/funder/:iid', get: () -> return API.service.jct.funders this.urlParams.iid
-
 API.add 'service/jct/feedback',
   get: () -> return API.service.jct.feedback this.queryParams
   post: () -> return API.service.jct.feedback this.bodyParams
@@ -173,9 +170,14 @@ API.add 'service/jct/compliance', get: () -> return jct_compliance.search this.q
 
 API.add 'service/jct/test', get: () -> return API.service.jct.test this.queryParams
 
+API.add 'service/jct/funder', get: () ->
+  return API.service.jct.funder_config undefined, this.queryParams.refresh
+API.add 'service/jct/funder/:iid', get: () ->
+  return API.service.jct.funder_config this.urlParams.iid
 API.add 'service/jct/funder_config', get: () ->
   return API.service.jct.funder_config undefined, this.queryParams.refresh
-API.add 'service/jct/funder_config/:iid', get: () -> return API.service.jct.funder_config this.urlParams.iid
+API.add 'service/jct/funder_config/:iid', get: () ->
+  return API.service.jct.funder_config this.urlParams.iid
 API.add 'service/jct/funder_config/import', get: () ->
   Meteor.setTimeout (() => API.service.jct.funder_config undefined, true), 1
   return true
@@ -215,15 +217,67 @@ API.service ?= {}
 API.service.jct = {}
 API.service.jct.suggest = {}
 API.service.jct.suggest.funder = (str, from, size) ->
-  res = []
-  for f in API.service.jct.funders()
-    matches = true
-    if str isnt f.id
-      for s in (if str then str.toLowerCase().split(' ') else [])
-        if s not in ['of','the','and'] and f.funder.toLowerCase().indexOf(s) is -1
-          matches = false
-    res.push({title: f.funder, id: f.id}) if matches
-  return total: res.length, data: res
+  _gather_rec = (data) ->
+    rec = {
+      'id': data.id,
+      'funder': data.name,
+      'retentionAt': data.routes?.self_archiving?.rights_retention ? '',
+    }
+    return rec
+
+  if !str
+    return total: 0, data: []
+  if !size
+    size = 10
+  str = str.toLowerCase().trim()
+
+  q = {
+    "query": {
+      "function_score" : {
+        "query" : {
+          "bool" : {
+            "should" : [
+              {"prefix" : {"id.exact" : str}},
+              {"prefix" : {"name.exact" : str}},
+              {"prefix" : {"abbr.exact" : str}},
+              {"match" : {"name" : str}},
+              {"match" : {"abbr" : str}}
+            ]
+          }
+        },
+        "functions" : [
+          {
+            "filter" : {"term" : {"id.exact" : str}},
+            "weight" : 20
+          },
+          {
+            "filter" : {"term" : {"name.exact" : str}},
+            "weight" : 15
+          },
+          {
+            "filter" : {"term" : {"abbr.exact" : str}},
+            "weight" : 10
+          },
+          {
+            "filter" : {"prefix" : {"name.exact" : str}},
+            "weight" : 5
+          },
+          {
+            "filter" : {"prefix" : {"abbr.exact" : str}},
+            "weight" : 4
+          }
+        ]
+      }
+    }
+    "size" : size
+  }
+  res = jct_funder_config.search q
+  data = []
+  for r in res?.hits?.hits ? []
+    rec = _gather_rec(r._source)
+    data.push(rec)
+  return total: res?.hits?.total ? 0, data: data
+
 
 API.service.jct.suggest.institution = (str, from, size) ->
   _gather_rec = (data) ->
@@ -509,7 +563,12 @@ API.service.jct.calculate = (params={}, refresh) ->
       if sg = API.service.jct.suggest[p] v
         if sg.data and sg.data.length
           ad = sg.data[0]
-          res.request[p].push {id: ad.id, title: ad.title, issn: ad.issns, publisher: ad.publisher}
+          if p is 'journal'
+            res.request[p].push {id: ad.id, title: ad.title, issn: ad.issns, publisher: ad.publisher}
+          else if p is 'funder'
+            res.request[p].push {id: ad.id, title: ad.funder}
+          else
+            res.request[p].push {id: ad.id, title: ad.title}
           issnsets[v] ?= ad.issns if p is 'journal' and _.isArray(ad.issns) and ad.issns.length
       res.request[p].push({id: v}) if not sg?.data
 
@@ -1231,9 +1290,13 @@ API.service.jct.sa = (journal, institution, funder, oa_permissions) ->
     if r.compliant isnt 'yes'
       # only check retention if the funder allows it - and only if there IS a funder
       # funder allows if their rights retention date is in the past
-      if journal and funder? and fndr = API.service.jct.funders funder
+      fndr = false
+      if funder?
+        fndrs = API.service.jct.suggest.funder funder
+        fndr = fndrs.data[0] if fndrs and fndrs.data and fndrs.data[0]
+      if journal and funder? and fndr
         r.funder = funder
-        if fndr.retentionAt? and fndr.retentionAt < Date.now()
+        if fndr.retentionAt? and Date.parse(fndr.retentionAt) < Date.now()
           r.compliant = 'yes'
           r.log.push code: 'SA.FunderRRActive'
           # 22022022, as per https://github.com/antleaf/jct-project/issues/503
@@ -1301,51 +1364,6 @@ API.service.jct.fully_oa = (issn) ->
         res.log.push code: 'FullOA.NotInProgressDOAJ' # there is no application, so still may or may not be compliant
 
   return res
-
-
-# https://www.coalition-s.org/plan-s-funders-implementation/
-_funders = []
-_last_funders = Date.now()
-API.service.jct.funders = (id, refresh) ->
-  if refresh or _funders.length is 0 or _last_funders > (Date.now() - 604800000) # if older than a week
-    _last_funders = Date.now()
-    _funders = []
-    for r in API.service.jct.table2json 'https://www.coalition-s.org/plan-s-funders-implementation/'
-      rec = 
-        funder: r['cOAlition S organisation (funder)']
-        launch: r['Launch date for implementing  Plan S-aligned OA policy']
-        application: r['Application of Plan S principles ']
-        retention: r['Rights Retention Strategy']
-      try rec.funder = rec.funder.replace('&amp;','&')
-      for k of rec
-        if rec[k]?
-          rec[k] = rec[k].trim()
-          if rec[k].indexOf('<a') isnt -1
-            rec.url ?= []
-            rec.url.push rec[k].split('href')[1].split('=')[1].split('"')[1]
-            rec[k] = (rec[k].split('<')[0] + rec[k].split('>')[1].split('<')[0] + rec[k].split('>').pop()).trim()
-        else
-          delete rec[k]
-      if rec.retention
-        if rec.retention.indexOf('Note:') isnt -1
-          rec.notes ?= []
-          rec.notes.push rec.retention.split('Note:')[1].replace(')','').trim()
-          rec.retention = rec.retention.split('Note:')[0].replace('(','').trim()
-        rec.retentionAt = moment('01012021','DDMMYYYY').valueOf() if rec.retention.toLowerCase().indexOf('adopted') isnt -1
-      try rec.startAt = moment(rec.launch, 'Do MMMM YYYY').valueOf()
-      delete rec.startAt if JSON.stringify(rec.startAt) is 'null'
-      if not rec.startAt? and rec.launch?
-        rec.notes ?= []
-        rec.notes.push rec.launch
-      try rec.id = rec.funder.toLowerCase().replace(/[^a-z0-9]/g,'')
-      _funders.push(rec) if rec.id?
-    
-  if id?
-    for e in _funders
-      if e.id is id
-        return e
-    return false
-  return _funders
 
 
 API.service.jct.journals = {}
@@ -1524,20 +1542,6 @@ API.service.jct.import = (refresh) ->
     res.retention = API.service.jct.retention undefined, true
     console.log 'JCT import retention data complete'
 
-    console.log 'Starting funder data import'
-    res.funders = API.service.jct.funders undefined, true
-    res.funders = res.funders.length if _.isArray res.funders
-    console.log 'JCT import funders complete'
-
-    # Institution data does not change regularly
-    # console.log 'Starting institution (ror) import'
-    # API.service.jct.institution.import()
-    # console.log 'JCT import institution (ror) complete'
-
-    console.log 'Starting TAs data import'
-    res.ta = API.service.jct.ta.import false # this is the slowest, takes about twenty minutes
-    console.log 'JCT import TAs complete'
-
     console.log 'Starting Funder db config import'
     API.service.jct.funder_config.import()
     console.log 'JCT import Funder db config complete'
@@ -1545,6 +1549,10 @@ API.service.jct.import = (refresh) ->
     console.log 'Starting Funder db language import'
     API.service.jct.funder_language.import()
     console.log 'JCT import Funder db language complete'
+
+    console.log 'Starting TAs data import'
+    res.ta = API.service.jct.ta.import false # this is the slowest, takes about twenty minutes
+    console.log 'JCT import TAs complete'
 
     # check the mappings on jct_journal, jct_agreement, any others that get used and changed during import
     # include a warning in the email if they seem far out of sync

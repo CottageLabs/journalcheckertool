@@ -52,7 +52,6 @@ funders will be a list given to us by JCT detailing their particular requirement
 # (for convenience the settings have initially been set up to only run import on dev as well, to make the most 
 # of the dev machine and minimise any potential memory or CPU intense work 
 index_name = API.settings.es.index ? 'jct'
-jct_institution = new API.collection {index:index_name, type:"institution"}
 jct_journal = new API.collection {index:index_name, type:"journal"}
 jct_agreement = new API.collection {index:index_name, type:"agreement"}
 jct_compliance = new API.collection {index:index_name, type:"compliance"}
@@ -161,11 +160,7 @@ API.add 'service/jct/unknown/:start/:end',
       return res
 
 API.add 'service/jct/journal', get: () -> return jct_journal.search this.queryParams
-API.add 'service/jct/institution', get: () -> return jct_institution.search this.queryParams
 API.add 'service/jct/institution/:iid', get: () -> return API.service.jct.institution this.urlParams.iid
-API.add 'service/jct/institution/import', get: () ->
-  Meteor.setTimeout (() => API.service.jct.institution undefined, true), 1
-  return true
 API.add 'service/jct/compliance', get: () -> return jct_compliance.search this.queryParams
 # the results that have already been calculated. These used to get used to re-serve as a 
 # faster cached result, but uncertainties over agreement on how long to cache stuff made 
@@ -293,81 +288,6 @@ API.service.jct.suggest.institution = (str, from, size) ->
     data.push(rec)
   return total: res?.hits?.total ? 0, data: data
 
-#API.service.jct.suggest.institution_old = (str, from, size) ->
-#  _cleanup_data = (data) ->
-#    cleaned_data = []
-#    for val in data
-#      new_val = {
-#        'id': val.id,
-#        'title': val.title,
-#        'country': val.country?.country_name ? '',
-#        'ror': val.ror ? '',
-#        'ror_id': val.ror_id ? '',
-#      }
-#      cleaned_data.push(new_val)
-#    return cleaned_data
-#
-#  if typeof str is 'string' and str.length is 9 and rec = jct_institution.get str
-#    delete rec[x] for x in ['createdAt', 'created_date', '_id', 'description', 'values', 'wid']
-#    return total: 1, data: [rec]
-#  else
-#    q = {query: {filtered: {query: {}, filter: {bool: {should: []}}}}, size: size}
-#    q.from = from if from?
-#    if str
-#      str = _jct_clean(str).replace(/the /gi,'')
-#      qry = (if str.indexOf(' ') is -1 then 'id:' + str + '* OR ' else '') + '(title:' + str.replace(/ /g,' AND title:') + '*) OR (aliases:' + str.replace(/ /g,' AND aliases:') + '*) OR (labels.label:' + str.replace(/ /g,' AND labels.label:') + '*)'
-#      q.query.filtered.query.query_string = {query: qry}
-#    else
-#      q.query.filtered.query.match_all = {}
-#    res = jct_institution.search q
-#    unis = []
-#    starts = []
-#    extra = []
-#    for rec in res?.hits?.hits ? []
-#      delete rec._source[x] for x in ['createdAt', 'created_date', '_id', 'description', 'values', 'wid']
-#      if str
-#        if rec._source.title.toLowerCase().indexOf('universit') isnt -1
-#          unis.push rec._source
-#        else if rec._source.title.replace('the ','').replace('university ','').replace('of ','').startsWith(str.replace('the ','').replace('university ','').replace('of ',''))
-#          starts.push rec._source
-#        else # add to extra
-#          extra.push rec._source
-#      else
-#        extra.push rec._source
-#    data = _.union unis.sort((a, b) -> return a.title.length - b.title.length), starts.sort((a, b) -> return a.title.length - b.title.length), extra.sort((a, b) -> return a.title.length - b.title.length)
-#    ret = total: res?.hits?.total ? 0, data: _cleanup_data(data)
-#
-#    if ret.data.length < 10
-#      seen = []
-#      seen.push(sr.id) for sr in ret.data
-#      q = {query: {filtered: {query: {}, filter: {bool: {should: []}}}}, size: size}
-#      q.from = from if from?
-#      if str
-#        str = _jct_clean(str).replace(/the /gi,'')
-#        q.query.filtered.query.query_string = {query: (if str.indexOf(' ') is -1 then 'ror.exact:"' + str + '" OR ' else '') + '(institution:' + str.replace(/ /g,' AND institution:') + '*)'}
-#      else
-#        q.query.filtered.query.query_string = {query: 'ror:*'}
-#      res = jct_agreement.search q
-#      if res?.hits?.total
-#        ret.total += res.hits.total
-#        unis = []
-#        starts = []
-#        extra = []
-#        for rec in res?.hits?.hits ? []
-#          if rec._source.ror not in seen
-#            rc = {title: rec._source.institution, id: rec._source.ror, ta: true}
-#            if str
-#              if rc.title.toLowerCase().indexOf('universit') isnt -1
-#                unis.push rc
-#              else if rc.title.replace('the ','').replace('university ','').replace('of ','').startsWith(str.replace('the ','').replace('university ','').replace('of ',''))
-#                starts.push rc
-#              else # add to extra
-#                extra.push rc
-#            else
-#              extra.push rc
-#        ret.data = _.union ret.data, _.union unis.sort((a, b) -> return a.title.length - b.title.length), starts.sort((a, b) -> return a.title.length - b.title.length), extra.sort((a, b) -> return a.title.length - b.title.length)
-#    return ret
-
 
 API.service.jct.suggest.journal = (str, from, size) ->
   if !str
@@ -428,37 +348,6 @@ API.service.jct.suggest.journal = (str, from, size) ->
     rec.id = rec.issns[0]
     data.push(rec)
   return total: res?.hits?.total ? 0, data: data
-
-# This is the previous implementation of the journal autosuggest.  This has since been replaced by the
-# above function which uses ES ranking/boosting to achieve better results
-#API.service.jct.suggest.journal_old = (str, from, size) ->
-#  q = {query: {filtered: {query: {query_string: {query: 'issn:* AND NOT discontinued:true AND NOT dois:0'}}, filter: {bool: {should: []}}}}, size: size, _source: {includes: ['title','issn','publisher','src']}}
-#  q.from = from if from?
-#  if str and str.replace(/\-/g,'').length
-#    if str.indexOf(' ') is -1
-#      if str.indexOf('-') isnt -1 and str.length is 9
-#        q.query.filtered.query.query_string.query = 'issn.exact:"' + str + '" AND NOT discontinued:true AND NOT dois:0'
-#      else
-#        q.query.filtered.query.query_string.query = 'NOT discontinued:true AND NOT dois:0 AND ('
-#        if str.indexOf('-') isnt -1
-#          q.query.filtered.query.query_string.query += '(issn:"' + str.replace('-','" AND issn:') + '*)'
-#        else
-#          q.query.filtered.query.query_string.query += 'issn:' + str + '*'
-#        q.query.filtered.query.query_string.query += ' OR title:"' + str + '" OR title:' + str + '* OR title:' + str + '~)'
-#    else
-#      str = _jct_clean str
-#      q.query.filtered.query.query_string.query = 'issn:* AND NOT discontinued:true AND NOT dois:0 AND (title:"' + str + '" OR '
-#      q.query.filtered.query.query_string.query += (if str.indexOf(' ') is -1 then 'title:' + str + '*' else '(title:' + str.replace(/ /g,'~ AND title:') + '*)') + ')'
-#  res = jct_journal.search q
-#  starts = []
-#  extra = []
-#  for rec in res?.hits?.hits ? []
-#    if not str or JSON.stringify(rec._source.issn).indexOf(str) isnt -1 or rec._source.title.startsWith(str)
-#      starts.push rec._source
-#    else
-#      extra.push rec._source
-#    rec._source.id = rec._source.issn[0]
-#  return total: res?.hits?.total ? 0, data: _.union starts.sort((a, b) -> return a.title.length - b.title.length), extra.sort((a, b) -> return a.title.length - b.title.length)
 
 
 API.service.jct.calculate = (params={}, refresh) ->
@@ -1166,27 +1055,6 @@ API.service.jct.hybrid = (issn, institution, funder, oa_permissions) ->
     else
       res.log.push code: 'Hybrid.HybridInOAW'
       res.compliant = 'yes'
-      # ANUSHA: we are no longer doing this, being hybrid is sufficient to be compliant
-      # get list of licences and matching license condition
-#      lc = false
-#      licences = []
-#      possibleLicences = pb.licences ? []
-#      if pb.licence
-#        possibleLicences.push({type: pb.licence})
-#      for l in possibleLicences
-#        licences.push l.type
-#        # TODO: Need to match with funder config
-#        if lc is false and l.type.toLowerCase().replace(/\-/g,'').replace(/ /g,'') in ['ccby','ccbysa','cc0','ccbynd']
-#          lc = l.type
-#      # check if license is compliant
-#      if lc
-#        res.log.push code: 'Hybrid.Compliant', parameters: licence: licences
-#        res.compliant = 'yes'
-#      else if not licences or licences.length is 0
-#        res.log.push code: 'Hybrid.Unknown', parameters: missing: ['licences']
-#        res.compliant = 'unknown'
-#      else
-#        res.log.push code: 'Hybrid.NonCompliant', parameters: licence: licences
   else
     res.log.push code: 'Hybrid.OAWTypeUnknown', parameters: missing: ['journal type']
     res.compliant = 'unknown'
@@ -1528,11 +1396,6 @@ API.service.jct.import = (refresh) ->
     res.funders = API.service.jct.funders undefined, true
     res.funders = res.funders.length if _.isArray res.funders
     console.log 'JCT import funders complete'
-
-    # Institution data does not change regularly
-    # console.log 'Starting institution (ror) import'
-    # API.service.jct.institution.import()
-    # console.log 'JCT import institution (ror) complete'
 
     console.log 'Starting TAs data import'
     res.ta = API.service.jct.ta.import false # this is the slowest, takes about twenty minutes
@@ -2208,71 +2071,14 @@ _cards_for_display = (funder_config, results) ->
 
   return [sorted_cards, is_compliant]
 
-# return the institution for an id. Import the data if refresh is true
-API.service.jct.institution = (id, refresh) ->
-  if refresh
-    console.log('Got refresh - importing institution (ror)')
-    Meteor.setTimeout (() => API.service.jct.institution.import()), 1
-    return true
+# return the institution for an id
+# No longer importing institution data. We get that from institution auto complete
+API.service.jct.institution = (id) ->
   if id
-    rec = jct_institution.find 'id.exact:"' + id.toLowerCase().trim() + '"'
+    rec = jct_institution_autocomplete.find 'id.exact:"' + id.toLowerCase().trim() + '"'
     if rec
       return rec
     return {}
   else
-    return total: jct_institution.count()
-
-# import institution data from ror
-API.service.jct.institution.import = () ->
-  _set_id = (rec) ->
-    ror = rec.id
-    id = ror.replace("https://ror.org/", '')
-    rec.id = id
-    rec.ror = id
-    rec.ror_id = ror
-    return rec
-
-  _set_title = (rec) ->
-    rec.title = rec.name
-    return rec
-
-  # Download zip file from github containing data dump of RoR
-  fldr = '/tmp/jct_ror' + (if API.settings.dev then '_dev' else '') + '/'
-  if fs.existsSync fldr
-    fs.rmdirSync(fldr, { recursive: true });
-  fs.mkdirSync fldr
-  filepath = fldr + 'ror.zip'
-  ror_data_dump_url = 'https://github.com/ror-community/ror-api/raw/master/rorapi/data/ror-2021-09-23/ror.zip'
-  fs.writeFileSync filepath, HTTP.call('GET', ror_data_dump_url, {npmRequestOptions:{encoding:null}}).content
-  console.log 'Importing from ROR data dump ' + fldr + 'ror.zip'
-  zip = AdmZip(filepath)
-  zip.extractEntryTo("ror.json", fldr)
-
-  # Remove old data and index new
-  removed = false
-  batch = []
-  counter = 1
-  imports = 0
-  for rec in JSON.parse fs.readFileSync fldr + 'ror.json'
-    if batch.length >= 20000
-      if not removed
-        console.log 'Removing old institution records'
-        jct_institution.remove '*'
-        future = new Future()
-        Meteor.setTimeout (() -> future.return()), 10000
-        future.wait()
-        removed = true
-      console.log 'Importing RoR batch ' + counter
-      jct_institution.insert batch
-      counter += 1
-      batch = []
-    rec = _set_id(rec)
-    rec = _set_title(rec)
-    batch.push rec
-    imports += 1
-  if batch.length
-    console.log 'Importing RoR batch ' + counter
-    jct_institution.insert batch
-    batch = []
-  console.log('Completed importing ror data ', imports)
+    return total: jct_institution_autocomplete.count()
 

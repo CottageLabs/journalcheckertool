@@ -50,9 +50,6 @@ cards:
         - tj
       not:
         - ta
-        - self_archiving
-#      must:
-#        - self_archiving
 
   - id: card4
     compliant: true
@@ -63,9 +60,6 @@ cards:
         - tj
       must:
         - ta
-#        - self_archiving
-      not:
-        - self_archiving
 
   - id: card5_hybrid
     compliant: true
@@ -89,9 +83,13 @@ cards:
         - tj
         - ta
 
-#  - id: card6
-#    compliant: false
-#    preferred: false
-#    match_routes:
-#      not:
-#        - self_archiving
+  - id: card6
+    compliant: false
+    preferred: false
+    match_routes:
+      not:
+        - self_archiving
+        - ta
+        - fully_oa
+        - hybrid
+        - tj

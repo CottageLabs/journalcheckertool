@@ -7,6 +7,7 @@ setup(
     install_requires=[
         "requests==2.22.0",
         "Unidecode==1.1.1",
+        "Deprecated==1.2.13",
         "wheel"
     ],
     url='http://journalcheckertool.org/',

@@ -5,4 +5,4 @@ apc:
   tj: false # 4, 13
 routes:
   self_archiving:
-    rights_retention: 2021-01-01
+    rights_retention: 2100-01-01

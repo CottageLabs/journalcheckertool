@@ -60,6 +60,14 @@ DATASOURCE_HISTORY = {
     "sa_positive": 3
 }
 
+INDEX_PATH = {
+    "jac": os.path.join(DATABASES, "jct", "jac")
+}
+
+INDEX_HISTORY = {
+    "jac": 5
+}
+
 CROSSREF_OLDEST_DOI = 2019
 
 TJ_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2SPOjVU4CKhP7FHOgaf0aRsjSOt-ApwLOy44swojTDFsWlZAIZViC0gdbmxJaEWxdJSnUmNoAnoo9/pub?gid=0&single=true&output=csv"

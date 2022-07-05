@@ -21,6 +21,7 @@ class TJ(datasource.Datasource):
         }
 
     def gather(self):
+        print("TJ: gathering TJ data from {x}".format(x=settings.TJ_SHEET))
         dir = datetime.strftime(datetime.utcnow(), settings.DIR_DATE_FORMAT)
         os.makedirs(os.path.join(self.dir, dir))
         out = os.path.join(self.dir, dir, "origin.csv")
@@ -28,6 +29,7 @@ class TJ(datasource.Datasource):
         resp = requests.get(settings.TJ_SHEET)
         with open(out, "w") as f:
             f.write(resp.text)
+        print("TJ: data written to {x}".format(x=out))
 
     def analyse(self):
         dir = self.current_dir()

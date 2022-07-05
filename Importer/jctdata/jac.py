@@ -190,22 +190,41 @@ def _cluster_to_dict(rows, n):
     return d
 
 
-def _extract_preferred(title_source_pairs, preference_order):
+def _extract_preferred(source_pairs, preference_order):
     selected = None
     idx = -1
     for pref in preference_order:
-        for i, tup in enumerate(title_source_pairs):
-            source, title = tup
+        opts = []
+        for i, tup in enumerate(source_pairs):
+            title, source = tup
             if pref == source:
-                selected = title
-                idx = i
-                break
+                opts.append((i, title))
+
+        if len(opts) == 0:
+            continue
+
+        countopts = {}
+        for opt in opts:
+            if opt[1] not in countopts:
+                countopts[opt[1]] = {"count": 1, "idx": [opt[0]]}
+            else:
+                countopts[opt[1]]["count"] += 1
+                countopts[opt[1]]["idx"].append(opt[0])
+
+        selected_count = 0
+        for k, v in countopts.items():
+            if v["count"] > selected_count:
+                selected = k
+                selected_count = v["count"]
+                idx = v["idx"][0]
+
+        break
 
     if selected is None:
-        selected = title_source_pairs[0][0]
+        selected = source_pairs[0][0]
         idx = 0
 
-    del title_source_pairs[idx]
+    del source_pairs[idx]
     return selected
 
 

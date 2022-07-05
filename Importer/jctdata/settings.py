@@ -74,10 +74,7 @@ SA_NEGATIVE_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0EEMZTikc
 
 SA_POSITIVE_SHEET ="https://docs.google.com/spreadsheets/d/e/2PACX-1vTm6sDI16Kin3baNWaAiMUfGdMEUEGXy0LRvSDnvAQTWDN_exlYGyv4gnstGKdv3rXshjSa7AUWtAc5/pub?gid=0&single=true&output=csv"
 
-JAC_PREF_ORDER = [
-    "doaj",
-    "crossref"
-]
+JAC_PREF_ORDER = ["crossref", "doaj", "tj", "sa_negative", "sa_positive", "ta"]
 
 JAC_HISTORY = 5
 

@@ -5,7 +5,7 @@ from jctdata import settings
 from jctdata import resolver
 from jctdata.lib.title_variants import title_variants
 
-ISSN_RX = "\d{4}-\d{3}[\dxX]"
+ISSN_RX = "^\d{4}-\d{3}[\dxX]$"
 
 
 def jac_index_data():

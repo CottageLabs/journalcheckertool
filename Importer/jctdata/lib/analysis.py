@@ -2,7 +2,7 @@ import csv
 import itertools
 import re
 
-ISSN_RX = "\d{4}-\d{3}[\dxX]"
+ISSN_RX = "^\d{4}-\d{3}[\dxX]$"
 
 
 def pair_manager(source, outfile, first=0, second=1, skip_title_row=False):

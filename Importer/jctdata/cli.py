@@ -1,6 +1,7 @@
 import click
 
 from jctdata import resolver
+from jctdata.indexes import factory
 
 
 @click.command()
@@ -17,7 +18,6 @@ def run(mode, target, stage=None, full_pipeline=True):
     processor(target, stage, full_pipeline)
 
 
-
 def resolve(target, stage=None, full_pipeline=True):
     datasource = resolver.SOURCES.get(target)
     if not stage:
@@ -32,9 +32,16 @@ def resolve(target, stage=None, full_pipeline=True):
         getattr(datasource, stage)()
 
 
+def index(target, stage=None, full_pipeline=True):
+    indexer = factory.get_indexer(target)
 
-def index():
-    pass
+    if full_pipeline:
+        for s in INDEX_PIPELINE:
+            getattr(indexer, s)()
+            if s == stage:
+                break
+    else:
+        getattr(indexer, stage)()
 
 
 def load():
@@ -48,6 +55,7 @@ MODE_MAP = {
 }
 
 RESOLVE_PIPELINE = ["gather", "analyse"]
+INDEX_PIPELINE = ["gather", "analyse", "assemble"]
 
 if __name__ == "__main__":
     run()

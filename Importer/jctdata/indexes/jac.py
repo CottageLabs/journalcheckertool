@@ -28,7 +28,7 @@ class JAC(object):
         return dirs[0]
 
     def gather(self):
-        print('JAC: Gathering data for journal autocomplete')
+        print('JAC: Gathering data for journal autocomplete from sources: {x}'.format(x=",".join(self.SOURCES)))
         paths = resolver.gather_data(self.SOURCES, True)
 
         issns, titles, pubs = self._get_paths(paths)
@@ -38,6 +38,7 @@ class JAC(object):
         print("JAC: PUB sources: " + ", ".join([x[0] for x in pubs]))
 
     def analyse(self):
+        print("JAC: Analysing data for journal autocomplete")
         dir = datetime.strftime(datetime.utcnow(), settings.DIR_DATE_FORMAT)
         jacdir = os.path.join(self.dir, dir)
         os.makedirs(jacdir, exist_ok=True)
@@ -63,9 +64,11 @@ class JAC(object):
             writer = csv.writer(f)
             writer.writerows(pubrows)
 
+        print("JAC: analysed data written to directory {x}".format(x=jacdir))
+
     def assemble(self):
         preference_order = settings.JAC_PREF_ORDER
-        jacdir = self.current_dir()
+        jacdir = os.path.join(self.dir, self.current_dir())
         outfile = os.path.join(jacdir, "jac.json")
 
         issn_clusters_file = os.path.join(jacdir, "issn_clusters.csv")

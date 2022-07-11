@@ -38,8 +38,6 @@ card_order:
   - tile7
   - tile5
   - tile3
-#  - funder_non_compliant
-#  - institution_non_compliant
   - tile4
 cards:
   # Card to display if the Journal is Fully Open Access
@@ -78,10 +76,8 @@ cards:
         - fully_oa
         - ta
         - tj
-#        - hybrid
         - self_archiving
     preferred: false
-#    modal: sa_rr
 
   # Transformative Journals tile
   - id: tile6      # derived from tj
@@ -123,28 +119,5 @@ cards:
         - hybrid
         - self_archiving
     preferred: false
-
-#  - id: funder_non_compliant
-#    compliant: false
-#    match_routes:
-#      not:
-#        - fully_oa
-#        - ta
-#        - tj
-#        - hybrid
-#        - self_archiving
-#    preferred: false
-#
-#  - id: institution_non_compliant
-#    compliant: false
-#    match_routes:
-#      not:
-#        - fully_oa
-#        - ta
-#        - tj
-#        - hybrid
-#        - self_archiving
-#    preferred: false
-
 
 

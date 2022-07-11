@@ -1,11 +1,10 @@
-import json, csv
-from copy import deepcopy
-import requests, os
+import json, csv, requests, os, shutil
 from jctdata import datasource
 from jctdata import settings
 from datetime import datetime, timedelta
 from zipfile import ZipFile
-import shutil
+from deprecated import deprecated
+
 
 class ROR(datasource.Datasource):
     ID = "ror"
@@ -69,6 +68,7 @@ class ROR(datasource.Datasource):
         self._ror_map(infile, ror_file)
         self._title_map(infile, title_file)
 
+    @deprecated(reason='ROR moved these files to Zenodo; we can only get old data from the GitHub repo.')
     def _get_latest_file(self):
         """
         To get the tree sha,
@@ -102,7 +102,8 @@ class ROR(datasource.Datasource):
             return latest_dt, url
         return None, None
 
-    def _extract_ror_data(self, zip_file, out):
+    @staticmethod
+    def _extract_ror_data(zip_file, out):
         print("ROR: extracting data dump {x}".format(x=zip_file))
 
         with ZipFile(zip_file, mode="r") as archive, open(out, "w") as o:
@@ -128,7 +129,8 @@ class ROR(datasource.Datasource):
                 }
                 o.write(json.dumps(rec) + "\n")
 
-    def _ror_map(self, infile, outfile):
+    @staticmethod
+    def _ror_map(infile, outfile):
         rors = []
         # listing all rors
         with open(infile, "r") as f:
@@ -147,7 +149,8 @@ class ROR(datasource.Datasource):
             for ror in rors:
                 writer.writerow([ror])
 
-    def _title_map(self, infile, outfile):
+    @staticmethod
+    def _title_map(infile, outfile):
         with open(outfile, "w") as o:
 
             writer = csv.writer(o)

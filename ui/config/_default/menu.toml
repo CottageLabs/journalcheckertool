@@ -24,10 +24,10 @@
     weight = 4
 [[main]]
     name = "FAQ"
-    pre = " • "
     url = "/faq"
     weight = 5
 [[main]]
+    pre = " • "
     name = "Privacy Notice"
     url = "/notices#privacy_notice"
     weight = 6

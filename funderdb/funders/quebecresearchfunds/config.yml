@@ -1,0 +1,9 @@
+id: quebecresearchfunds
+name: Fonds de recherche du Québec (Quebec Research Funds)
+abbr: FRQ
+plan_s: 2022-07-01
+apc:
+  tj: true # implementation roadmap
+routes:
+  self_archiving:
+    rights_retention: 2100-01-01  # implementation roadmap

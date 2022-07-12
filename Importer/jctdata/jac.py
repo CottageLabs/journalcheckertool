@@ -137,7 +137,7 @@ def issn_clusters(coincident_issn_files, clusters_file):
     for row in issn_clusters:
         if row[0] not in d:
             d[row[0]] = []
-        d[row[0]] += [row[x + 1] for x in range(len(row) - 1)]
+        d[row[0]] += row[1:]
 
     # go through every key, and for each value in the array associated with it, look
     # for the key of that value.  This will lead to another set of values.  For each

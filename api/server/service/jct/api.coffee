@@ -608,7 +608,10 @@ API.service.jct.ta = (issn, ror) ->
         rs = _.clone res
         rs.compliant = 'yes'
         rs.qualifications = if journals[j].corresponding_authors or institutions[j].corresponding_authors then [{corresponding_authors: {}}] else []
-        rs.log.push code: 'TA.Exists'
+        ta_info_log = {ta_id: [j]}
+        if journals[j]["End Date"]
+          ta_info_log["end_date"] = [journals[j]["End Date"]]
+        rs.log.push {code: 'TA.Exists', parameters: ta_info_log}
         tas.push rs
   if tas.length is 0
     res.compliant = 'no'

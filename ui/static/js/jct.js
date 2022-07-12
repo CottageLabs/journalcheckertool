@@ -185,7 +185,28 @@ jct.buildCard = function(cardConfig, uiText, results, choices) {
         body = body.replace("{institution}", uiText.site.card_institution_missing);
     }
 
-    let cardClass = "card"
+    // FIXME: we should consider a better way to do this, but in the mean time this serves our
+    // basic requirements
+    if (compliantRoutes.includes("ta")) {
+        for (let i = 0; i < results.length; i++) {
+            let r = results[i];
+            if (r.route === "ta") {
+                for (let j = 0; j < r.log.length; j++) {
+                    let log = r.log[j];
+                    if (log.code === "TA.Exists") {
+                        if (log.parameters && log.parameters.end_date && log.parameters.end_date.length > 0) {
+                            body = body.replace("{end_date}", log.parameters.end_date[0]);
+                        } else {
+                            body = body.replace("{end_date}", "an unknown date");
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    let cardClass = "card";
     let why = "";
     // TODO: this enables a "why am I seeing this?" feature on the card which links to the
     // results explanation on a per-card basis.  We have agreed not to enable this for the moment

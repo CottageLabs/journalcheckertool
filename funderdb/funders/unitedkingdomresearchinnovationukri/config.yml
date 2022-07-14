@@ -16,6 +16,8 @@ aka:
     abbr: MRC (UKRI)
   - name: Natural Environment Research Council
     abbr: NERC (UKRI)
+  - name: National Centre for the Replacement Refinement & Reduction of Animals in Research
+    abbr: NC3Rs (UKRI)
   - name: Research England
     abbr: UKRI
   - name: Science and Technology Facilities Council
@@ -29,27 +31,56 @@ routes:
   hybrid:
     calculate: true
 card_order:
-  - ta
-  - ta_aq
-  - fully_oa_sa
-  - tj
-  - hybrid
-  - self_archiving
-  - journal_non_compliant
-  - funder_non_compliant
-  - institution_non_compliant
-  - sa_rr
+  - tile2
+  - tile2_aq
+  - tile1
+  - tile6
+  - tile7
+  - tile5
+  - tile3
+  - tile4
 cards:
   # Card to display if the Journal is Fully Open Access
-  - id: fully_oa_sa   # derived from fully_oa
+  - id: tile1   # derived from fully_oa
     compliant: true
     match_routes:
       must:
+        - fully_oa  # The rules for tile1 also say "and allows SA" but all Fully OA journals do, so no need for that route check
+    preferred: false
+
+  # Transformative Agreements tiles (with and without author qualifications)
+  - id: tile2    # derived from ta
+    compliant: true
+    match_routes:
+      must:
+        - ta
+    match_qualifications:
+      not:
+        - ta.corresponding_authors
+    preferred: true
+
+  - id: tile2_aq     # derived from ta_aq
+    compliant: true
+    match_routes:
+      must:
+        - ta
+    match_qualifications:
+      must:
+        - ta.corresponding_authors
+    preferred: true
+
+  - id: tile4   # Route 2 (UKRI's version of RR)
+    compliant: true
+    match_routes:
+      not:
         - fully_oa
+        - ta
+        - tj
+        - self_archiving
     preferred: false
 
   # Transformative Journals tile
-  - id: tj      # derived from tj
+  - id: tile6      # derived from tj
     compliant: true
     match_routes:
       must:
@@ -57,21 +88,17 @@ cards:
     preferred: false
     modal: tj
 
-    # Standard policy-based Self-Archiving route, when RRS is not required.  Only this OR `sa_rr` will
-    # be displayed, never both.
-  - id: self_archiving
+  # Self-Archiving route, only displayed alongside TJ tile
+  - id: tile5
     compliant: true
     match_routes:
       must:
         - self_archiving
       not:
-        - tj
         - fully_oa
-        - ta
-        - hybrid
     preferred: false
 
-  - id: hybrid
+  - id: tile7
     compliant: true
     match_routes:
       must:
@@ -80,30 +107,9 @@ cards:
         - tj
         - ta
     preferred: false
-
-  # Transformative Agreements tiles (with and without author qualifications)
-  - id: ta    # derived from ta
-    compliant: true
-    match_routes:
-      must:
-        - ta
-    match_qualifications:
-      not:
-        - ta.corresponding_authors
-    preferred: true
-
-  - id: ta_aq     # derived from ta_aq
-    compliant: true
-    match_routes:
-      must:
-        - ta
-    match_qualifications:
-      must:
-        - ta.corresponding_authors
-    preferred: true
 
   # Set of cards to display if there are no compliant results
-  - id: journal_non_compliant
+  - id: tile3
     compliant: false
     match_routes:
       not:
@@ -114,37 +120,4 @@ cards:
         - self_archiving
     preferred: false
 
-  - id: funder_non_compliant
-    compliant: false
-    match_routes:
-      not:
-        - fully_oa
-        - ta
-        - tj
-        - hybrid
-        - self_archiving
-    preferred: false
-
-  - id: institution_non_compliant
-    compliant: false
-    match_routes:
-      not:
-        - fully_oa
-        - ta
-        - tj
-        - hybrid
-        - self_archiving
-    preferred: false
-
-  - id: sa_rr   # this is a non-compliant card similar to sa_rr, but non-compliant
-    compliant: false
-    match_routes:
-      not:
-        - fully_oa
-        - ta
-        - tj
-        - hybrid
-        - self_archiving
-    preferred: false
-    modal: sa_rr
 

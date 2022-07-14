@@ -63,6 +63,9 @@ logs:
   ta:
     TA.NoTA: No Transformative Agreement containing the selected journal and institution was found within our database.
     TA.Exists: A Transformative Agreement containing the selected journal and institution was found within our database.
+    TA.Exists.Properties:
+      ta_id: "Our ID for the TA is (may also be the ESAC ID)"
+      end_date: "Expires:"
     TA.NotActive: Our database shows that the Transformative Agreement containing the selected journal and institution has expired.
     TA.Active: Our database shows that the Transformative Agreement containing the selected journal and institution is active.
     TA.Unknown: We do not have sufficient information to determine if a Transformative Agreement is available to provide a route to compliance.

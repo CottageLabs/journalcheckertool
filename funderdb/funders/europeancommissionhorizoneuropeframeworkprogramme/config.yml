@@ -19,9 +19,13 @@ card_order:
   - card1
   - card2
   - card3
+  - card3a
   - card4
+  - card4a
+  - card4a_ta
   - card5_hybrid
   - card5_closed
+  - card5_ta
   - card6
 cards:
   - id: card1
@@ -50,6 +54,19 @@ cards:
         - tj
       not:
         - ta
+        - self_archiving
+
+  - id: card3a
+    compliant: true
+    preferred: false
+    match_routes:
+      must:
+        - self_archiving
+      or:
+        - hybrid
+        - tj
+      not:
+        - ta
 
   - id: card4
     compliant: true
@@ -60,6 +77,19 @@ cards:
         - tj
       must:
         - ta
+      not:
+        - self_archiving
+
+  - id: card4a
+    compliant: true
+    preferred: false
+    match_routes:
+      or:
+        - hybrid
+        - tj
+      must:
+        - ta
+        - self_archiving
 
   - id: card5_hybrid
     compliant: true
@@ -93,3 +123,25 @@ cards:
         - fully_oa
         - hybrid
         - tj
+
+  - id: card4a_ta
+    compliant: true
+    preferred: false
+    match_routes:
+      not:
+        - hybrid
+        - tj
+        - fully_oa
+      must:
+        - ta
+
+  - id: card5_ta
+    compliant: true
+    preferred: false
+    match_routes:
+      not:
+        - hybrid
+        - tj
+        - fully_oa
+      must:
+        - ta

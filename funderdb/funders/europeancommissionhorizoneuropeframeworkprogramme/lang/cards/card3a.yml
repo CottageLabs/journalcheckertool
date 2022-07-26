@@ -4,10 +4,10 @@ body:
   default: "<p>Remember to select a <strong>CC BY</strong> licence (or equivalent).</p>
             <p>Remember to also ensure, at the time of publication, the <strong>immediate deposition</strong> and open 
             access of the Version of Record (preferred) or the Author Accepted Manuscript in a <strong>trusted 
-            repository</strong> under a CC BY (or equivalent) licence, as required by Horizon Europe.</p>
+            repository</strong> under a CC BY (or equivalent) licence, as required by Horizon Europe</p>
             <p>Publishing costs, including Article Processing Charges, in Hybrid journals are <strong>not 
             eligible</strong> costs under Horizon Europe and you must locate alternative funds.
-            <a href=\"#\" class=\"modal-trigger\" data-modal=\"he_popup3\">More information</a></p>"
+            <a href=\"#\" class=\"modal-trigger\" data-modal=\"he_popup3a\">More information</a></p>"
 explain:
   title: Hybrid Journal
   text: This way to comply is available to you because the journal is a Hybrid or Transformative Journal, with a suitable

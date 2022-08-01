@@ -57,7 +57,7 @@ logs:
     SA.Unknown: We are unable to determine if this journal provides a route to compliance via self-archiving due to missing information.
     SA.NonCompliant: Self-archiving is not a route to compliance when publishing in this journal.
     SA.Compliant: This journal has indicated to cOAlition S that self-archiving is permitted.
-    SA.RRException: This journal has stated that it will desk reject any manuscript which includes the Rights Retention language.
+    SA.RRException: This journal has stated that it will reject any manuscript where the author has applied a CC BY public copyright licence to any Author Accepted Manuscript version arising from their submission.
     SA.RRNoException: This journal is not known to reject the Rights Retention Strategy
     SA.NotAsserted: This journal is not in the cOAlition S-managed list of titles which have indicated to cOAlition S that they allow Self-Archiving, irrespective of their publicly stated policy
   ta:

@@ -1,10 +1,10 @@
 ---
-title: "Self Archiving Exceptions"
-date: 2021-02-13T23:43:22Z
-description: "Self Archiving Exceptions data-sources explained for the Journal Checker Tool: Plan S Compliance Validator."
+title: "Exception lists"
+date: 2021-02-13T23:42:49Z
+description: "Exception data-sources explained for the Journal Checker Tool: Plan S Compliance Validator."
 ---
 
-# Self Archiving Exceptions data
+# Exception lists
 
 <p xmlns:dct="http://purl.org/dc/terms/">
   <a rel="license"
@@ -23,8 +23,8 @@ The format of the CSV is straightforward:
 * ISSN (electronic) - The Electronic ISSN of the journal, if available
 * Publisher - The name of the publisher
 
-## Self-archiving Prohibited List
-This is a list of titles from publishers which have explicitly expressed an intention to "desk-reject" manuscripts containing the _Rights Retention Strategy (RRS)_ clause.
+## Journals which reject manuscript submissions that assert a prior CC BY licence
+This is a list of titles from publishers which have explicitly expressed an intention to "desk-reject" manuscripts where the author has applied a CC BY public copyright licence to any Author Accepted Manuscript version arising from their submission.
 
 This list is supplied to JCT by cOAlition S, and can be obtained from [this CSV](https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0EEMZTikcQZV28BiCL4huv-r0RnHiDrU08j3W1fyERNasoJYuAZek5G3oQH1TUKmf_X-yC5SiHaBM/pub?gid=0&single=true&output=csv).
 

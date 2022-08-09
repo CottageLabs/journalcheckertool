@@ -1,6 +1,8 @@
 [en]
+    languageName = "English"
     weight = 1
 [fr]
+    languageName = "Français"
     title="Outil pour vérifier les revues"
     weight = 2
     [fr.params]

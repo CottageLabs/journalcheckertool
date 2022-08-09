@@ -68,7 +68,7 @@ TA_INDEX_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vStezELi7qnKcy
 
 DOAJ_IN_PROGRESS_URL = "https://doaj.org/jct/inprogress"
 
-DOAJ_IN_PROGRESS_KEYFILE = "../keyfiles/doaj_inprogress.txt"
+DOAJ_IN_PROGRESS_KEYFILE = rel2abs(__file__, "../keyfiles/doaj_inprogress.txt")
 
 SA_NEGATIVE_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0EEMZTikcQZV28BiCL4huv-r0RnHiDrU08j3W1fyERNasoJYuAZek5G3oQH1TUKmf_X-yC5SiHaBM/pub?gid=0&single=true&output=csv"
 

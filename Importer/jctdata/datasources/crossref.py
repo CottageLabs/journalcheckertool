@@ -27,12 +27,13 @@ class Crossref(datasource.Datasource):
         with open(outfile, "w") as f:
             writer = csv.writer(f)
             counter = 0
+            cursor = "*"
             while True:
                 if counter >= self.LIMIT:
                     print("CROSSREF: configured import limit reached {x}".format(x=self.LIMIT))
                     break
 
-                url = 'https://api.crossref.org/journals?offset=' + str(counter) + '&rows=' + str(self.ROW_PER_PAGE)
+                url = 'https://api.crossref.org/journals?cursor=' + cursor + '&rows=' + str(self.ROW_PER_PAGE)
                 print("CROSSREF: retrieve from {x}".format(x=url))
                 resp = requests.get(url)
                 if resp.status_code != 200:
@@ -44,7 +45,14 @@ class Crossref(datasource.Datasource):
                     print("CROSSREF: document status not ok: {x}".format(x=data.get("status")))
                     break
 
+                cursor = data.get("message", {}).get("next-cursor")
+                print("CROSSREF: next cursor {x}".format(x=cursor))
+
                 items = data.get("message", {}).get("items", [])
+                if len(items) == 0:
+                    print("CROSSREF: zero length results list, terminating")
+                    break
+
                 print("CROSSREF: processing {x} items from this page".format(x=len(items)))
 
                 for entry in items:

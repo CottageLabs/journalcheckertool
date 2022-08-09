@@ -23,4 +23,5 @@
     restartButton = "Start over"
     explainButton = "Explain this result"
     printButton = "Print"
+    shareButton = "Share this result"
     populate = false

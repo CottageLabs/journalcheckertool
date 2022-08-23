@@ -1,0 +1,10 @@
+title: "Entente de transformation"
+body:
+  default: "<p>L’auteur-ressource de l’article soumis (auteur correspondant) doit être affilié à une institution incluse dans cette entente de transformation pour que celle-ci puisse fournir une voie de publication conforme.</p>
+            <p>D’autres conditions au sujet de la publication peuvent également être imposées dans le cadre de cette entente de transformation.</p>
+            <p><a href=\"#\" class=\"modal-trigger\" data-modal=\"ta\">Assurez-vous de bien lire cette information.</a>.</p>
+            <p><em>{title}</em> est couvert par une entente de transformation entre <em>{publisher}</em> et <em>{institution}</em>
+            which expires on <em>{end_date}</em></p>"
+explain:
+  title: Entente de transformation
+  text: Cette voie de conformité est proposée parce que vous êtes l’auteur-ressource (auteur correspondant) et que la revue et l’institution sont impliquées dans une entente de transformation en vigueur.

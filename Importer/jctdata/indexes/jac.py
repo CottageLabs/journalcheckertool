@@ -5,27 +5,12 @@ from jctdata import settings
 from jctdata import resolver
 from jctdata.lib.title_variants import title_variants
 from jctdata.lib.analysis import cat_and_dedupe, issn_clusters, cluster_to_dict, extract_preferred
+from jctdata.indexes.indexer import Indexer
 
 
-class JAC(object):
+class JAC(Indexer):
     ID = "jac"
     SOURCES = ["crossref", "doaj", "tj", "ta", "doaj_inprogress", "sa_negative", "sa_positive"]
-
-    def __init__(self):
-        self.dir = settings.INDEX_PATH[self.ID]
-        self.keep_historic = settings.INDEX_HISTORY.get(self.ID, 5)
-
-    def current_dir(self):
-        dirs = []
-        for entry in os.listdir(self.dir):
-            if os.path.isdir(os.path.join(self.dir, entry)):
-                dirs.append(entry)
-
-        if len(dirs) == 0:
-            return None
-
-        dirs.sort(reverse=True)
-        return dirs[0]
 
     def gather(self):
         print('JAC: Gathering data for journal autocomplete from sources: {x}'.format(x=",".join(self.SOURCES)))
@@ -67,6 +52,8 @@ class JAC(object):
         print("JAC: analysed data written to directory {x}".format(x=jacdir))
 
     def assemble(self):
+        print("JAC: Preparing journal autocomplete data")
+
         preference_order = settings.JAC_PREF_ORDER
         jacdir = os.path.join(self.dir, self.current_dir())
         outfile = os.path.join(jacdir, "jac.json")
@@ -106,7 +93,9 @@ class JAC(object):
 
                 o.write(json.dumps(record) + "\n")
 
-        self._cleanup(self.dir)
+        print("JAC: Journal Autocomplete data assembled")
+
+        self._cleanup()
 
     def _get_paths(self, paths):
         issns = []
@@ -178,17 +167,3 @@ class JAC(object):
 
         record["index"] = idx
 
-    def _cleanup(self, dir):
-        dirs = []
-        for entry in os.listdir(dir):
-            if os.path.isdir(os.path.join(dir, entry)):
-                dirs.append(entry)
-
-        if len(dirs) <= settings.JAC_HISTORY:
-            return
-
-        dirs.sort(reverse=True)
-        for remove in dirs[settings.JAC_HISTORY:]:
-            removing = os.path.join(dir, remove)
-            print("JAC: cleaning up old directory {x}".format(x=removing))
-            shutil.rmtree(removing)

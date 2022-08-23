@@ -61,11 +61,13 @@ DATASOURCE_HISTORY = {
 }
 
 INDEX_PATH = {
-    "jac": os.path.join(DATABASES, "jct", "jac")
+    "jac": os.path.join(DATABASES, "jct", "jac"),
+    "iac": os.path.join(DATABASES, "jct", "iac")
 }
 
 INDEX_HISTORY = {
-    "jac": 5
+    "jac": 5,
+    "iac": 5
 }
 
 CROSSREF_OLDEST_DOI = 2019
@@ -83,8 +85,6 @@ SA_NEGATIVE_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0EEMZTikc
 SA_POSITIVE_SHEET ="https://docs.google.com/spreadsheets/d/e/2PACX-1vTm6sDI16Kin3baNWaAiMUfGdMEUEGXy0LRvSDnvAQTWDN_exlYGyv4gnstGKdv3rXshjSa7AUWtAc5/pub?gid=0&single=true&output=csv"
 
 JAC_PREF_ORDER = ["crossref", "doaj", "tj", "sa_negative", "sa_positive", "ta"]
-
-JAC_HISTORY = 5
 
 DEFAULT_MAPPING = {
     "dynamic_templates": [

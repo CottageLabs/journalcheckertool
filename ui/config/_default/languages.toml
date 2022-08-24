@@ -21,9 +21,9 @@
             licenseName = "Attribution 4.0 International (CC BY) de Creative Commons."
         [fr.params.results]
             restartButton = "Start over"
-            explainButton = "Explain this result"
+            explainButton = "Explications du résultat"
             printButton = "Print"
-            shareButton = "Share this result"
+            shareButton = "Partager le résultat"
     [fr.menu]
         [[fr.menu.main]]
             name = "Revues en transformation"

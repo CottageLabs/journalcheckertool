@@ -9,7 +9,8 @@ setup(
         "requests==2.22.0",
         "Unidecode==1.1.1",
         "Deprecated==1.2.13",
-        "wheel"
+        "wheel",
+        "PyYAML==6.0"
     ],
     url='http://journalcheckertool.org/',
     author='Cottage Labs',

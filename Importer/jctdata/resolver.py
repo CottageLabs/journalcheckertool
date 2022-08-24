@@ -8,6 +8,7 @@ from jctdata.datasources import ta
 from jctdata.datasources import ror
 from jctdata.datasources import sa_negative
 from jctdata.datasources import sa_positive
+from jctdata.datasources import funderdb
 
 
 SOURCES = {
@@ -18,7 +19,8 @@ SOURCES = {
     "ta" : ta.TA(),
     "ror": ror.ROR(),
     "sa_negative" : sa_negative.SANegative(),
-    "sa_positive" : sa_positive.SAPositive()
+    "sa_positive" : sa_positive.SAPositive(),
+    "funderdb": funderdb.FunderDB()
 }
 
 

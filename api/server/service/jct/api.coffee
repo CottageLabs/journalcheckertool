@@ -56,6 +56,7 @@ jct_journal = new API.collection {index:index_name, type:"journal"}
 jct_agreement = new API.collection {index:index_name, type:"agreement"}
 jct_compliance = new API.collection {index:index_name, type:"compliance"}
 jct_unknown = new API.collection {index:index_name, type:"unknown"}
+
 jct_funder_config = new API.collection {index:index_name, type:"funder_config"}
 jct_funder_language = new API.collection {index:index_name, type:"funder_language"}
 

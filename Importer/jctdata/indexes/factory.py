@@ -1,9 +1,11 @@
 from jctdata.indexes.jac import JAC
 from jctdata.indexes.iac import IAC
+from jctdata.indexes.funder_language import FunderLanguage
 
 INDEXERS = {
     JAC.ID: JAC,
-    IAC.ID: IAC
+    IAC.ID: IAC,
+    FunderLanguage.ID: FunderLanguage
 }
 
 

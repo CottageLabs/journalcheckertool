@@ -1,3 +1,101 @@
+# Import all data to JCT
+
+To build and import all (new style) indexes, use the following command.
+
+```
+python cli.py load _all
+```
+
+Note that this does not trigger the remote JCT imports, they must be triggered separately.
+
+# Using the Import CLI
+
+The Import CLI gives you control over exactly what import steps are run.  The general form of the interface is
+
+```
+python cli.py [mode] [target] [-s [stage]] [-o or -a]
+```
+
+**mode** tells the importer which part of its lifecycle it should be running, and the options are:
+* resolve - run resolution on the target.  Note that this bypasses the indexers limits on how often targets are resolved, this will always directly resolve the target every time it is run.
+* index - construct the index data for the target.  Note that this will resolve the sources via the usual index resolver, so will only resolve sources if they are older than their maximum age.
+* load - load the index data into elasticsearch
+
+**target** tells the importer what to act on in the given mode.  Depending on the **mode** the options of targets are
+different:
+* resolve mode - the target can be any of the datasources (e.g. `crossref`, `doaj`, `ror`, etc)
+* index mode - the target can be any of the output index types (e.g. `jac` or `iac`), or the special keyword `_all` to index all targets
+* load mode - as index mode
+
+**stage** tells the importer which stage in the mode to process.  Each mode has different stages in its processing pipeline:
+* resolve
+  1. gather - pull the data from the datasource
+  2. analyse - analyse the pulled data, ready for use in indexing
+* index
+  1. gather - gather and analyse all the data in the `resolve` pipeline
+  2. analyse - analyse the data from each datasource to build the data for this index
+  3. assemble - assemble the analysed data into indexable documents
+  4. load - load the data into the elasticsearch index
+* load - has no stages, this argument will have no effect in this mode
+
+**stage pipeline execution (-o or -a)** tells the importer whether to run only the given **stage** or to run all the
+stages before it, up-to and including the supplied stage.
+
+Here are a set of example commands:
+
+1. Gather all of the data from crossref, and analyse it:
+
+```
+python cli.py resolve crossref
+```
+
+You can also set the stage and pipeline execution explicitly.  Here we specify a **stage** of `analyse` which is the
+last stage of `resolve` and we specify `-a` to indicate to run all prior stages, so `gather` and `analyse` will both
+be run.
+
+```
+python cli.py resolve crossref -s analyse -a
+```
+
+If we had already retrieved the data from crossref, and we just wanted to re-run the analysis stage, we could run
+only the analyse stage, and omit the `gather` stage, by specifying `-o` meaning "only run the specified stage and not
+the prior stages".  Note that in this case you must ensure that the previous stages have been run, or you will receive
+errors.
+
+```
+python cli.py resolve crossref -s analyse -o
+```
+
+2. Prep the JAC index
+
+```
+python cli.py index jac
+```
+
+This is equivalent to the more explicit command
+
+```
+python cli.py index jac -s assemble -a
+```
+
+As with the Crossref example, you can run only a single stage.  For example if we wanted to just analyse the data for the
+JAC index, we could do
+
+```
+python cli.py index jac -s analyse -o
+```
+
+3. Load JAC Index into Elasticsearch
+
+```
+python cli.py load jac
+```
+
+---
+
+(previous instructions, still to review)
+
+
 # Import data to JCT
 
 To import data into jct, run

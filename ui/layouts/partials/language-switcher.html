@@ -1,0 +1,5 @@
+<ul style="list-style: none; text-align: right; margin: 0 10px 0 0">
+    {{ range $.Site.Home.AllTranslations }}
+    <li style="display: inline-block;"><a style="text-decoration: none; font-size: 0.8em" href="{{ .Permalink }}">{{ .Language.LanguageName }}</a></li>
+    {{ end }}
+</ul>

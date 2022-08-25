@@ -2,6 +2,7 @@
     languageName = "English"
     weight = 1
 [fr]
+    languageCode = "fr"
     languageName = "Français"
     title="Outil pour vérifier les revues"
     weight = 2

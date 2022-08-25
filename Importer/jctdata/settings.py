@@ -36,7 +36,7 @@ MAX_DATASOURCE_AGE = {
     "ror": 60 * 60 * 24 * 7,
     "sa_negative": 60 * 60 * 24 * 7,
     "sa_positive": 60 * 60 * 24 * 7,
-    "funderdb": 0   # funderdb is always updated
+    "funderdb": 60   # funderdb is always updated, only a short delay to avoid importing multiple times in a concurrent run
 }
 
 DATASOURCE_PATH = {
@@ -66,13 +66,15 @@ DATASOURCE_HISTORY = {
 INDEX_PATH = {
     "jac": os.path.join(DATABASES, "jct", "jac"),
     "iac": os.path.join(DATABASES, "jct", "iac"),
-    "funder_language": os.path.join(DATABASES, "jct", "funder_language")
+    "funder_language": os.path.join(DATABASES, "jct", "funder_language"),
+    "funder_config": os.path.join(DATABASES, "jct", "funder_config")
 }
 
 INDEX_HISTORY = {
     "jac": 5,
     "iac": 5,
-    "funder_language": 5
+    "funder_language": 5,
+    "funder_config": 5
 }
 
 CROSSREF_OLDEST_DOI = 2019

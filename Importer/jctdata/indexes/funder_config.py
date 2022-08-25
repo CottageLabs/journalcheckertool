@@ -4,8 +4,20 @@ from jctdata.indexes.indexer import Indexer
 from jctdata import resolver
 from jctdata import settings
 
-from datetime import datetime
+from datetime import datetime, date
 from copy import deepcopy
+
+
+def serialiser_help(obj):
+    """JSON serializer for objects not serializable by default json code"""
+
+    if isinstance(obj, date):
+        return obj.isoformat() + "T00:00:00Z"
+
+    if isinstance(obj, datetime):
+        return obj.isoformat()
+
+    raise TypeError ("Type %s not serializable" % type(obj))
 
 
 class FunderConfig(Indexer):
@@ -31,16 +43,16 @@ class FunderConfig(Indexer):
         default_cfg_path = os.path.join(funderdb_dir, "default", "config.yml")
 
         with open(default_cfg_path) as y:
-            default_cfg = yaml.load(y.read(), Loader=yaml.BaseLoader)
+            default_cfg = yaml.safe_load(y.read())
 
         funders_dir = os.path.join(funderdb_dir, "funders")
         for funder in os.listdir(funders_dir):
             funder_cfg = os.path.join(funders_dir, funder, "config.yml")
             with open(funder_cfg) as y:
-                funder_cfg = yaml.load(y.read(), Loader=yaml.BaseLoader)
+                funder_cfg = yaml.safe_load(y.read())
             funder_cfg = self._merge(default_cfg, funder_cfg)
             with open(os.path.join(analyse_dir, funder + ".json"), "w") as o:
-                o.write(json.dumps(funder_cfg, indent=2))
+                o.write(json.dumps(funder_cfg, indent=2, default=serialiser_help))
 
         print("FUNDER_CONFIG: Funder configurations built")
 

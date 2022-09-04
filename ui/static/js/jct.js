@@ -501,7 +501,7 @@ jct.jx = (route,q,after,api) => {
             jct.load_funder(q.funder, jct.funder_langs[q.funder]);
             return;
         }
-        let funderUrl = new URL("funder_language/" + q.funder, base_url)
+        let funderUrl = new URL("funder_language/" + q.funder + "/" + jct.languageCode, base_url)
         let fxhr = new XMLHttpRequest();
         // fxhr.open("GET", new URL(base_url + "/funder_language/" + q.funder));
         fxhr.open("GET", funderUrl.href);

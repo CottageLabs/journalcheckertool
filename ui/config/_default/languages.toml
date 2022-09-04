@@ -9,8 +9,10 @@
     [fr.params]
         [fr.params.header]
             pageTitle = "Outil pour vérifier les revues"
-        [fr.params.main]
+        [fr.params.text]
             feedbackButton = "Faites-nous part de vos commentaires"
+            alert = "The information provided by the <em>Journal Checker Tool</em> represents cOAlition S’s current understanding in relation to the policies of the journals contained within it. We will endeavour to keep it up to date and accurate, but we do not accept any liability in relation to any errors or omissions."
+            comingSoon = "Coming Soon"
         [fr.params.footer]
             address = '''
             cOAlition S Office<br/>
@@ -19,6 +21,7 @@
             67080 Strasbourg – France
             '''
             licenseText = "Le contenu sur ce site est régi par une licence"
+            licenseUrl = "https://creativecommons.org/licenses/by/4.0/"
             licenseName = "Attribution 4.0 International (CC BY) de Creative Commons."
         [fr.params.results]
             restartButton = "Start over"

@@ -31,9 +31,6 @@ class Indexer(object):
     def assemble(self):
         raise NotImplementedError()
 
-    def load(self):
-        pass
-
     def _cleanup(self):
         dir = self.dir
         dirs = []

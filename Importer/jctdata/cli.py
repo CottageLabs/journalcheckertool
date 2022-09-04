@@ -8,37 +8,41 @@ from jctdata import settings
 
 @click.command()
 @click.argument("mode")
-@click.argument("target")
+@click.argument("targets", nargs=-1)
 @click.option("-s", "--stage")
 @click.option("-o", "--only", "full_pipeline", flag_value=False)
 @click.option("-a", "--all", "full_pipeline", flag_value=True, default=True)
-def run(mode, target, stage=None, full_pipeline=True):
+def run(mode, targets, stage=None, full_pipeline=True):
     processor = MODE_MAP.get(mode)
     if not processor:
         return
 
-    processor(target, stage, full_pipeline)
+    processor(targets, stage, full_pipeline)
 
 
-def resolve(target, stage=None, full_pipeline=True):
-    datasource = resolver.SOURCES.get(target)
-    if not stage:
-        stage = RESOLVE_PIPELINE[-1]
+def resolve(targets, stage=None, full_pipeline=True):
+    if targets[0] == "_all":
+        targets = resolver.SOURCES.keys()
 
-    if full_pipeline:
-        for s in RESOLVE_PIPELINE:
-            getattr(datasource, s)()
-            if s == stage:
-                break
-    else:
-        getattr(datasource, stage)()
+    for target in targets:
+        datasource = resolver.SOURCES.get(target)
+        if not stage:
+            stage = RESOLVE_PIPELINE[-1]
+
+        if full_pipeline:
+            for s in RESOLVE_PIPELINE:
+                getattr(datasource, s)()
+                if s == stage:
+                    break
+        else:
+            getattr(datasource, stage)()
 
 
-def index(target, stage=None, full_pipeline=True):
-    if target == "_all":
+def index(targets, stage=None, full_pipeline=True):
+    if targets[0] == "_all":
         indexers = factory.get_all_indexers()
     else:
-        indexers = [factory.get_indexer(target)]
+        indexers = [factory.get_indexer(target) for target in targets]
 
     for indexer in indexers:
         if full_pipeline:
@@ -50,14 +54,12 @@ def index(target, stage=None, full_pipeline=True):
             getattr(indexer, stage)()
 
 
-def load(target, stage=None, full_pipeline=True):
-    if full_pipeline:
-        index(target)
-
-    if target == "_all":
+def load(targets, stage=None, full_pipeline=True):
+    if targets[0] == "_all":
         targets = factory.get_all_index_names()
-    else:
-        targets = [target]
+
+    if full_pipeline:
+        index(targets)
 
     for t in targets:
         loader.index_latest_with_alias(t, settings.ES_INDEX_SUFFIX)

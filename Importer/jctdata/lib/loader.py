@@ -14,7 +14,8 @@ def index(infile, bulkfile, conn, index_type, mapping, alias):
         line = f.readline()
         while line:
             d = json.loads(line)
-            d["id"] = uuid.uuid4().hex
+            if "id" not in d:
+                d["id"] = uuid.uuid4().hex
             bulklines = esprit.raw.to_bulk_single_rec(d)
             o.write(bulklines)
             line = f.readline()

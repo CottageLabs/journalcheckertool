@@ -22,6 +22,5 @@
     apiURL = "https://api.jct.cottagelabs.com/"
 [results]
     restartButton = "Start over"
-    explainButton = "Explain this result"
     printButton = "Print"
     shareButton = "Share this result"

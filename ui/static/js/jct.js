@@ -31,7 +31,8 @@ let jct = {
             funder_placeholder: "By funder name",
             institution: "My Institution",
             institution_placeholder: "By ROR or name",
-            no_affiliation: "No affiliation"
+            no_affiliation: "No affiliation",
+            explain: 'Explain this result'
         },
         fr: {
             journal: "Revue",
@@ -40,7 +41,8 @@ let jct = {
             funder_placeholder: "Par nom d’organisme de financement",
             institution: "Mon institution",
             institution_placeholder: "Par le ROR ou le nom",
-            no_affiliation: "Aucune affiliation"
+            no_affiliation: "Aucune affiliation",
+            explain: "Explications du résultat"
         }
     }
 };
@@ -823,7 +825,7 @@ jct.d.show_detailed_results = () => {
 jct.d.hide_detailed_results = () => {
     let explainResults = jct.d.gebi("jct_explain_results");
     if (explainResults) {
-        explainResults.innerHTML = 'Explain this result';
+        explainResults.innerHTML = jct.getText("explain")
     }
     jct.d.gebi('jct_detailed_results').style.display = "none";
     // let print = jct.d.gebi('jct_print');

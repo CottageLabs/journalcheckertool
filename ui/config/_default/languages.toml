@@ -25,7 +25,6 @@
             licenseName = "Attribution 4.0 International (CC BY) de Creative Commons."
         [fr.params.results]
             restartButton = "Start over"
-            explainButton = "Explications du résultat"
             printButton = "Print"
             shareButton = "Partager le résultat"
     [fr.menu]

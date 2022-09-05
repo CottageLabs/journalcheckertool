@@ -16,15 +16,16 @@ python run_all_import.py
 
 This runs the following imports
 
-* Journal autocomplete data import
-* Institution autocomplete data import
+* Locally
+  * Journal autocomplete data import
+  * Institution autocomplete data import
+  * Funder config
+  * Funder language
 * JCT import, which in turn imports from
   * Journals form Crossref and DOAJ
   * TJ
   * SA Prohibited data
   * Rights retention data
-  * Funder config
-  * Funder language
   * TA
 
 This will send an email, when the importer has finished running the commands needed to invoke an import. The import task itself runs in the background and could take a couple of hours to complete.
@@ -81,7 +82,6 @@ different:
   1. gather - gather and analyse all the data in the `resolve` pipeline
   2. analyse - analyse the data from each datasource to build the data for this index
   3. assemble - assemble the analysed data into indexable documents
-  4. load - load the data into the elasticsearch index
 * load - has no stages, this argument will have no effect in this mode
 
 **stage pipeline execution (-o or -a)** tells the importer whether to run only the given **stage** or to run all the
@@ -89,7 +89,7 @@ stages before it, up-to and including the supplied stage.
 
 Here are a set of example commands:
 
-1. Gather all of the data from crossref, and analyse it:
+## 1. Gather all of the data from crossref, and analyse it:
 
 ```
 python cli.py resolve crossref
@@ -112,7 +112,7 @@ errors.
 python cli.py resolve crossref -s analyse -o
 ```
 
-2. Prep the JAC index
+## 2. Prep the JAC index
 
 ```
 python cli.py index jac
@@ -124,20 +124,20 @@ This is equivalent to the more explicit command
 python cli.py index jac -s assemble -a
 ```
 
-As with the Crossref example, you can run only a single stage.  For example if we wanted to just analyse the data for the
+As with the Crossref example, you could also run only a single stage.  For example if we wanted to just analyse the data for the
 JAC index, we could do
 
 ```
 python cli.py index jac -s analyse -o
 ```
 
-3. Load JAC Index into Elasticsearch
+## 3. Load JAC Index into Elasticsearch
 
 ```
 python cli.py load jac
 ```
 
-4. Resolve and load everything
+## 4. Resolve and load everything
 
 ```
 python cli.py load _all
@@ -155,7 +155,7 @@ The following processes happen:
 
 1. All the datasources upon which the index is built are resolved.  For example, JAC requires Crossref, DOAJ and a variety of other smaller journal datasources.  A datasource is automatically downloaded via whatever mechanism is provided if the time elapsed since it was last downloaded is greater than the specified maximum age (e.g. a week).  If the datasource has been downloaded more recently than that, then the existing copy is used.  This speeds up repeat builds.  Data is placed in `databases/[datasource name]/[timestamp]`, usually in a file or folder called `origin`.
 2. Datasources are analysed as needed.  For example, journal data sources have their ISSNs, Titles and Publishers extracted and normalised ready for any downstream indexer to use.  Again, the analysed data is placed in `databases/[datasource name]/[timestamp]`
-3. The indexer assembles all the datasource information it needs into an intermediate form.  This form may be an amalgamation of the datasource data, or a convenient output suitable for debugging/review, or both.  For example, the JAC assembles and normalises ISSNs, Titles and Publishers from all of its many datasources into a single deduplicated database, ready for assembly into the autocomplete index.
+3. The indexer assembles all the datasource information it needs into an intermediate form.  This form may be an amalgamation of the various datasources data, or a convenient output suitable for debugging/review, or both.  For example, the JAC assembles and normalises ISSNs, Titles and Publishers from all of its many datasources into a single deduplicated database, ready for assembly into the autocomplete index.
 4. The indexer assembles a JSON file which comprises the indexable data.  The file consists of one JSON record per line.
 5. The JSON file from the previous step is converted into the ES Bulk API format and loaded into an appropriately named index, which is of the form `jct_[index][suffix][timestamp]`.  For example, JAC loaded in a development environment will have a name like `jct_jac_dev20220828175612`
 6. The ES index alias for the type is switched to point to the new index, and any old copies of the index are deleted (some number of old indices are kept for emergency roll-back, configured in `settings.py`).  The index alias will be of the form `jct_[index][suffix]`, so for JAC this would mean `jct_jac_dev` pointed to `jct_jac_dev20220828175612` after this operation.

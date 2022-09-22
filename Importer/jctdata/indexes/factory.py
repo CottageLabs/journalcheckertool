@@ -20,4 +20,4 @@ def get_all_indexers():
 
 
 def get_all_index_names():
-    return INDEXERS.keys()
+    return list(INDEXERS.keys())

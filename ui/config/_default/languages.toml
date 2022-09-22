@@ -11,7 +11,7 @@
             pageTitle = "Outil pour vérifier les revues"
         [fr.params.text]
             feedbackButton = "Faites-nous part de vos commentaires"
-            alert = "The information provided by the <em>Journal Checker Tool</em> represents cOAlition S’s current understanding in relation to the policies of the journals contained within it. We will endeavour to keep it up to date and accurate, but we do not accept any liability in relation to any errors or omissions."
+            alert = "L’information fournie par l'outil de vérification des revues représente la compréhension actuelle de la cOAlition S en ce qui concerne les politiques des revues qu'il contient. Nous nous efforcerons de les maintenir à jour et exactes, mais nous n'acceptons aucune responsabilité en cas d'erreurs ou d'omissions"
             comingSoon = "Coming Soon"
         [fr.params.footer]
             address = '''
@@ -22,10 +22,10 @@
             '''
             licenseText = "Le contenu sur ce site est régi par une licence"
             licenseUrl = "https://creativecommons.org/licenses/by/4.0/"
-            licenseName = "Attribution 4.0 International (CC BY) de Creative Commons."
+            licenseName = "Attribution 4.0 International (CC BY) de Creative Commons"
         [fr.params.results]
-            restartButton = "Start over"
-            printButton = "Print"
+            restartButton = "Recommencer"
+            printButton = "Imprimer"
             shareButton = "Partager le résultat"
     [fr.menu]
         [[fr.menu.main]]
@@ -38,36 +38,36 @@
             url = "/transformative-agreements"
             weight = 2
         [[fr.menu.main]]
-            name = "Exceptions en cas d’auto-archivage"
+            name = "Listes d’exceptions"
             pre = " • "
             url = "/exception-lists"
-            weight = 2.1
+            weight = 3
         [[fr.menu.main]]
             name = "Documentation API"
             pre = " • "
             url = "/apidocs"
-            weight = 3
+            weight = 4
         [[fr.menu.main]]
             name = "Widget intégrable"
             pre = " • "
             url = "/widget"
-            weight = 4
+            weight = 5
         [[fr.menu.main]]
             name = " FAQ"
             url = "/faq"
-            weight = 5
+            weight = 6
         [[fr.menu.main]]
             pre = " • "
             name = "Avis de confidentialité"
             url = "/notices#privacy_notice"
-            weight = 6
+            weight = 7
         [[fr.menu.main]]
             name = "Avis de non-responsabilité et droits d’auteur"
             pre = " • "
             url = "/notices#disclaimer_and_copyright"
-            weight = 7
+            weight = 8
         [[fr.menu.main]]
             name = "Historique des versions"
             pre = " • "
             url = "/release-history"
-            weight = 8
+            weight = 9

@@ -341,6 +341,13 @@ jct.build_modal = (modal_id) => {
     let modalText = jct.lang ? jct.lang.modals[modal_id] : "";
     if (!modalText) {
         modalText = jct.site_modals[modal_id];
+        if (modalText.en) {
+            if (modalText[jct.languageCode]) {
+                modalText = modalText[jct.languageCode];
+            } else {
+                modalText = modalText.en;
+            }
+        }
     }
     if (!modalText) {
         return "";

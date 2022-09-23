@@ -27,6 +27,7 @@ class TJ(datasource.Datasource):
         out = os.path.join(self.dir, dir, "origin.csv")
 
         resp = requests.get(settings.TJ_SHEET)
+        resp.encoding = "utf-8"
         with open(out, "w") as f:
             f.write(resp.text)
         print("TJ: data written to {x}".format(x=out))

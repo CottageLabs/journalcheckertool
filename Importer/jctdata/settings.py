@@ -36,7 +36,8 @@ MAX_DATASOURCE_AGE = {
     "ror": 60 * 60 * 24 * 7,
     "sa_negative": 60 * 60 * 24 * 7,
     "sa_positive": 60 * 60 * 24 * 7,
-    "funderdb": 60   # funderdb is always updated, only a short delay to avoid importing multiple times in a concurrent run
+    "funderdb": 60,   # funderdb is always updated, only a short delay to avoid importing multiple times in a concurrent run
+    "oa_exceptions": 60 * 60 * 24 * 7,
 }
 
 DATASOURCE_PATH = {
@@ -48,7 +49,8 @@ DATASOURCE_PATH = {
     "ror": os.path.join(DATABASES, "ror"),
     "sa_negative": os.path.join(DATABASES, "sa_negative"),
     "sa_positive": os.path.join(DATABASES, "sa_positive"),
-    "funderdb": os.path.join(DATABASES, "funderdb")
+    "funderdb": os.path.join(DATABASES, "funderdb"),
+    "oa_exceptions": os.path.join(DATABASES, "oa_exceptions")
 }
 
 DATASOURCE_HISTORY = {
@@ -60,7 +62,8 @@ DATASOURCE_HISTORY = {
     "ror": 3,
     "sa_negative": 3,
     "sa_positive": 3,
-    "funderdb": 2
+    "funderdb": 2,
+    "oa_exceptions": 3
 }
 
 INDEX_PATH = {
@@ -90,6 +93,8 @@ DOAJ_IN_PROGRESS_KEYFILE = "../keyfiles/doaj_inprogress.txt"
 SA_NEGATIVE_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0EEMZTikcQZV28BiCL4huv-r0RnHiDrU08j3W1fyERNasoJYuAZek5G3oQH1TUKmf_X-yC5SiHaBM/pub?gid=0&single=true&output=csv"
 
 SA_POSITIVE_SHEET ="https://docs.google.com/spreadsheets/d/e/2PACX-1vTm6sDI16Kin3baNWaAiMUfGdMEUEGXy0LRvSDnvAQTWDN_exlYGyv4gnstGKdv3rXshjSa7AUWtAc5/pub?gid=0&single=true&output=csv"
+
+OA_EXCEPTIONS_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSexj1DPUkhIDZvVX-CkGTkR_zwduUVlZ4DKVNnS1g0w1AlGKDUSx2t7HAawCcSAR6qqsJAQ7dPHWIa/pub?gid=404801205&single=true&output=csv"
 
 FUNDER_DB_DIR = rel2abs(__file__, "..", "..", "funderdb")
 

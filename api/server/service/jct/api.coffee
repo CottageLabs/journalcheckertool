@@ -425,7 +425,7 @@ API.service.jct.calculate = (params={}, refresh) ->
     throw {status: 400, stack: "ISSN parameter must be supplied in the `issn` url parameter"} # Meteor.Error(400, "ISSN parameter must be supplied", "")
   if !params.funder
     throw {status: 400, stack: "Funder ID must be supplied in the `funder` url parameter"}
-  
+
   # field formats
   if params.journal.toString().match(ISSN_RX) == null
     throw {status: 400, stack: "Supplied ISSN is malformed"}

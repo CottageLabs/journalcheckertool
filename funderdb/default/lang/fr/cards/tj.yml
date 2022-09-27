@@ -1,0 +1,10 @@
+title: "Revue en transformation"
+body:
+  default: "<p>Allez-y et soumettez votre article. N’oubliez pas de sélectionner l’option de publication en libre accès sous
+            <a href=\"https://creativecommons.org/licenses/by/2.0/\" target=\"_blank\" rel=\"noopener\">
+            licence CC BY</a> pour assurer la conformité.</p>
+            <p>Effectuez une vérification <a href=\"https://www.coalition-s.org/plan-s-funders-implementation/\" target=\"_blank\"
+            rel=\"noopener\">ici</a> pour confirmer si votre organisme de financement assumera les frais de publication.</p>"
+explain:
+  title: Revue en transformation
+  text: Cette voie de conformité est proposée parce que cette revue a été désignée comme étant une revue en transformation.

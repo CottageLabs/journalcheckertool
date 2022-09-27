@@ -1,0 +1,73 @@
+[en]
+    languageName = "English"
+    weight = 1
+[fr]
+    languageCode = "fr"
+    languageName = "Français"
+    title="Outil pour vérifier les revues"
+    weight = 2
+    [fr.params]
+        [fr.params.header]
+            pageTitle = "Outil pour vérifier les revues"
+        [fr.params.text]
+            feedbackButton = "Faites-nous part de vos commentaires"
+            alert = "L’information fournie par l'outil de vérification des revues représente la compréhension actuelle de la cOAlition S en ce qui concerne les politiques des revues qu'il contient. Nous nous efforcerons de les maintenir à jour et exactes, mais nous n'acceptons aucune responsabilité en cas d'erreurs ou d'omissions"
+            comingSoon = "Coming Soon"
+        [fr.params.footer]
+            address = '''
+            cOAlition S Office<br/>
+            European Science Foundation<br/>
+            1, quai Lezay – Marnésia<br/>
+            67080 Strasbourg – France
+            '''
+            licenseText = "Le contenu sur ce site est régi par une licence"
+            licenseUrl = "https://creativecommons.org/licenses/by/4.0/"
+            licenseName = "Attribution 4.0 International (CC BY) de Creative Commons"
+        [fr.params.results]
+            restartButton = "Recommencer"
+            printButton = "Imprimer"
+            shareButton = "Partager le résultat"
+    [fr.menu]
+        [[fr.menu.main]]
+            name = "Revues en transformation"
+            url = "/transformative-journals"
+            weight = 1
+        [[fr.menu.main]]
+            name = "Ententes de transformation"
+            pre = " • "
+            url = "/transformative-agreements"
+            weight = 2
+        [[fr.menu.main]]
+            name = "Listes d’exceptions"
+            pre = " • "
+            url = "/exception-lists"
+            weight = 3
+        [[fr.menu.main]]
+            name = "Documentation API"
+            pre = " • "
+            url = "/apidocs"
+            weight = 4
+        [[fr.menu.main]]
+            name = "Widget intégrable"
+            pre = " • "
+            url = "/widget"
+            weight = 5
+        [[fr.menu.main]]
+            name = " FAQ"
+            url = "/faq"
+            weight = 6
+        [[fr.menu.main]]
+            pre = " • "
+            name = "Avis de confidentialité"
+            url = "/notices#privacy_notice"
+            weight = 7
+        [[fr.menu.main]]
+            name = "Avis de non-responsabilité et droits d’auteur"
+            pre = " • "
+            url = "/notices#disclaimer_and_copyright"
+            weight = 8
+        [[fr.menu.main]]
+            name = "Historique des versions"
+            pre = " • "
+            url = "/release-history"
+            weight = 9

@@ -1,0 +1,11 @@
+icon: ta
+title: "Transformative <br>agreement"
+body:
+  default: "<p>Conditions may be in place around publishing through this agreement.
+            <a href=\"#\" class=\"modal-trigger\" data-modal=\"ta\">Make sure to read this information</a>.</p>
+            <p><em>{title}</em> is part of a transformative agreement between <em>{publisher}</em> and <em>{institution}</em>
+            which expires on <em>{end_date}</em></p></p>"
+explain:
+  title: Transformative agreement
+  text: This way to comply is available to you because your selected journal and institution are both present in an active
+        Transformative Agreement.

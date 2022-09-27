@@ -1,6 +1,5 @@
 [main]
     endpoint="_staging"
+    populate = false
 [apidocs]
     apiURL = "https://api.jct.cottagelabs.com/"
-[results]
-    populate = false

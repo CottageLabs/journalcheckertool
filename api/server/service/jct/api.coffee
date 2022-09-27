@@ -52,13 +52,17 @@ funders will be a list given to us by JCT detailing their particular requirement
 # (for convenience the settings have initially been set up to only run import on dev as well, to make the most 
 # of the dev machine and minimise any potential memory or CPU intense work 
 index_name = API.settings.es.index ? 'jct'
-jct_institution = new API.collection {index:index_name, type:"institution"}
 jct_journal = new API.collection {index:index_name, type:"journal"}
 jct_agreement = new API.collection {index:index_name, type:"agreement"}
 jct_compliance = new API.collection {index:index_name, type:"compliance"}
 jct_unknown = new API.collection {index:index_name, type:"unknown"}
-jct_funder_config = new API.collection {index:index_name, type:"funder_config"}
-jct_funder_language = new API.collection {index:index_name, type:"funder_language"}
+
+# Funder configurations talk to an alias of the name `[index_name]_funder_config` or
+# `[index_name]_funder_language` which points to the latest import of data.  Within
+# those indices are a single type `funder_config` or `funder_language` which is the one
+# which contains the relevant data
+jct_funder_config = new API.collection {index:index_name + "_funder_config", type:"funder_config"}
+jct_funder_language = new API.collection {index:index_name + "_funder_language", type:"funder_language"}
 
 # Autocomplete endpoint talks to an alias of the name `[index_name]_jac` which points to
 # the latest import of data.  Within that index there is a single type `jac` which is the
@@ -120,9 +124,6 @@ API.add 'service/jct/tj/import',
     Meteor.setTimeout (() => API.service.jct.tj undefined, true), 1
     return true
 
-API.add 'service/jct/funder', get: () -> return API.service.jct.funders undefined, this.queryParams.refresh
-API.add 'service/jct/funder/:iid', get: () -> return API.service.jct.funders this.urlParams.iid
-
 API.add 'service/jct/feedback',
   get: () -> return API.service.jct.feedback this.queryParams
   post: () -> return API.service.jct.feedback this.bodyParams
@@ -161,11 +162,7 @@ API.add 'service/jct/unknown/:start/:end',
       return res
 
 API.add 'service/jct/journal', get: () -> return jct_journal.search this.queryParams
-API.add 'service/jct/institution', get: () -> return jct_institution.search this.queryParams
 API.add 'service/jct/institution/:iid', get: () -> return API.service.jct.institution this.urlParams.iid
-API.add 'service/jct/institution/import', get: () ->
-  Meteor.setTimeout (() => API.service.jct.institution undefined, true), 1
-  return true
 API.add 'service/jct/compliance', get: () -> return jct_compliance.search this.queryParams
 # the results that have already been calculated. These used to get used to re-serve as a 
 # faster cached result, but uncertainties over agreement on how long to cache stuff made 
@@ -173,19 +170,25 @@ API.add 'service/jct/compliance', get: () -> return jct_compliance.search this.q
 
 API.add 'service/jct/test', get: () -> return API.service.jct.test this.queryParams
 
+API.add 'service/jct/funder', get: () ->
+  return API.service.jct.funder_config undefined, false
+API.add 'service/jct/funder/:iid', get: () ->
+  return API.service.jct.funder_config this.urlParams.iid
 API.add 'service/jct/funder_config', get: () ->
-  return API.service.jct.funder_config undefined, this.queryParams.refresh
-API.add 'service/jct/funder_config/:iid', get: () -> return API.service.jct.funder_config this.urlParams.iid
-API.add 'service/jct/funder_config/import', get: () ->
-  Meteor.setTimeout (() => API.service.jct.funder_config undefined, true), 1
-  return true
+  return API.service.jct.funder_config undefined, false
+API.add 'service/jct/funder_config/:iid', get: () ->
+  return API.service.jct.funder_config this.urlParams.iid
+#API.add 'service/jct/funder_config/import', get: () ->
+#  Meteor.setTimeout (() => API.service.jct.funder_config undefined, true), 1
+#  return true
 
 API.add 'service/jct/funder_language', get: () ->
-  return API.service.jct.funder_language undefined, this.queryParams.refresh
+  return API.service.jct.funder_language undefined, false
 API.add 'service/jct/funder_language/:iid', get: () -> return API.service.jct.funder_language this.urlParams.iid
-API.add 'service/jct/funder_language/import', get: () ->
-  Meteor.setTimeout (() => API.service.jct.funder_language undefined, true), 1
-  return true
+API.add 'service/jct/funder_language/:iid/:lang', get: () -> return API.service.jct.funder_language this.urlParams.iid, this.urlParams.lang
+#API.add 'service/jct/funder_language/import', get: () ->
+#  Meteor.setTimeout (() => API.service.jct.funder_language undefined, true), 1
+#  return true
 
 _jct_clean = (str) ->
   specialChars = ["\\", "+", "-", "=", "&&", "||", ">", "<", "!", "(", ")", "{", "}", "[", "]", "^", "~", "?", ":", "/"]
@@ -215,15 +218,67 @@ API.service ?= {}
 API.service.jct = {}
 API.service.jct.suggest = {}
 API.service.jct.suggest.funder = (str, from, size) ->
-  res = []
-  for f in API.service.jct.funders()
-    matches = true
-    if str isnt f.id
-      for s in (if str then str.toLowerCase().split(' ') else [])
-        if s not in ['of','the','and'] and f.funder.toLowerCase().indexOf(s) is -1
-          matches = false
-    res.push({title: f.funder, id: f.id}) if matches
-  return total: res.length, data: res
+  _gather_rec = (data) ->
+    rec = {
+      'id': data.id,
+      'funder': data.name,
+      'retentionAt': data.routes?.self_archiving?.rights_retention ? '',
+    }
+    return rec
+
+  if !str
+    return total: 0, data: []
+  if !size
+    size = 10
+  str = str.toLowerCase().trim()
+
+  q = {
+    "query": {
+      "function_score" : {
+        "query" : {
+          "bool" : {
+            "should" : [
+              {"prefix" : {"id.exact" : str}},
+              {"prefix" : {"name.exact" : str}},
+              {"prefix" : {"abbr.exact" : str}},
+              {"match" : {"name" : str}},
+              {"match" : {"abbr" : str}}
+            ]
+          }
+        },
+        "functions" : [
+          {
+            "filter" : {"term" : {"id.exact" : str}},
+            "weight" : 20
+          },
+          {
+            "filter" : {"term" : {"name.exact" : str}},
+            "weight" : 15
+          },
+          {
+            "filter" : {"term" : {"abbr.exact" : str}},
+            "weight" : 10
+          },
+          {
+            "filter" : {"prefix" : {"name.exact" : str}},
+            "weight" : 5
+          },
+          {
+            "filter" : {"prefix" : {"abbr.exact" : str}},
+            "weight" : 4
+          }
+        ]
+      }
+    }
+    "size" : size
+  }
+  res = jct_funder_config.search q
+  data = []
+  for r in res?.hits?.hits ? []
+    rec = _gather_rec(r._source)
+    data.push(rec)
+  return total: res?.hits?.total ? 0, data: data
+
 
 API.service.jct.suggest.institution = (str, from, size) ->
   _gather_rec = (data) ->
@@ -293,81 +348,6 @@ API.service.jct.suggest.institution = (str, from, size) ->
     data.push(rec)
   return total: res?.hits?.total ? 0, data: data
 
-#API.service.jct.suggest.institution_old = (str, from, size) ->
-#  _cleanup_data = (data) ->
-#    cleaned_data = []
-#    for val in data
-#      new_val = {
-#        'id': val.id,
-#        'title': val.title,
-#        'country': val.country?.country_name ? '',
-#        'ror': val.ror ? '',
-#        'ror_id': val.ror_id ? '',
-#      }
-#      cleaned_data.push(new_val)
-#    return cleaned_data
-#
-#  if typeof str is 'string' and str.length is 9 and rec = jct_institution.get str
-#    delete rec[x] for x in ['createdAt', 'created_date', '_id', 'description', 'values', 'wid']
-#    return total: 1, data: [rec]
-#  else
-#    q = {query: {filtered: {query: {}, filter: {bool: {should: []}}}}, size: size}
-#    q.from = from if from?
-#    if str
-#      str = _jct_clean(str).replace(/the /gi,'')
-#      qry = (if str.indexOf(' ') is -1 then 'id:' + str + '* OR ' else '') + '(title:' + str.replace(/ /g,' AND title:') + '*) OR (aliases:' + str.replace(/ /g,' AND aliases:') + '*) OR (labels.label:' + str.replace(/ /g,' AND labels.label:') + '*)'
-#      q.query.filtered.query.query_string = {query: qry}
-#    else
-#      q.query.filtered.query.match_all = {}
-#    res = jct_institution.search q
-#    unis = []
-#    starts = []
-#    extra = []
-#    for rec in res?.hits?.hits ? []
-#      delete rec._source[x] for x in ['createdAt', 'created_date', '_id', 'description', 'values', 'wid']
-#      if str
-#        if rec._source.title.toLowerCase().indexOf('universit') isnt -1
-#          unis.push rec._source
-#        else if rec._source.title.replace('the ','').replace('university ','').replace('of ','').startsWith(str.replace('the ','').replace('university ','').replace('of ',''))
-#          starts.push rec._source
-#        else # add to extra
-#          extra.push rec._source
-#      else
-#        extra.push rec._source
-#    data = _.union unis.sort((a, b) -> return a.title.length - b.title.length), starts.sort((a, b) -> return a.title.length - b.title.length), extra.sort((a, b) -> return a.title.length - b.title.length)
-#    ret = total: res?.hits?.total ? 0, data: _cleanup_data(data)
-#
-#    if ret.data.length < 10
-#      seen = []
-#      seen.push(sr.id) for sr in ret.data
-#      q = {query: {filtered: {query: {}, filter: {bool: {should: []}}}}, size: size}
-#      q.from = from if from?
-#      if str
-#        str = _jct_clean(str).replace(/the /gi,'')
-#        q.query.filtered.query.query_string = {query: (if str.indexOf(' ') is -1 then 'ror.exact:"' + str + '" OR ' else '') + '(institution:' + str.replace(/ /g,' AND institution:') + '*)'}
-#      else
-#        q.query.filtered.query.query_string = {query: 'ror:*'}
-#      res = jct_agreement.search q
-#      if res?.hits?.total
-#        ret.total += res.hits.total
-#        unis = []
-#        starts = []
-#        extra = []
-#        for rec in res?.hits?.hits ? []
-#          if rec._source.ror not in seen
-#            rc = {title: rec._source.institution, id: rec._source.ror, ta: true}
-#            if str
-#              if rc.title.toLowerCase().indexOf('universit') isnt -1
-#                unis.push rc
-#              else if rc.title.replace('the ','').replace('university ','').replace('of ','').startsWith(str.replace('the ','').replace('university ','').replace('of ',''))
-#                starts.push rc
-#              else # add to extra
-#                extra.push rc
-#            else
-#              extra.push rc
-#        ret.data = _.union ret.data, _.union unis.sort((a, b) -> return a.title.length - b.title.length), starts.sort((a, b) -> return a.title.length - b.title.length), extra.sort((a, b) -> return a.title.length - b.title.length)
-#    return ret
-
 
 API.service.jct.suggest.journal = (str, from, size) ->
   if !str
@@ -429,37 +409,6 @@ API.service.jct.suggest.journal = (str, from, size) ->
     data.push(rec)
   return total: res?.hits?.total ? 0, data: data
 
-# This is the previous implementation of the journal autosuggest.  This has since been replaced by the
-# above function which uses ES ranking/boosting to achieve better results
-#API.service.jct.suggest.journal_old = (str, from, size) ->
-#  q = {query: {filtered: {query: {query_string: {query: 'issn:* AND NOT discontinued:true AND NOT dois:0'}}, filter: {bool: {should: []}}}}, size: size, _source: {includes: ['title','issn','publisher','src']}}
-#  q.from = from if from?
-#  if str and str.replace(/\-/g,'').length
-#    if str.indexOf(' ') is -1
-#      if str.indexOf('-') isnt -1 and str.length is 9
-#        q.query.filtered.query.query_string.query = 'issn.exact:"' + str + '" AND NOT discontinued:true AND NOT dois:0'
-#      else
-#        q.query.filtered.query.query_string.query = 'NOT discontinued:true AND NOT dois:0 AND ('
-#        if str.indexOf('-') isnt -1
-#          q.query.filtered.query.query_string.query += '(issn:"' + str.replace('-','" AND issn:') + '*)'
-#        else
-#          q.query.filtered.query.query_string.query += 'issn:' + str + '*'
-#        q.query.filtered.query.query_string.query += ' OR title:"' + str + '" OR title:' + str + '* OR title:' + str + '~)'
-#    else
-#      str = _jct_clean str
-#      q.query.filtered.query.query_string.query = 'issn:* AND NOT discontinued:true AND NOT dois:0 AND (title:"' + str + '" OR '
-#      q.query.filtered.query.query_string.query += (if str.indexOf(' ') is -1 then 'title:' + str + '*' else '(title:' + str.replace(/ /g,'~ AND title:') + '*)') + ')'
-#  res = jct_journal.search q
-#  starts = []
-#  extra = []
-#  for rec in res?.hits?.hits ? []
-#    if not str or JSON.stringify(rec._source.issn).indexOf(str) isnt -1 or rec._source.title.startsWith(str)
-#      starts.push rec._source
-#    else
-#      extra.push rec._source
-#    rec._source.id = rec._source.issn[0]
-#  return total: res?.hits?.total ? 0, data: _.union starts.sort((a, b) -> return a.title.length - b.title.length), extra.sort((a, b) -> return a.title.length - b.title.length)
-
 
 API.service.jct.calculate = (params={}, refresh) ->
   # given funder(s), journal(s), institution(s), find out if compliant or not
@@ -509,7 +458,12 @@ API.service.jct.calculate = (params={}, refresh) ->
       if sg = API.service.jct.suggest[p] v
         if sg.data and sg.data.length
           ad = sg.data[0]
-          res.request[p].push {id: ad.id, title: ad.title, issn: ad.issns, publisher: ad.publisher}
+          if p is 'journal'
+            res.request[p].push {id: ad.id, title: ad.title, issn: ad.issns, publisher: ad.publisher}
+          else if p is 'funder'
+            res.request[p].push {id: ad.id, title: ad.funder}
+          else
+            res.request[p].push {id: ad.id, title: ad.title}
           issnsets[v] ?= ad.issns if p is 'journal' and _.isArray(ad.issns) and ad.issns.length
       res.request[p].push({id: v}) if not sg?.data
 
@@ -660,7 +614,10 @@ API.service.jct.ta = (issn, ror) ->
         rs = _.clone res
         rs.compliant = 'yes'
         rs.qualifications = if journals[j].corresponding_authors or institutions[j].corresponding_authors then [{corresponding_authors: {}}] else []
-        rs.log.push code: 'TA.Exists'
+        ta_info_log = {ta_id: [j]}
+        if journals[j]["End Date"]
+          ta_info_log["end_date"] = [journals[j]["End Date"]]
+        rs.log.push {code: 'TA.Exists', parameters: ta_info_log}
         tas.push rs
   if tas.length is 0
     res.compliant = 'no'
@@ -1166,27 +1123,6 @@ API.service.jct.hybrid = (issn, institution, funder, oa_permissions) ->
     else
       res.log.push code: 'Hybrid.HybridInOAW'
       res.compliant = 'yes'
-      # ANUSHA: we are no longer doing this, being hybrid is sufficient to be compliant
-      # get list of licences and matching license condition
-#      lc = false
-#      licences = []
-#      possibleLicences = pb.licences ? []
-#      if pb.licence
-#        possibleLicences.push({type: pb.licence})
-#      for l in possibleLicences
-#        licences.push l.type
-#        # TODO: Need to match with funder config
-#        if lc is false and l.type.toLowerCase().replace(/\-/g,'').replace(/ /g,'') in ['ccby','ccbysa','cc0','ccbynd']
-#          lc = l.type
-#      # check if license is compliant
-#      if lc
-#        res.log.push code: 'Hybrid.Compliant', parameters: licence: licences
-#        res.compliant = 'yes'
-#      else if not licences or licences.length is 0
-#        res.log.push code: 'Hybrid.Unknown', parameters: missing: ['licences']
-#        res.compliant = 'unknown'
-#      else
-#        res.log.push code: 'Hybrid.NonCompliant', parameters: licence: licences
   else
     res.log.push code: 'Hybrid.OAWTypeUnknown', parameters: missing: ['journal type']
     res.compliant = 'unknown'
@@ -1231,9 +1167,13 @@ API.service.jct.sa = (journal, institution, funder, oa_permissions) ->
     if r.compliant isnt 'yes'
       # only check retention if the funder allows it - and only if there IS a funder
       # funder allows if their rights retention date is in the past
-      if journal and funder? and fndr = API.service.jct.funders funder
+      fndr = false
+      if funder?
+        fndrs = API.service.jct.suggest.funder funder
+        fndr = fndrs.data[0] if fndrs and fndrs.data and fndrs.data[0]
+      if journal and funder? and fndr
         r.funder = funder
-        if fndr.retentionAt? and fndr.retentionAt < Date.now()
+        if fndr.retentionAt? and Date.parse(fndr.retentionAt) < Date.now()
           r.compliant = 'yes'
           r.log.push code: 'SA.FunderRRActive'
           # 22022022, as per https://github.com/antleaf/jct-project/issues/503
@@ -1301,51 +1241,6 @@ API.service.jct.fully_oa = (issn) ->
         res.log.push code: 'FullOA.NotInProgressDOAJ' # there is no application, so still may or may not be compliant
 
   return res
-
-
-# https://www.coalition-s.org/plan-s-funders-implementation/
-_funders = []
-_last_funders = Date.now()
-API.service.jct.funders = (id, refresh) ->
-  if refresh or _funders.length is 0 or _last_funders > (Date.now() - 604800000) # if older than a week
-    _last_funders = Date.now()
-    _funders = []
-    for r in API.service.jct.table2json 'https://www.coalition-s.org/plan-s-funders-implementation/'
-      rec = 
-        funder: r['cOAlition S organisation (funder)']
-        launch: r['Launch date for implementing  Plan S-aligned OA policy']
-        application: r['Application of Plan S principles ']
-        retention: r['Rights Retention Strategy']
-      try rec.funder = rec.funder.replace('&amp;','&')
-      for k of rec
-        if rec[k]?
-          rec[k] = rec[k].trim()
-          if rec[k].indexOf('<a') isnt -1
-            rec.url ?= []
-            rec.url.push rec[k].split('href')[1].split('=')[1].split('"')[1]
-            rec[k] = (rec[k].split('<')[0] + rec[k].split('>')[1].split('<')[0] + rec[k].split('>').pop()).trim()
-        else
-          delete rec[k]
-      if rec.retention
-        if rec.retention.indexOf('Note:') isnt -1
-          rec.notes ?= []
-          rec.notes.push rec.retention.split('Note:')[1].replace(')','').trim()
-          rec.retention = rec.retention.split('Note:')[0].replace('(','').trim()
-        rec.retentionAt = moment('01012021','DDMMYYYY').valueOf() if rec.retention.toLowerCase().indexOf('adopted') isnt -1
-      try rec.startAt = moment(rec.launch, 'Do MMMM YYYY').valueOf()
-      delete rec.startAt if JSON.stringify(rec.startAt) is 'null'
-      if not rec.startAt? and rec.launch?
-        rec.notes ?= []
-        rec.notes.push rec.launch
-      try rec.id = rec.funder.toLowerCase().replace(/[^a-z0-9]/g,'')
-      _funders.push(rec) if rec.id?
-    
-  if id?
-    for e in _funders
-      if e.id is id
-        return e
-    return false
-  return _funders
 
 
 API.service.jct.journals = {}
@@ -1529,22 +1424,21 @@ API.service.jct.import = (refresh) ->
     res.funders = res.funders.length if _.isArray res.funders
     console.log 'JCT import funders complete'
 
-    # Institution data does not change regularly
-    # console.log 'Starting institution (ror) import'
-    # API.service.jct.institution.import()
-    # console.log 'JCT import institution (ror) complete'
-
     console.log 'Starting TAs data import'
     res.ta = API.service.jct.ta.import false # this is the slowest, takes about twenty minutes
     console.log 'JCT import TAs complete'
 
-    console.log 'Starting Funder db config import'
-    API.service.jct.funder_config.import()
-    console.log 'JCT import Funder db config complete'
+#    console.log 'Starting Funder db config import'
+#    API.service.jct.funder_config.import()
+#    console.log 'JCT import Funder db config complete'
+#
+#    console.log 'Starting Funder db language import'
+#    API.service.jct.funder_language.import()
+#    console.log 'JCT import Funder db language complete'
 
-    console.log 'Starting Funder db language import'
-    API.service.jct.funder_language.import()
-    console.log 'JCT import Funder db language complete'
+    console.log 'Starting TAs data import'
+    res.ta = API.service.jct.ta.import false # this is the slowest, takes about twenty minutes
+    console.log 'JCT import TAs complete'
 
     # check the mappings on jct_journal, jct_agreement, any others that get used and changed during import
     # include a warning in the email if they seem far out of sync
@@ -2016,10 +1910,11 @@ API.service.jct.test = (params={}) ->
 
 # return the funder config for an id. Import the data if refresh is true
 API.service.jct.funder_config = (id, refresh) ->
-  if refresh
-    console.log('Got refresh - importing funder config')
-    Meteor.setTimeout (() => API.service.jct.funder_config.import()), 1
-    return true
+#  if refresh
+#    console.log('Got refresh - importing funder config')
+#    Meteor.setTimeout (() => API.service.jct.funder_config.import()), 1
+#    return true
+  # FIXME: this can now just pull from the index by id, which would probably be more performant
   if id
     rec = jct_funder_config.find 'id.exact:"' + id.toLowerCase().trim() + '"'
     if rec
@@ -2032,102 +1927,111 @@ API.service.jct.funder_config = (id, refresh) ->
 # For each funder in jct-funderdb repo, get the final funder configuration
 # The funder's specific config file gets merged with the default config file, to create the final config file
 # This is saved in elastic search
-API.service.jct.funder_config.import = () ->
-  funderdb_path = API.settings.funderdb
-  default_config_file = path.join(funderdb_path, 'default', 'config.yml')
-  default_config = jsYaml.load(fs.readFileSync(default_config_file, 'utf8'));
-  funders_config = []
-  # For each funder in directory
-  for f in fs.readdirSync funderdb_path
-    # parse and get the merged config file if it isn't default
-    if f isnt 'default'
-      funder_config_file = path.join(funderdb_path, f, 'config.yml')
-      if fs.existsSync funder_config_file
-        funder_config = jsYaml.load(fs.readFileSync(funder_config_file, 'utf8'));
-        merged_config = _merge_funder_config(default_config, funder_config)
-        funders_config.push(merged_config)
-  if funders_config.length
-    console.log 'Removing and reloading ' + funders_config.length + ' funders configuration'
-    jct_funder_config.remove '*'
-    jct_funder_config.insert funders_config
-  return
+#API.service.jct.funder_config.import = () ->
+#  funderdb_path = API.settings.funderdb
+#  default_config_file = path.join(funderdb_path, 'default', 'config.yml')
+#  default_config = jsYaml.load(fs.readFileSync(default_config_file, 'utf8'));
+#  funders_config = []
+#  # For each funder in directory
+#  for f in fs.readdirSync funderdb_path
+#    # parse and get the merged config file if it isn't default
+#    if f isnt 'default'
+#      funder_config_file = path.join(funderdb_path, f, 'config.yml')
+#      if fs.existsSync funder_config_file
+#        funder_config = jsYaml.load(fs.readFileSync(funder_config_file, 'utf8'));
+#        merged_config = _merge_funder_config(default_config, funder_config)
+#        funders_config.push(merged_config)
+#  if funders_config.length
+#    console.log 'Removing and reloading ' + funders_config.length + ' funders configuration'
+#    jct_funder_config.remove '*'
+#    jct_funder_config.insert funders_config
+#  return
 
 # return the funder language for an id. Import the data if refresh is true
-API.service.jct.funder_language = (id, refresh) ->
-  if refresh
-    console.log('Got refresh - importing funder language files')
-    Meteor.setTimeout (() => API.service.jct.funder_language.import()), 1
-    return true
-  if id
-    rec = jct_funder_language.find 'id.exact:"' + id.toLowerCase().trim() + '"'
+# FIXME: the id is now [funder]__[lang], so callers need to be checked
+API.service.jct.funder_language = (funder_id, language) ->
+  if not funder_id
+    return total: jct_funder_language.count()
+
+  if not language
+    language = "en"
+  id = funder_id.toLowerCase().trim() + "__" + language.toLowerCase().trim()
+
+  rec = jct_funder_language.get id
+  if rec
+    return rec
+
+  if language != "en"
+    id = funder_id.toLowerCase().trim() + "__en"
+    rec = jct_funder_language.get id
     if rec
       return rec
-    return {}
-  else
-    return total: jct_funder_language.count()
+
+  return {}
+
 
 # For each funder in jct-funderdb repo, get the final funder language file
 # The funder's specific language files get merged with the default language files, to create the final language file
 # This is saved in elastic search
-API.service.jct.funder_language.import = () ->
-  funderdb_path = API.settings.funderdb
-  default_lang_files_path = path.join(funderdb_path, 'default', 'lang')
-  default_language = _flatten_yaml_files(default_lang_files_path)
-  funders_language = []
-  for f in fs.readdirSync funderdb_path
-    # parse and get the merged config file if it isn't default
-    if f isnt 'default'
-      funder_lang_files_path = path.join(funderdb_path, f, 'lang')
-      if fs.existsSync funder_lang_files_path
-        merged_lang = _merge_language_files(default_language, funder_lang_files_path)
-        merged_lang['id'] = f
-        funders_language.push(merged_lang)
-      else
-        merged_lang = JSON.parse(JSON.stringify(default_language))
-        merged_lang['id'] = f
-        funders_language.push(merged_lang)
-  if funders_language.length
-    console.log 'Removing and reloading ' + funders_language.length + ' funders language files'
-    jct_funder_language.remove '*'
-    jct_funder_language.insert funders_language
-  return
+#API.service.jct.funder_language.import = () ->
+#  funderdb_path = API.settings.funderdb
+#  default_lang_files_path = path.join(funderdb_path, 'default', 'lang')
+#  default_language = _flatten_yaml_files(default_lang_files_path)
+#  funders_language = []
+#  for f in fs.readdirSync funderdb_path
+#    # parse and get the merged config file if it isn't default
+#    if f isnt 'default'
+#      funder_lang_files_path = path.join(funderdb_path, f, 'lang')
+#      if fs.existsSync funder_lang_files_path
+#        merged_lang = _merge_language_files(default_language, funder_lang_files_path)
+#        merged_lang['id'] = f
+#        funders_language.push(merged_lang)
+#      else
+#        merged_lang = JSON.parse(JSON.stringify(default_language))
+#        merged_lang['id'] = f
+#        funders_language.push(merged_lang)
+#  if funders_language.length
+#    console.log 'Removing and reloading ' + funders_language.length + ' funders language files'
+#    jct_funder_language.remove '*'
+#    jct_funder_language.insert funders_language
+#  return
+#
+#_merge_funder_config = (default_config, funder_config) ->
+#  result = _jct_object_merge(default_config, funder_config)
+#  return result
+#
+#_merge_language_files = (default_language, language_files_path) ->
+#  funder_lang = _flatten_yaml_files(language_files_path)
+#  result = _jct_object_merge(default_language, funder_lang)
+#  return result
 
-_merge_funder_config = (default_config, funder_config) ->
-  result = _jct_object_merge(default_config, funder_config)
-  return result
+#_jct_object_merge = (default_object, specific_object) ->
+#  result = JSON.parse(JSON.stringify(default_object)) # deep copy object
+#  for key in Object.keys(specific_object)
+#    # If specific_object[key] is an object and the key exists in default_object
+#    if Match.test(specific_object[key], Object)
+#      if key in Object.keys(default_object)
+#        result[key] = _jct_object_merge(default_object[key], specific_object[key])
+#      else
+#        result[key] = specific_object[key]
+#    else
+#      result[key] = specific_object[key]
+#  return result
 
-_merge_language_files = (default_language, language_files_path) ->
-  funder_lang = _flatten_yaml_files(language_files_path)
-  result = _jct_object_merge(default_language, funder_lang)
-  return result
-
-_jct_object_merge = (default_object, specific_object) ->
-  result = JSON.parse(JSON.stringify(default_object)) # deep copy object
-  for key in Object.keys(specific_object)
-    # If specific_object[key] is an object and the key exists in default_object
-    if Match.test(specific_object[key], Object)
-      if key in Object.keys(default_object)
-        result[key] = _jct_object_merge(default_object[key], specific_object[key])
-      else
-        result[key] = specific_object[key]
-    else
-      result[key] = specific_object[key]
-  return result
-
-_flatten_yaml_files = (lang_files_path) ->
-  flattened_config = {}
-  if not fs.existsSync lang_files_path
-    return flattened_config
-  if not fs.lstatSync(lang_files_path).isDirectory()
-    return flattened_config
-  for sub_file_name in fs.readdirSync lang_files_path
-    sub_file_path = path.join(lang_files_path, sub_file_name)
-    if fs.existsSync(sub_file_path) && fs.lstatSync(sub_file_path).isDirectory()
-      flattened_config[sub_file_name] = _flatten_yaml_files(sub_file_path)
-    else
-      menu = sub_file_name.split('.')[0]
-      flattened_config[menu] = jsYaml.load(fs.readFileSync(sub_file_path, 'utf8'));
-  return flattened_config
+#_flatten_yaml_files = (lang_files_path) ->
+#  flattened_config = {}
+#  if not fs.existsSync lang_files_path
+#    return flattened_config
+#  if not fs.lstatSync(lang_files_path).isDirectory()
+#    return flattened_config
+#  for sub_file_name in fs.readdirSync lang_files_path
+#    sub_file_path = path.join(lang_files_path, sub_file_name)
+#    if fs.existsSync(sub_file_path) && fs.lstatSync(sub_file_path).isDirectory()
+#      flattened_config[sub_file_name] = _flatten_yaml_files(sub_file_path)
+#    else
+#      menu = sub_file_name.split('.')[0]
+#      flattened_config[menu] = jsYaml.load(fs.readFileSync(sub_file_path, 'utf8'));
+#  return flattened_config
 
 _cards_for_display = (funder_config, results) ->
   _hasQualification = (path) ->
@@ -2208,71 +2112,14 @@ _cards_for_display = (funder_config, results) ->
 
   return [sorted_cards, is_compliant]
 
-# return the institution for an id. Import the data if refresh is true
-API.service.jct.institution = (id, refresh) ->
-  if refresh
-    console.log('Got refresh - importing institution (ror)')
-    Meteor.setTimeout (() => API.service.jct.institution.import()), 1
-    return true
+# return the institution for an id
+# No longer importing institution data. We get that from institution auto complete
+API.service.jct.institution = (id) ->
   if id
-    rec = jct_institution.find 'id.exact:"' + id.toLowerCase().trim() + '"'
+    rec = jct_institution_autocomplete.find 'id.exact:"' + id.toLowerCase().trim() + '"'
     if rec
       return rec
     return {}
   else
-    return total: jct_institution.count()
-
-# import institution data from ror
-API.service.jct.institution.import = () ->
-  _set_id = (rec) ->
-    ror = rec.id
-    id = ror.replace("https://ror.org/", '')
-    rec.id = id
-    rec.ror = id
-    rec.ror_id = ror
-    return rec
-
-  _set_title = (rec) ->
-    rec.title = rec.name
-    return rec
-
-  # Download zip file from github containing data dump of RoR
-  fldr = '/tmp/jct_ror' + (if API.settings.dev then '_dev' else '') + '/'
-  if fs.existsSync fldr
-    fs.rmdirSync(fldr, { recursive: true });
-  fs.mkdirSync fldr
-  filepath = fldr + 'ror.zip'
-  ror_data_dump_url = 'https://github.com/ror-community/ror-api/raw/master/rorapi/data/ror-2021-09-23/ror.zip'
-  fs.writeFileSync filepath, HTTP.call('GET', ror_data_dump_url, {npmRequestOptions:{encoding:null}}).content
-  console.log 'Importing from ROR data dump ' + fldr + 'ror.zip'
-  zip = AdmZip(filepath)
-  zip.extractEntryTo("ror.json", fldr)
-
-  # Remove old data and index new
-  removed = false
-  batch = []
-  counter = 1
-  imports = 0
-  for rec in JSON.parse fs.readFileSync fldr + 'ror.json'
-    if batch.length >= 20000
-      if not removed
-        console.log 'Removing old institution records'
-        jct_institution.remove '*'
-        future = new Future()
-        Meteor.setTimeout (() -> future.return()), 10000
-        future.wait()
-        removed = true
-      console.log 'Importing RoR batch ' + counter
-      jct_institution.insert batch
-      counter += 1
-      batch = []
-    rec = _set_id(rec)
-    rec = _set_title(rec)
-    batch.push rec
-    imports += 1
-  if batch.length
-    console.log 'Importing RoR batch ' + counter
-    jct_institution.insert batch
-    batch = []
-  console.log('Completed importing ror data ', imports)
+    return total: jct_institution_autocomplete.count()
 

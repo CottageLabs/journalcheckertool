@@ -753,7 +753,7 @@ button {
 
 .query {
   height: auto;
-  padding-top: 2.5vw;
+  padding-top: 0;
   padding-bottom: 0;
   background: #2B2B2B;
   min-height: 75vh;

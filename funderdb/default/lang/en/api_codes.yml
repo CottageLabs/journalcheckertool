@@ -1,0 +1,93 @@
+# This file contains the text to display for the various API codes
+qualifications:
+  doaj_under_review:
+    description: this journal is currently under review for potential inclusion in DOAJ, it is yet to be
+                  approved for inclusion within the public DOAJ database.
+  rights_retention_author_advice:
+    description: your funder supports you to use the <a href="https://www.coalition-s.org/faq-theme/rights-licences/" target="_blank"  rel="noopener">
+                 cOAlition S rights retention strategy</a> as a route to compliance irrespective of the journal's self-archiving policy.
+  corresponding_authors:
+    description: the corresponding author of the submitted article must be based at
+                 an institution within this transformative agreement for it to provide a route to compliance.
+  journal:
+    description: a transformative agreement is currently in force for this journal.
+    start_date: 'Start date of the transformative agreement:'
+    end_date: 'End date of the transformative agreement:'
+  institution:
+    description: a transformative agreement is currently in force for this institution.
+    start_date: 'Start date of the transformative agreement:'
+    end_date: 'End date of the transformative agreement:'
+logs:
+  fully_oa:
+    FullOA.NotInDOAJ: This journal is not present in DOAJ.
+    FullOA.InProgressDOAJ: This journal is currently under review for potential inclusion in DOAJ.
+    FullOA.NotInProgressDOAJ: This journal is not currently under review at DOAJ.
+    FullOA.InDOAJ: This journal is present in DOAJ.
+    FullOA.Compliant: "This journal enables you to publish under the following licences that are supported by your funder's policy:"
+    FullOA.Compliant.Properties:
+      licence: ''
+    FullOA.Unknown: We were unable to determine if this journal provides a route to compliance.
+    FullOA.Unknown.Properties:
+      missing: 'The following required information was missing from the DOAJ record:'
+    FullOA.NonCompliant: This journal does not enable you to publish under a CC BY or equivalent licence required for policy compliance.
+    FullOA.NonCompliant.Properties:
+      licence: 'The licences allowed by this journal are:'
+  self_archiving:
+    SA.InOAB: This journal is present in OAB Permissions.
+    SA.NotInOAB: This journal is not present in OAB Permissions.
+    SA.OABNonCompliant: "This journal's self-archiving policy does not enable compliance with your funder's open access policy, for the following reason(s):"
+    SA.OABNonCompliant.Properties:
+      version: 'The manuscript version that can be archived is:'
+      embargo: 'There is an embargo period (in months):'
+      licence: 'The licence that can be used on the manuscript to be archived is:'
+    SA.OABIncomplete: We were unable to determine if this journal provides a route to compliance.
+    SA.OABIncomplete.Properties:
+      missing: 'The following required information was missing from the OAB Permissions database:'
+    SA.OABCompliant: This journal's self-archiving policy aligns with your funder's open access policy.
+    SA.OABCompliant.Properties:
+      version: 'The manuscript version that can be archived is:'
+      embargo: 'There is an embargo period (in months):'
+      licence: 'The licence that can be used on the manuscript to be archived is:'
+    SA.FunderRRNotActive: Your funder has not implemented the
+                          <a href="https://www.coalition-s.org/faq-theme/rights-licences/" target="_blank"  rel="noopener">Plan S Rights Retention Strategy</a>.
+    SA.FunderRRActive: Your funder has implemented the
+                       <a href="https://www.coalition-s.org/faq-theme/rights-licences/" target="_blank"  rel="noopener">Plan S Rights Retention Strategy</a>.
+                       Rights retention takes precedence over the journal's self-archiving policy. It provides a route to
+                       compliance irrespective of publisher imposed restrictions or embargo periods.
+    SA.Unknown: We are unable to determine if this journal provides a route to compliance via self-archiving due to missing information.
+    SA.NonCompliant: Self-archiving is not a route to compliance when publishing in this journal.
+    SA.Compliant: This journal has indicated to cOAlition S that self-archiving is permitted.
+    SA.RRException: This journal has stated that it will reject any manuscript where the author has applied a CC BY public copyright licence to any Author Accepted Manuscript version arising from their submission.
+    SA.RRNoException: This journal is not known to reject the Rights Retention Strategy
+    SA.NotAsserted: This journal is not in the cOAlition S-managed list of titles which have indicated to cOAlition S that they allow Self-Archiving, irrespective of their publicly stated policy
+  ta:
+    TA.NoTA: No Transformative Agreement containing the selected journal and institution was found within our database.
+    TA.Exists: A Transformative Agreement containing the selected journal and institution was found within our database.
+    TA.Exists.Properties:
+      ta_id: "Our ID for the TA is (may also be the ESAC ID)"
+      end_date: "Expires:"
+    TA.NotActive: Our database shows that the Transformative Agreement containing the selected journal and institution has expired.
+    TA.Active: Our database shows that the Transformative Agreement containing the selected journal and institution is active.
+    TA.Unknown: We do not have sufficient information to determine if a Transformative Agreement is available to provide a route to compliance.
+    TA.NonCompliant: There is no Transformative Agreement available to provide a route to compliance.
+    TA.Compliant: A Transformative Agreement is available that can provide a route to compliance.
+  tj:
+    TJ.NoTJ: This journal is not a Transformative Journal.
+    TJ.Exists: This journal is a Transformative Journal.
+    TJ.NonCompliant: As this journal is not a Transformative Journal, this route to compliance is not available.
+    TJ.Compliant: This Transformative Journal provides a route to compliance.
+  hybrid:
+    Hybrid.NotInDOAJ: This journal is not in DOAJ
+    Hybrid.InDOAJ: This journal is in DOAJ, which only lists fully Open Access journals, so this journal is not Hybrid
+    Hybrid.NotInOAW: This journal is not listed as a Hybrid or Transformative Journal in the OA.Works permissions database, so we are unable to tell if it is Hybrid
+    Hybrid.InOAW: This journal is listed in the OA.Works permissions database
+    Hybrid.OAWTypeUnknown: The journal type is not given in OA.Works, we are unable to determine if it is Hybrid
+    Hybrid.NotHybridInOAW: The journal is not identified as Hybrid or Transformative in OA.Works
+    Hybrid.HybridInOAW: The journal is identified as Hybrid or Transformative in OA.Works
+    Hybrid.NonCompliant: The journal does not permit you to publish under a licence compliant with your funder's policy
+    Hybrid.NonCompliant.Properties:
+      licence: "The licences available for you to publish in are:"
+    Hybrid.Compliant: The journal permits you to publish under a licence compliant with your funder's policy
+    Hybrid.Compliant.Properties:
+      licence: "The licences available for you to publish in are:"
+    Hybrid.Unknown: We are unable to determine if the journal permits you to publish under a licence compliant with your funder's policy

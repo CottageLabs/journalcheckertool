@@ -403,6 +403,7 @@ API.service.jct.suggest.journal = (str, from, size) ->
     data.push(rec)
   return total: res?.hits?.total ? 0, data: data
 
+ISSN_RX = new RegExp("^[0-9]{4}-[0-9]{3}[0-9Xx]$")
 
 API.service.jct.calculate = (params={}, refresh) ->
   # given funder(s), journal(s), institution(s), find out if compliant or not
@@ -416,6 +417,19 @@ API.service.jct.calculate = (params={}, refresh) ->
     params.institution = params.ror
     delete params.ror
   refresh ?= params.refresh if params.refresh?
+
+  # validate the incoming parameters
+  #
+  # required fields
+  if !params.journal
+    throw {status: 400, stack: "ISSN parameter must be supplied in the `issn` url parameter"} # Meteor.Error(400, "ISSN parameter must be supplied", "")
+  if !params.funder
+    throw {status: 400, stack: "Funder ID must be supplied in the `funder` url parameter"}
+
+  # field formats
+  if params.journal.toString().match(ISSN_RX) == null
+    throw {status: 400, stack: "Supplied ISSN is malformed"}
+
   # all possible checks we can perform
   checks = {
     'self_archiving': 'sa',

@@ -70,14 +70,16 @@ INDEX_PATH = {
     "jac": os.path.join(DATABASES, "jct", "jac"),
     "iac": os.path.join(DATABASES, "jct", "iac"),
     "funder_language": os.path.join(DATABASES, "jct", "funder_language"),
-    "funder_config": os.path.join(DATABASES, "jct", "funder_config")
+    "funder_config": os.path.join(DATABASES, "jct", "funder_config"),
+    "journals": os.path.join(DATABASES, "jct", "journals")
 }
 
 INDEX_HISTORY = {
     "jac": 5,
     "iac": 5,
     "funder_language": 5,
-    "funder_config": 5
+    "funder_config": 5,
+    "journals": 5
 }
 
 CROSSREF_OLDEST_DOI = 2019
@@ -98,7 +100,7 @@ OA_EXCEPTIONS_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSexj1DPU
 
 FUNDER_DB_DIR = rel2abs(__file__, "..", "..", "funderdb")
 
-JAC_PREF_ORDER = ["doaj", "crossref", "tj", "sa_negative", "sa_positive", "ta"]
+JAC_PREF_ORDER = ["doaj", "crossref", "tj", "sa_negative", "sa_positive", "oa_exceptions", "ta"]
 
 DEFAULT_MAPPING = {
     "dynamic_templates": [

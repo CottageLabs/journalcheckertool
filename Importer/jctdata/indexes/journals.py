@@ -12,158 +12,181 @@ class Journals(Indexer):
     ID = "journals"
     SOURCES = ["crossref", "doaj", "tj", "ta", "doaj_inprogress", "sa_negative", "sa_positive", "oa_exceptions"]
 
+    def __init__(self):
+        super(Journals, self).__init__()
+        self._doaj_data = False
+        self._tj_data = False
+        self._dip_data = False
+        self._san_data = False
+        self._sap_data = False
+        self._oae_data = False
+
     def gather(self):
-        print('JOURNALS: Gathering data for journal autocomplete from sources: {x}'.format(x=",".join(self.SOURCES)))
+        print('JOURNALS: Gathering data for journal compliance from sources: {x}'.format(x=",".join(self.SOURCES)))
         paths = resolver.gather_data(self.SOURCES, True)
 
-        issns, titles, pubs = self._get_paths(paths)
+        issns = self._get_paths(paths)
 
         print("JOURNALS: ISSN sources: " + ", ".join([x[0] for x in issns]))
-        print("JOURNALS: TITLE sources: " + ", ".join([x[0] for x in titles]))
-        print("JOURNALS: PUB sources: " + ", ".join([x[0] for x in pubs]))
 
     def analyse(self):
-        print("JAC: Analysing data for journal autocomplete")
+        print("JOURNALS: Analysing data for journal compliance")
         dir = datetime.strftime(datetime.utcnow(), settings.DIR_DATE_FORMAT)
-        jacdir = os.path.join(self.dir, dir)
-        os.makedirs(jacdir, exist_ok=True)
+        journalsdir = os.path.join(self.dir, dir)
+        os.makedirs(journalsdir, exist_ok=True)
 
-        issn_clusters_file = os.path.join(jacdir, "issn_clusters.csv")
-        titles_file = os.path.join(jacdir, "titles.csv")
-        pubs_file = os.path.join(jacdir, "pubs.csv")
+        issn_clusters_file = os.path.join(journalsdir, "issn_clusters.csv")
 
         pathset = {}
         for s in self.SOURCES:
             pathset[s] = resolver.SOURCES[s].current_paths()
-        issns, titles, pubs = self._get_paths(pathset)
+        issns = self._get_paths(pathset)
 
         issn_clusters(issns, issn_clusters_file)
-        titlerows = cat_and_dedupe(titles)
-        pubrows = cat_and_dedupe(pubs)
 
-        with open(titles_file, "w") as f:
-            writer = csv.writer(f)
-            writer.writerows(titlerows)
-
-        with open(pubs_file, "w") as f:
-            writer = csv.writer(f)
-            writer.writerows(pubrows)
-
-        print("JAC: analysed data written to directory {x}".format(x=jacdir))
+        print("JOURNALS: analysed data written to directory {x}".format(x=journalsdir))
 
     def assemble(self):
-        print("JAC: Preparing journal autocomplete data")
+        print("JOURNALS: Preparing journal compliance")
 
-        preference_order = settings.JAC_PREF_ORDER
-        jacdir = os.path.join(self.dir, self.current_dir())
-        outfile = os.path.join(jacdir, "jac.json")
+        journalsdir = os.path.join(self.dir, self.current_dir())
+        outfile = os.path.join(journalsdir, "journals.json")
 
-        issn_clusters_file = os.path.join(jacdir, "issn_clusters.csv")
-        titles_file = os.path.join(jacdir, "titles.csv")
-        pubs_file = os.path.join(jacdir, "pubs.csv")
-
-        with open(titles_file) as f:
-            reader = csv.reader(f)
-            titlerows = [row for row in reader]
-
-        with open(pubs_file) as f:
-            reader = csv.reader(f)
-            pubrows = [row for row in reader]
-
-        titles = cluster_to_dict(titlerows, 3)
-        publishers = cluster_to_dict(pubrows, 2)
+        issn_clusters_file = os.path.join(journalsdir, "issn_clusters.csv")
 
         with open(issn_clusters_file, "r") as f, open(outfile, "w") as o:
             reader = csv.reader(f)
             for vissns in reader:
                 record = {"issns": vissns}
-                main, alts = self._get_titles(vissns, titles, preference_order)
-                if main is not None:
-                    record["title"] = main
-                else:
-                    record["title"] = ""
-                if len(alts) > 0:
-                    record["alts"] = alts
 
-                publisher = self._get_publisher(vissns, publishers, preference_order)
-                if publisher is not None:
-                    record["publisher"] = publisher
-
-                self._index(record)
+                self._doaj(record)
+                self._tj(record)
+                self._doaj_in_progress(record)
+                self._sa_negative(record)
+                self._sa_positive(record)
+                self._oa_exceptions(record)
 
                 o.write(json.dumps(record) + "\n")
 
-        print("JAC: Journal Autocomplete data assembled")
+        print("JOURNALS: Journal compliance assembled")
 
         self._cleanup()
 
     def _get_paths(self, paths):
         issns = []
-        titles = []
-        pubs = []
         for source, files in paths.items():
             if "coincident_issns" in files:
                 issns.append((source, files["coincident_issns"]))
-            if "titles" in files:
-                titles.append((source, files["titles"]))
-            if "publishers" in files:
-                pubs.append((source, files["publishers"]))
+        return issns
 
-        return issns, titles, pubs
+    def _doaj(self, record):
+        if self._doaj_data is False:
+            paths = resolver.SOURCES["doaj"].current_paths()
+            doaj_csv = paths["licences"]
 
-    def _get_titles(self, issns, titles, preference_order):
-        mains = []
-        alts = []
+            with open(doaj_csv, "r") as f:
+                reader = csv.reader(f)
+                data = [row for row in reader]
+                self._doaj_data = cluster_to_dict(data, 1)
 
-        for issn in issns:
-            candidates = titles.get(issn, [])
-            for c in candidates:
-                if c[1] == "main":
-                    mains.append((c[0].strip(), c[2].strip()))
-                elif c[1] == "alt":
-                    alts.append((c[0].strip(), c[2].strip()))
+        for issn in record.get("issns", []):
+            if issn in self._doaj_data:
+                record["indoaj"] = True
+                license = json.loads(self._doaj_data[issn][0][0])
+                record["doaj"] = {"bibjson": {"license" : license}}
+                break
 
-        if len(mains) == 0:
-            # if there are no titles, return an empty state
-            if len(alts) == 0:
-                return None, alts
-            # otherwise return the best title from the alternates
-            main = extract_preferred(alts, preference_order)
-            return main, [x for x in list(set([a[0] for a in alts])) if x != main]
+    def _tj(self, record):
+        if self._tj_data is False:
+            paths = resolver.SOURCES["tj"].current_paths()
+            tj_csv = paths["coincident_issns"]
 
-        if len(mains) == 1:
-            return mains[0][0], [x for x in list(set([a[0] for a in alts])) if x != mains[0][0]]
+            with open(tj_csv, "r") as f:
+                reader = csv.reader(f)
+                data = []
+                for row in reader:
+                    for c in row:
+                        if c != "":
+                            data.append(c)
+                self._tj_data = data
 
-        main = extract_preferred(mains, preference_order)
-        return main, [x for x in list(set([m[0] for m in mains] + [a[0] for a in alts])) if x != main]
+        for issn in record.get("issns", []):
+            if issn in self._tj_data:
+                record["tj"] = True
+                break
 
-    def _get_publisher(self, issns, publishers, preference_order):
-        pubs = []
+    def _doaj_in_progress(self, record):
+        if self._dip_data is False:
+            paths = resolver.SOURCES["doaj_inprogress"].current_paths()
+            dip_csv = paths["coincident_issns"]
 
-        for issn in issns:
-            candidates = publishers.get(issn, [])
-            for c in candidates:
-                pubs.append((c[0].strip(), c[1].strip()))
+            with open(dip_csv, "r") as f:
+                reader = csv.reader(f)
+                data = []
+                for row in reader:
+                    for c in row:
+                        if c != "":
+                            data.append(c)
+                self._dip_data = data
 
-        if len(pubs) == 0:
-            return None
+        for issn in record.get("issns", []):
+            if issn in self._dip_data:
+                record["doajinprogress"] = True
+                break
 
-        pub = extract_preferred(pubs, preference_order)
-        return pub
+    def _sa_negative(self, record):
+        if self._san_data is False:
+            paths = resolver.SOURCES["sa_negative"].current_paths()
+            san_csv = paths["coincident_issns"]
 
-    def _index(self, record):
-        idx = {}
+            with open(san_csv, "r") as f:
+                reader = csv.reader(f)
+                data = []
+                for row in reader:
+                    for c in row:
+                        if c != "":
+                            data.append(c)
+                self._san_data = data
 
-        idx["issns"] = [issn.lower() for issn in record["issns"]]
-        idx["issns"] += [issn.replace("-", "") for issn in idx["issns"]]
+        for issn in record.get("issns", []):
+            if issn in self._san_data:
+                record["sa_prohibited"] = True
+                break
 
-        idx["title"] = title_variants(record.get("title", ""))
+    def _sa_positive(self, record):
+        if self._sap_data is False:
+            paths = resolver.SOURCES["sa_positive"].current_paths()
+            sap_csv = paths["coincident_issns"]
 
-        if "alts" in record:
-            idx["alts"] = []
-            for alt in record["alts"]:
-                idx["alts"] += title_variants(alt)
-            idx["alts"] = list(set(idx["alts"]))
+            with open(sap_csv, "r") as f:
+                reader = csv.reader(f)
+                data = []
+                for row in reader:
+                    for c in row:
+                        if c != "":
+                            data.append(c)
+                self._sap_data = data
 
-        record["index"] = idx
+        for issn in record.get("issns", []):
+            if issn in self._sap_data:
+                record["retained"] = True
+                break
 
+    def _oa_exceptions(self, record):
+        if self._oae_data is False:
+            paths = resolver.SOURCES["oa_exceptions"].current_paths()
+            oae_csv = paths["coincident_issns"]
+
+            with open(oae_csv, "r") as f:
+                reader = csv.reader(f)
+                data = []
+                for row in reader:
+                    for c in row:
+                        if c != "":
+                            data.append(c)
+                self._oae_data = data
+
+        for issn in record.get("issns", []):
+            if issn in self._oae_data:
+                record["oa_exception"] = True
+                break

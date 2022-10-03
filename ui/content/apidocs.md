@@ -288,7 +288,7 @@ files provided for that funder (see below).
 * `cards[].modal` - the modal to bind to the card's overall modal (other modals can be specified inline in the card text as normal)
 
 
-## Funder Specific Configurations and Language
+## Funder Specific Language
 
 Each funder in JCT may specify custom language for how the compliance information should be
 interpreted and displayed to end users.  This information is optimised for use in the JCT user interface.
@@ -298,14 +298,29 @@ Nonetheless it is also available via the API for use by any downstream systems.
 GET /funder_language/<funder id>
 ```
 
+or 
+
+```bash
+GET /funder_language/<funder_id>/<language_code>
+```
+
+Use of the URL without language code will return the default language pack (English).  If you request a language which is not provided for that funder, you will get the default language pack in response.
+
 The response is a JSON document which contains all of the language used by the JCT front end, which covers:
 * General site text specific to the funder
 * Text for all API log codes
 * Content for all compliance cards
 * Any modals attached to any part of the information
 
+The support for multiple languages can vary across funders.  Most funders support all of the current translations (see below), but where funders have customised the language of their results for their own needs, unless translations of those customisations are also provided, they will be in the default language.
+
+The list of broadly supported languages is currently:
+* English (en) *default*
+* French (fr)
+
 Examples:
 * Wellcome Trust: [{{< param apidocs.ApiURL >}}funder_language/wellcome]({{< param apidocs.ApiURL >}}funder_language/wellcome)
+* Fonds de recherche du Québec, in French : [{{< param apidocs.ApiURL >}}funder_language/quebecresearchfunds/fr]({{< param apidocs.ApiURL >}}funder_language/quebecresearchfunds/fr)
 * UKRI: [{{< param apidocs.ApiURL >}}funder_language/unitedkingdomresearchinnovationukri]({{< param apidocs.ApiURL >}}funder_language/unitedkingdomresearchinnovationukri)
 
 ## Transformative Journals

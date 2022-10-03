@@ -1,0 +1,10 @@
+icon: false
+title: "DOES NOT ALLOW COMPLIANCE WITH THE HORIZON EUROPE OPEN ACCESS MANDATE"
+body:
+  default: "<p>The journal you have selected does not seem to allow you to publish your article with immediate open 
+            access. It also does not seem to allow you to immediately deposit the Author Accepted Manuscript or the 
+            Version of Record in a trusted repository under a CC BY (or equivalent) licence.</p>
+            <p>You may have to contact the publisher or select another publishing venue for your article such as
+            <a href=\"https://open-research-europe.ec.europa.eu\" target=\"_blank\">Open
+            Research Europe</a>, the European Commission’s open access publishing platform.</p>
+            <p>If you have questions or need more information, contact your Project Officer.</p>"

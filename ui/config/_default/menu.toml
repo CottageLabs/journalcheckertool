@@ -11,33 +11,33 @@
     name = "Exception Lists"
     pre = " • "
     url = "/exception-lists"
-    weight = 2.1
+    weight = 3
 [[main]]
     name = "API Documentation"
     pre = " • "
     url = "/apidocs"
-    weight = 3
+    weight = 4
 [[main]]
     name = "Embeddable Widget"
     pre = " • "
     url = "/widget"
-    weight = 4
+    weight = 5
 [[main]]
     name = "FAQ"
     url = "/faq"
-    weight = 5
+    weight = 6
 [[main]]
     pre = " • "
     name = "Privacy Notice"
     url = "/notices#privacy_notice"
-    weight = 6
+    weight = 7
 [[main]]
     name = "Disclaimer & Copyright"
     pre = " • "
     url = "/notices#disclaimer_and_copyright"
-    weight = 7
+    weight = 8
 [[main]]
     name = "Release History"
     pre = " • "
     url = "/release-history"
-    weight = 8
+    weight = 9

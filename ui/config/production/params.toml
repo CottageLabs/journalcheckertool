@@ -1,6 +1,5 @@
 [main]
     endpoint=""
+    populate = false
 [apidocs]
     apiURL = "https://api.journalcheckertool.org/"
-[results]
-    populate = false

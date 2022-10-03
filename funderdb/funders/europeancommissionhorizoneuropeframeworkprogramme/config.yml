@@ -5,4 +5,143 @@ apc:
   tj: false # 4, 13
 routes:
   self_archiving:
-    rights_retention: 2100-01-01
+    rights_retention: 2021-01-01
+    license:
+      - cc-by # SA is compliant if the licence is cc-by (6.1) / 6.7
+  fully_oa:
+    license:
+      - cc-by # 6.7
+  hybrid:
+    calculate: true
+    license:
+      - cc-by # 6.3 / 6.7
+card_order:
+  - card1
+  - card2
+  - card3
+  - card3a
+  - card4
+  - card4a
+  - card4a_ta
+  - card5_hybrid
+  - card5_closed
+  - card5_ta
+  - card6
+cards:
+  - id: card1
+    compliant: true
+    preferred: false
+    match_routes:
+      must:
+        - fully_oa  # no need to consider the SA route, as this is implicit in Fully OA
+      not:
+        - ta
+
+  - id: card2
+    compliant: true
+    preferred: false
+    match_routes:
+      must:
+        - fully_oa  # no need to consider the SA route, as this is implicit in Fully OA
+        - ta
+
+  - id: card3
+    compliant: true
+    preferred: false
+    match_routes:
+      or:
+        - hybrid
+        - tj
+      not:
+        - ta
+        - self_archiving
+
+  - id: card3a
+    compliant: true
+    preferred: false
+    match_routes:
+      must:
+        - self_archiving
+      or:
+        - hybrid
+        - tj
+      not:
+        - ta
+
+  - id: card4
+    compliant: true
+    preferred: false
+    match_routes:
+      or:
+        - hybrid
+        - tj
+      must:
+        - ta
+      not:
+        - self_archiving
+
+  - id: card4a
+    compliant: true
+    preferred: false
+    match_routes:
+      or:
+        - hybrid
+        - tj
+      must:
+        - ta
+        - self_archiving
+
+  - id: card5_hybrid
+    compliant: true
+    preferred: false
+    match_routes:
+      must:
+        - self_archiving
+      or:
+        - hybrid
+        - tj
+
+  - id: card5_closed
+    compliant: true
+    preferred: false
+    match_routes:
+      must:
+        - self_archiving
+      not:
+        - fully_oa
+        - hybrid
+        - tj
+        - ta
+
+  - id: card6
+    compliant: false
+    preferred: false
+    match_routes:
+      not:
+        - self_archiving
+        - ta
+        - fully_oa
+        - hybrid
+        - tj
+
+  - id: card4a_ta
+    compliant: true
+    preferred: false
+    match_routes:
+      not:
+        - hybrid
+        - tj
+        - fully_oa
+      must:
+        - ta
+
+  - id: card5_ta
+    compliant: true
+    preferred: false
+    match_routes:
+      not:
+        - hybrid
+        - tj
+        - fully_oa
+      must:
+        - ta

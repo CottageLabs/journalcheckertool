@@ -35,7 +35,8 @@ MAX_DATASOURCE_AGE = {
     "ta": 60 * 60 * 24 * 7,
     "ror": 60 * 60 * 24 * 7,
     "sa_negative": 60 * 60 * 24 * 7,
-    "sa_positive": 60 * 60 * 24 * 7
+    "sa_positive": 60 * 60 * 24 * 7,
+    "funderdb": 60   # funderdb is always updated, only a short delay to avoid importing multiple times in a concurrent run
 }
 
 DATASOURCE_PATH = {
@@ -46,7 +47,8 @@ DATASOURCE_PATH = {
     "ta": os.path.join(DATABASES, "ta"),
     "ror": os.path.join(DATABASES, "ror"),
     "sa_negative": os.path.join(DATABASES, "sa_negative"),
-    "sa_positive": os.path.join(DATABASES, "sa_positive")
+    "sa_positive": os.path.join(DATABASES, "sa_positive"),
+    "funderdb": os.path.join(DATABASES, "funderdb")
 }
 
 DATASOURCE_HISTORY = {
@@ -57,7 +59,22 @@ DATASOURCE_HISTORY = {
     "ta": 3,
     "ror": 3,
     "sa_negative": 3,
-    "sa_positive": 3
+    "sa_positive": 3,
+    "funderdb": 2
+}
+
+INDEX_PATH = {
+    "jac": os.path.join(DATABASES, "jct", "jac"),
+    "iac": os.path.join(DATABASES, "jct", "iac"),
+    "funder_language": os.path.join(DATABASES, "jct", "funder_language"),
+    "funder_config": os.path.join(DATABASES, "jct", "funder_config")
+}
+
+INDEX_HISTORY = {
+    "jac": 5,
+    "iac": 5,
+    "funder_language": 5,
+    "funder_config": 5
 }
 
 CROSSREF_OLDEST_DOI = 2019
@@ -74,9 +91,9 @@ SA_NEGATIVE_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0EEMZTikc
 
 SA_POSITIVE_SHEET ="https://docs.google.com/spreadsheets/d/e/2PACX-1vTm6sDI16Kin3baNWaAiMUfGdMEUEGXy0LRvSDnvAQTWDN_exlYGyv4gnstGKdv3rXshjSa7AUWtAc5/pub?gid=0&single=true&output=csv"
 
-JAC_PREF_ORDER = ["doaj", "crossref", "tj", "sa_negative", "sa_positive", "ta"]
+FUNDER_DB_DIR = rel2abs(__file__, "..", "..", "funderdb")
 
-JAC_HISTORY = 5
+JAC_PREF_ORDER = ["doaj", "crossref", "tj", "sa_negative", "sa_positive", "ta"]
 
 DEFAULT_MAPPING = {
     "dynamic_templates": [

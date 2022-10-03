@@ -1,9 +1,18 @@
 jct.site_modals.share_results = {
-    title: "Share this result",
-    body: `<p>To share this result, copy the following link
+    en: {
+        title: "Share this result",
+        body: `<p>To share this result, copy the following link
             <button class="button button--primary" style="float: right;" onClick="jct.copy_results_url()">Copy</button>
         </p>
         <p id="jct_results_url"></p>`
+    },
+    fr: {
+        title: "Partager ce résultat",
+        body: `<p>Pour partager ce résultat, copier le lien suivant :
+            <button class="button button--primary" style="float: right;" onClick="jct.copy_results_url()">Copier</button>
+        </p>
+        <p id="jct_results_url"></p>`
+    }
 }
 
 jct.explain = (q) => {

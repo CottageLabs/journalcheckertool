@@ -50,4 +50,5 @@ class SAPositive(datasource.Datasource):
         analysis.simple_property_extract(sa_file, outfile, property=0, identifiers=[1,2], info="main", skip_title_row=True)
 
     def _publisher_map(self, sa_file, outfile):
-        analysis.simple_property_extract(sa_file, outfile, property=4, identifiers=[1, 2], skip_title_row=True)
+        # NOTE, this has been updated to match the Master data file, rather than the SA data transfer sheet
+        analysis.simple_property_extract(sa_file, outfile, property=3, identifiers=[1, 2], skip_title_row=True)

@@ -94,7 +94,10 @@ DOAJ_IN_PROGRESS_KEYFILE = "../keyfiles/doaj_inprogress.txt"
 
 SA_NEGATIVE_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0EEMZTikcQZV28BiCL4huv-r0RnHiDrU08j3W1fyERNasoJYuAZek5G3oQH1TUKmf_X-yC5SiHaBM/pub?gid=0&single=true&output=csv"
 
-SA_POSITIVE_SHEET ="https://docs.google.com/spreadsheets/d/e/2PACX-1vTm6sDI16Kin3baNWaAiMUfGdMEUEGXy0LRvSDnvAQTWDN_exlYGyv4gnstGKdv3rXshjSa7AUWtAc5/pub?gid=0&single=true&output=csv"
+SA_POSITIVE_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQXYjTvrKA3zTXPJDtO3MMj8zGISaQ-0p6d-CDSxJM0iv5DQ1BQ1S7JNy7BAiUw3K4MUE-zG8MbiL4R/pub?gid=0&single=true&output=csv"
+
+# This is the data transfer sheet, but it appears to have updates that are not in the master sheet
+# SA_POSITIVE_SHEET ="https://docs.google.com/spreadsheets/d/e/2PACX-1vTm6sDI16Kin3baNWaAiMUfGdMEUEGXy0LRvSDnvAQTWDN_exlYGyv4gnstGKdv3rXshjSa7AUWtAc5/pub?gid=0&single=true&output=csv"
 
 OA_EXCEPTIONS_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSexj1DPUkhIDZvVX-CkGTkR_zwduUVlZ4DKVNnS1g0w1AlGKDUSx2t7HAawCcSAR6qqsJAQ7dPHWIa/pub?gid=404801205&single=true&output=csv"
 

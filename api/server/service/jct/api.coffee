@@ -1433,10 +1433,10 @@ API.service.jct.import = (refresh) ->
     res.retention = API.service.jct.retention undefined, true
     console.log 'JCT import retention data complete'
 
-    console.log 'Starting funder data import'
-    res.funders = API.service.jct.funders undefined, true
-    res.funders = res.funders.length if _.isArray res.funders
-    console.log 'JCT import funders complete'
+#    console.log 'Starting funder data import'
+#    res.funders = API.service.jct.funders undefined, true
+#    res.funders = res.funders.length if _.isArray res.funders
+#    console.log 'JCT import funders complete'
 
     console.log 'Starting TAs data import'
     res.ta = API.service.jct.ta.import false # this is the slowest, takes about twenty minutes

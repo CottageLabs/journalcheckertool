@@ -104,28 +104,16 @@ API.add 'service/jct/ta/import',
 API.add 'service/jct/sa_prohibited',
   get: () ->
     return API.service.jct.sa_prohibited this.queryParams.issn
-API.add 'service/jct/sa_prohibited/import',
-  get: () ->
-    Meteor.setTimeout (() => API.service.jct.sa_prohibited undefined, true), 1
-    return true
 
 API.add 'service/jct/retention', 
   get: () -> 
     return API.service.jct.retention this.queryParams.issn
-API.add 'service/jct/retention/import', 
-  get: () -> 
-    Meteor.setTimeout (() => API.service.jct.retention undefined, true), 1
-    return true
 
 API.add 'service/jct/tj', get: () -> return jct_journal.search this.queryParams, {restrict: [{exists: {field: 'tj'}}]}
 API.add 'service/jct/tj/:issn', 
   get: () -> 
     res = API.service.jct.tj this.urlParams.issn
     return if res?.compliant isnt 'yes' then 404 else issn: this.urlParams.issn, transformative_journal: true
-API.add 'service/jct/tj/import', 
-  get: () -> 
-    Meteor.setTimeout (() => API.service.jct.tj undefined, true), 1
-    return true
 
 API.add 'service/jct/feedback',
   get: () -> return API.service.jct.feedback this.queryParams
@@ -181,17 +169,11 @@ API.add 'service/jct/funder_config', get: () ->
   return API.service.jct.funder_config undefined, false
 API.add 'service/jct/funder_config/:iid', get: () ->
   return API.service.jct.funder_config this.urlParams.iid
-#API.add 'service/jct/funder_config/import', get: () ->
-#  Meteor.setTimeout (() => API.service.jct.funder_config undefined, true), 1
-#  return true
 
 API.add 'service/jct/funder_language', get: () ->
   return API.service.jct.funder_language undefined, false
 API.add 'service/jct/funder_language/:iid', get: () -> return API.service.jct.funder_language this.urlParams.iid
 API.add 'service/jct/funder_language/:iid/:lang', get: () -> return API.service.jct.funder_language this.urlParams.iid, this.urlParams.lang
-#API.add 'service/jct/funder_language/import', get: () ->
-#  Meteor.setTimeout (() => API.service.jct.funder_language undefined, true), 1
-#  return true
 
 _jct_clean = (str) ->
   specialChars = ["\\", "+", "-", "=", "&&", "||", ">", "<", "!", "(", ")", "{", "}", "[", "]", "^", "~", "?", ":", "/"]
@@ -547,9 +529,6 @@ API.service.jct.calculate = (params={}, refresh) ->
         cm.institution = i
         combos.push cm
 
-#  console.log 'Calculating for:'
-#  console.log combos
-
   # start an async check for every combo
   _prl = (combo) -> Meteor.setTimeout (() -> _check combo.funder, combo.journal, combo.institution), 1
   for c in combos
@@ -644,7 +623,7 @@ API.service.jct.ta.import = (mail=true) ->
   records = []
   res = sheets: 0, ready: 0, processed:0, records: 0, failed: [], not_processed:0
   console.log 'Starting ta import'
-  batch = []
+  # batch = []
   bissns = [] # track ones going into the batch
   for ov in API.service.jct.csv2json 'https://docs.google.com/spreadsheets/d/e/2PACX-1vStezELi7qnKcyE8OiO2OYx2kqQDOnNsDX1JfAsK487n2uB_Dve5iDTwhUFfJ7eFPDhEjkfhXhqVTGw/pub?gid=1130349201&single=true&output=csv'
     res.sheets += 1
@@ -705,8 +684,8 @@ API.service.jct.ta.import = (mail=true) ->
                         inbi = true
                       else
                         bissns.push ri
-                    if not inbi
-                      batch.push issn: rec.issn, title: rec.journal, ta: true
+#                    if not inbi
+#                      batch.push issn: rec.issn, title: rec.journal, ta: true
                   records.push rec
           catch
             console.log src + ' FAILED'
@@ -732,9 +711,9 @@ API.service.jct.ta.import = (mail=true) ->
     jct_agreement.remove '*'
     jct_agreement.insert records
     res.extracted = records.length
-  if batch.length
-    jct_journal.insert batch
-    batch = []
+#  if batch.length
+#    jct_journal.insert batch
+#    batch = []
   if mail
     API.service.jct.mail
       subject: 'JCT TA import complete'
@@ -754,31 +733,6 @@ API.service.jct.ta.import = (mail=true) ->
 # fields called pissn and eissn will contain ISSNs to check against
 # check if an issn is in the transformative journals list (to be provided by plan S)
 API.service.jct.tj = (issn, refresh) ->
-  if refresh
-    console.log 'Starting tj import'
-    recs = API.service.jct.csv2json 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT2SPOjVU4CKhP7FHOgaf0aRsjSOt-ApwLOy44swojTDFsWlZAIZViC0gdbmxJaEWxdJSnUmNoAnoo9/pub?gid=0&single=true&output=csv'
-    console.log 'Retrieved ' + recs.length + ' tj records from sheet'
-    for rec in recs
-      tj = {}
-      try tj.title = rec['Journal Title'].trim() if rec['Journal Title']
-      tj.issn ?= []
-      tj.issn.push(rec['ISSN (Print)'].trim().toUpperCase()) if typeof rec['ISSN (Print)'] is 'string' and rec['ISSN (Print)'].length
-      tj.issn.push(rec['e-ISSN (Online/Web)'].trim().toUpperCase()) if typeof rec['e-ISSN (Online/Web)'] is 'string' and rec['e-ISSN (Online/Web)'].length
-      if tj.issn and tj.issn.length
-        if exists = jct_journal.find 'issn.exact:"' + tj.issn.join('" OR issn.exact:"') + '"'
-          upd = {}
-          # don't trust incoming ISSNs from sheets because data provided by third parties has been seen to be wrong
-          #for isn in tj.issn
-          #  if isn not in exists.issn
-          #    upd.issn ?= []
-          #    upd.issn.push isn
-          upd.tj = true if exists.tj isnt true
-          if JSON.stringify(upd) isnt '{}'
-            jct_journal.update exists._id, upd
-        else
-          tj.tj = true
-          jct_journal.insert tj
-
   issn = issn.split(',') if typeof issn is 'string'
   if issn and issn.length
     res = 
@@ -809,35 +763,6 @@ API.service.jct.sa_prohibited = (issn, refresh) ->
 # check the sa prohibited data source first, to check if retained is false
 # If retained is false, SA check is not compliant.
 # will be a list of journals by ISSN
-  if refresh
-    counter = 0
-    for rt in API.service.jct.csv2json 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0EEMZTikcQZV28BiCL4huv-r0RnHiDrU08j3W1fyERNasoJYuAZek5G3oQH1TUKmf_X-yC5SiHaBM/pub?gid=0&single=true&output=csv'
-      counter += 1
-      console.log('sa prohibited import ' + counter) if counter % 20 is 0
-      rt.journal = rt['Journal Title'].trim() if typeof rt['Journal Title'] is 'string'
-      rt.issn = []
-      rt.issn.push(rt['ISSN (print)'].trim().toUpperCase()) if typeof rt['ISSN (print)'] is 'string' and rt['ISSN (print)'].length
-      rt.issn.push(rt['ISSN (electronic)'].trim().toUpperCase()) if typeof rt['ISSN (electronic)'] is 'string' and rt['ISSN (electronic)'].length
-      rt.publisher = rt.Publisher.trim() if typeof rt.Publisher is 'string'
-      if rt.issn.length
-        if exists = jct_journal.find 'issn.exact:"' + rt.issn.join('" OR issn.exact:"') + '"'
-          upd = {}
-          upd.issn ?= []
-          for isn in rt.issn
-            if isn not in exists.issn
-              upd.issn.push isn
-          upd.sa_prohibited = true if exists.sa_prohibited isnt true
-          # All of the sa prohibition data is held in journal.retention
-          upd.retention = rt
-          if JSON.stringify(upd) isnt '{}'
-            for en in exists.issn
-              upd.issn.push(en) if typeof en is 'string' and en.length and en not in upd.issn
-            jct_journal.update exists._id, upd
-        else
-          rec = sa_prohibited: true, retention: rt, issn: rt.issn, publisher: rt.publisher, title: rt.journal
-          jct_journal.insert rec
-    console.log('Imported ' + counter)
-
   if issn
     issn = issn.split(',') if typeof issn is 'string'
     res =
@@ -871,35 +796,6 @@ API.service.jct.retention = (issn, refresh) ->
   # check the rights retention data source once it exists if the record is not in OAB
   # for now this is a fallback to something that is not in OAB
   # will be a list of journals by ISSN and a number 1,2,3,4,5
-  if refresh
-    counter = 0
-    for rt in API.service.jct.csv2json 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTm6sDI16Kin3baNWaAiMUfGdMEUEGXy0LRvSDnvAQTWDN_exlYGyv4gnstGKdv3rXshjSa7AUWtAc5/pub?gid=0&single=true&output=csv'
-      counter += 1
-      console.log('Retention import ' + counter) if counter % 20 is 0
-      rt.journal = rt['Journal Name'].trim() if typeof rt['Journal Name'] is 'string'
-      rt.issn = []
-      rt.issn.push(rt['ISSN (print)'].trim().toUpperCase()) if typeof rt['ISSN (print)'] is 'string' and rt['ISSN (print)'].length
-      rt.issn.push(rt['ISSN (online)'].trim().toUpperCase()) if typeof rt['ISSN (online)'] is 'string' and rt['ISSN (online)'].length
-      rt.position = if typeof rt.Position is 'number' then rt.Position else parseInt rt.Position.trim()
-      rt.publisher = rt.Publisher.trim() if typeof rt.Publisher is 'string'
-      if rt.issn.length
-        if exists = jct_journal.find 'issn.exact:"' + rt.issn.join('" OR issn.exact:"') + '"'
-          upd = {}
-          upd.issn ?= []
-          for isn in rt.issn
-            if isn not in exists.issn
-              upd.issn.push isn
-          upd.retained = true if exists.retained isnt true
-          upd.retention = rt
-          if JSON.stringify(upd) isnt '{}'
-            for en in exists.issn
-              upd.issn.push(en) if typeof en is 'string' and en.length and en not in upd.issn
-            jct_journal.update exists._id, upd
-        else
-          rec = retained: true, retention: rt, issn: rt.issn, publisher: rt.publisher, title: rt.journal
-          jct_journal.insert rec
-    console.log('Imported ' + counter)
-
   if issn
     issn = [issn] if typeof issn is 'string'
     res =
@@ -1245,199 +1141,12 @@ API.service.jct.fully_oa = (issn) ->
 
   return res
 
-
-API.service.jct.journals = {}
-API.service.jct.journals.import = (refresh) ->
-  # first see if DOAJ file has updated - if so, do a full journal import
-  # doaj only updates their journal dump once a week so calling journal import
-  # won't actually do anything if the dump file name has not changed since last run 
-  # or if a refresh is called
-  fldr = '/tmp/jct_doaj' + (if API.settings.dev then '_dev' else '') + '/'
-  if not fs.existsSync fldr
-    fs.mkdirSync fldr
-  ret = false
-  prev = false
-  current = false
-  fs.writeFileSync fldr + 'doaj.tar', HTTP.call('GET', 'https://doaj.org/public-data-dump/journal', {npmRequestOptions:{encoding:null}}).content
-  tar.extract file: fldr + 'doaj.tar', cwd: fldr, sync: true # extracted doaj dump folders end 2020-10-01
-  console.log 'got DOAJ journals dump'
-  for f in fs.readdirSync fldr # readdir alphasorts, so if more than one in tmp then last one will be newest
-    if f.indexOf('doaj_journal_data') isnt -1
-      if prev
-        try fs.unlinkSync fldr + prev + '/journal_batch_1.json'
-        try fs.rmdirSync fldr + prev
-      prev = current
-      current = f
-  if current and (prev or refresh)
-    console.log 'DOAJ journal dump ' + current + ' is suitable for ingest, getting crossref first'
-
-    # get everything from crossref
-    removed = false
-    total = 0
-    counter = 0
-    batch = []
-    error_count = 0
-    while (total is 0 or counter < 100000) and error_count < 10
-      if batch.length >= 10000 or (removed and batch.length >= 5000)
-        if not removed
-          # makes a shorter period of lack of records to query
-          # there will still be a period of 5 to 10 minutes where not all journals will be present
-          # but, since imports only occur once a day to every few days depending on settings, and 
-          # responses should be cached at cloudflare anyway, this should not affect anyone as long as 
-          # imports are not often run during UK/US business hours
-          jct_journal.remove '*'
-          console.log 'Removing old journal records'
-          future = new Future()
-          Meteor.setTimeout (() -> future.return()), 10000
-          future.wait()
-          removed = true
-        console.log 'Importing crossref ' + counter
-        jct_journal.insert batch
-        batch = []
-      try
-        url = 'https://api.crossref.org/journals?offset=' + counter + '&rows=' + 1000
-        console.log 'getting from crossref journals ' + url
-        res = HTTP.call 'GET', url, {headers: {'User-Agent': 'Journal Checker Tool; mailto: jct@cottagelabs.zendesk.com'}}
-        total = res.data.message['total-results'] if total is 0
-        for rec in res.data.message.items
-          if rec.ISSN and rec.ISSN.length and typeof rec.ISSN[0] is 'string'
-            rec.crossref = true
-            rec.issn = []
-            for i in rec.ISSN
-              rec.issn.push(i) if typeof i is 'string' and i.length and i not in rec.issn
-            rec.dois = rec.counts?['total-dois']
-            if rec.breakdowns?['dois-by-issued-year']?
-              rec.years = []
-              for yr in rec.breakdowns['dois-by-issued-year']
-                rec.years.push(yr[0]) if yr.length is 2 and yr[0] not in rec.years
-              rec.years.sort()
-            if not rec.years? or not rec.years.length or not rec.dois
-              rec.discontinued = true
-            else
-              thisyear = new Date().getFullYear()
-              if thisyear not in rec.years and (thisyear-1) not in rec.years and (thisyear-2) not in rec.years and (thisyear-3) not in rec.years
-                rec.discontinued = true
-            batch.push rec
-        counter += 1000
-      catch err
-        error_count += 1
-        future = new Future()
-        Meteor.setTimeout (() -> future.return()), 2000 # wait 2s on probable crossref downtime
-        future.wait()
-    if batch.length
-      jct_journal.insert batch
-      batch = []
-    if error_count >= 10
-      console.log 'Crossref import had ' + error_count + ' errors. Backing off. Imported ' + batch.length + ' of ' + total + ' records.'
-
-    # then load the DOAJ data from the file (crossref takes priority because it has better metadata for spotting discontinuations)
-    # only about 20% of the ~15k are not already in crossref, so do updates then bulk load the new ones
-    console.log 'Importing from DOAJ journal dump ' + current
-    imports = 0
-    for rec in JSON.parse fs.readFileSync fldr + current + '/journal_batch_1.json'
-      imports += 1
-      console.log('DOAJ dump import ' + imports) if imports % 1000 is 0
-      qr = if typeof rec.bibjson.pissn is 'string' then 'issn.exact:"' + rec.bibjson.pissn + '"' else ''
-      if typeof rec.bibjson.eissn is 'string'
-        qr += ' OR ' if qr isnt ''
-        qr += 'issn.exact:"' + rec.bibjson.eissn + '"'
-      if exists = jct_journal.find qr
-        upd = doaj: rec
-        upd.indoaj = true
-        upd.discontinued = true if rec.bibjson.discontinued_date or rec.bibjson.is_replaced_by
-        upd.issn = [] # DOAJ ISSN data overrides crossref because we've seen errors in crossref that are correct in DOAJ such as 1474-9728
-        upd.issn.push(rec.bibjson.pissn.toUpperCase()) if typeof rec.bibjson.pissn is 'string' and rec.bibjson.pissn.length and rec.bibjson.pissn.toUpperCase() not in upd.issn
-        upd.issn.push(rec.bibjson.eissn.toUpperCase()) if typeof rec.bibjson.eissn is 'string' and rec.bibjson.eissn.length and rec.bibjson.eissn.toUpperCase() not in upd.issn
-        jct_journal.update exists._id, upd
-      else
-        nr = doaj: rec, indoaj: true
-        nr.title ?= rec.bibjson.title
-        nr.publisher ?= rec.bibjson.publisher.name if rec.bibjson.publisher?.name?
-        nr.discontinued = true if rec.bibjson.discontinued_date or rec.bibjson.is_replaced_by
-        nr.issn ?= []
-        nr.issn.push(rec.bibjson.pissn.toUpperCase()) if typeof rec.bibjson.pissn is 'string' and rec.bibjson.pissn.toUpperCase() not in nr.issn
-        nr.issn.push(rec.bibjson.eissn.toUpperCase()) if typeof rec.bibjson.eissn is 'string' and rec.bibjson.eissn.toUpperCase() not in nr.issn
-        batch.push nr
-    if batch.length
-      jct_journal.insert batch
-      batch = []
-
-    # get new doaj inprogress data if the journals load processed some doaj
-    # journals (otherwise we're between the week-long period when doaj doesn't update)
-    # and if doaj did update, load them into the catalogue too - there's only a few hundred so can check them for crossref dups too
-    r = HTTP.call 'GET', 'https://doaj.org/jct/inprogress?api_key=' + API.settings.service.jct.doaj.apikey
-    console.log 'Loading DOAJ inprogress records'
-    inpc = 0
-    for rec in JSON.parse r.content
-      inpc += 1
-      console.log('DOAJ inprogress ' + inpc) if inpc % 100 is 0
-      issns = []
-      issns.push(rec.pissn.toUpperCase()) if typeof rec.pissn is 'string' and rec.pissn.length
-      issns.push(rec.eissn.toUpperCase()) if typeof rec.eissn is 'string' and rec.eissn.length
-      if exists = jct_journal.find 'issn.exact:"' + issns.join('" OR issn.exact:"') + '"'
-        if not exists.indoaj # no point adding an application if already in doaj, which should be impossible, but check anyway
-          upd = doajinprogress: true, doajprogress: rec
-          nissns = []
-          for isn in issns
-            nissns.push(isn) if isn not in nissns and isn not in exists.issn
-          if nissns.length
-            upd.issn = _.union exists.issn, nissns
-          jct_journal.update exists._id, upd
-        else
-          console.log 'DOAJ in progress application already in DOAJ for ' + issns.join(', ')
-      else
-        nr = doajprogress: rec, issn: issns, doajinprogress: true
-        batch.push nr
-    if batch.length
-      jct_journal.insert batch
-      batch = []
-    return jct_journal.count()
-  else
-    return 0
-  # when importing TJ or TA data, add any journals not yet known about
-  
-
 API.service.jct.import = (refresh) ->
-  res = {}
-  if jct_journal
-    res = previously: jct_journal.count(), presently: undefined, started: Date.now()
-    res.newest = jct_agreement.find '*', true
+  res = {started: Date.now()}
+  res.newest = jct_agreement.find '*', true
   if refresh or res.newest?.createdAt < Date.now()-86400000
     # run all imports necessary for up to date data
     console.log 'Starting JCT imports'
-
-    console.log 'Starting journals import'
-    res.journals = API.service.jct.journals.import refresh # takes about 10 mins depending how crossref is feeling
-    console.log 'JCT journals imported ' + res.journals
-  
-    console.log 'Starting TJs import'
-    res.tj = API.service.jct.tj undefined, true
-    console.log 'JCT import TJs complete'
-
-    console.log 'Starting sa prohibited data import'
-    res.retention = API.service.jct.sa_prohibited undefined, true
-    console.log 'JCT import sa prohibited data complete'
-
-    console.log 'Starting retention data import'
-    res.retention = API.service.jct.retention undefined, true
-    console.log 'JCT import retention data complete'
-
-    console.log 'Starting funder data import'
-    res.funders = API.service.jct.funders undefined, true
-    res.funders = res.funders.length if _.isArray res.funders
-    console.log 'JCT import funders complete'
-
-    console.log 'Starting TAs data import'
-    res.ta = API.service.jct.ta.import false # this is the slowest, takes about twenty minutes
-    console.log 'JCT import TAs complete'
-
-#    console.log 'Starting Funder db config import'
-#    API.service.jct.funder_config.import()
-#    console.log 'JCT import Funder db config complete'
-#
-#    console.log 'Starting Funder db language import'
-#    API.service.jct.funder_language.import()
-#    console.log 'JCT import Funder db language complete'
 
     console.log 'Starting TAs data import'
     res.ta = API.service.jct.ta.import false # this is the slowest, takes about twenty minutes
@@ -1446,33 +1155,18 @@ API.service.jct.import = (refresh) ->
     # check the mappings on jct_journal, jct_agreement, any others that get used and changed during import
     # include a warning in the email if they seem far out of sync
     # and include the previously and presently count, they should not be too different
-    res.presently = jct_journal.count()
+    # res.presently = jct_journal.count()
     res.ended = Date.now()
     res.took = res.ended - res.started
     res.minutes = Math.ceil res.took/60000
-    if res.mapped = JSON.stringify(jct_journal.mapping()).indexOf('dynamic_templates') isnt -1
-      res.mapped = JSON.stringify(jct_agreement.mapping()).indexOf('dynamic_templates') isnt -1
+#    if res.mapped = JSON.stringify(jct_journal.mapping()).indexOf('dynamic_templates') isnt -1
+#      res.mapped = JSON.stringify(jct_agreement.mapping()).indexOf('dynamic_templates') isnt -1
   
     API.service.jct.mail
       subject: 'JCT import complete'
       text: JSON.stringify res, '', 2
 
   return res
-
-#_jct_import = () ->
-#  try API.service.jct.funders undefined, true # get the funders at startup
-#  if API.settings.service?.jct?.import isnt false # so defaults to run if not set to false in settings
-#    console.log 'Setting up a daily import check which will run an import if it is day ' + API.settings.service.jct.import_day
-#    # if later updates are made to run this on a cluster again, make sure that only one server runs this (e.g. use the import setting above where necessary)
-#    Meteor.setInterval () ->
-#      today = new Date()
-#      if today.getDay() is API.settings.service.jct.import_day
-#        # if import_day number matches, run import. Days are numbered 0 to 6, Sun to Sat
-#        console.log 'Starting day ' + API.settings.service.jct.import_day + ' import'
-#        API.service.jct.import()
-#    , 86400000
-#Meteor.setTimeout _jct_import, 5000
-
 
 API.service.jct.unknown = (res, funder, journal, institution, send) ->
   if res?

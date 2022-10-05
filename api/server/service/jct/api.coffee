@@ -52,10 +52,13 @@ funders will be a list given to us by JCT detailing their particular requirement
 # (for convenience the settings have initially been set up to only run import on dev as well, to make the most 
 # of the dev machine and minimise any potential memory or CPU intense work 
 index_name = API.settings.es.index ? 'jct'
-jct_journal = new API.collection {index:index_name, type:"journal"}
 jct_agreement = new API.collection {index:index_name, type:"agreement"}
 jct_compliance = new API.collection {index:index_name, type:"compliance"}
 jct_unknown = new API.collection {index:index_name, type:"unknown"}
+
+# Journals are held in an alias of the name `[index_name]_journal]`.  Within that
+# index is a single type `journal` which contains the relevant data
+jct_journal = new API.collection {index:index_name + "_journals", type:"journals"}
 
 # Funder configurations talk to an alias of the name `[index_name]_funder_config` or
 # `[index_name]_funder_language` which points to the latest import of data.  Within

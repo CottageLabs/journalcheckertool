@@ -57,7 +57,7 @@ class Journals(Indexer):
         with open(issn_clusters_file, "r") as f, open(outfile, "w") as o:
             reader = csv.reader(f)
             for vissns in reader:
-                record = {"issns": vissns}
+                record = {"issn": vissns, "createdAt": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")}
 
                 self._doaj(record)
                 self._tj(record)
@@ -89,7 +89,7 @@ class Journals(Indexer):
                 data = [row for row in reader]
                 self._doaj_data = cluster_to_dict(data, 1)
 
-        for issn in record.get("issns", []):
+        for issn in record.get("issn", []):
             if issn in self._doaj_data:
                 record["indoaj"] = True
                 license = json.loads(self._doaj_data[issn][0][0])
@@ -110,7 +110,7 @@ class Journals(Indexer):
                             data.append(c)
                 self._tj_data = data
 
-        for issn in record.get("issns", []):
+        for issn in record.get("issn", []):
             if issn in self._tj_data:
                 record["tj"] = True
                 break
@@ -129,7 +129,7 @@ class Journals(Indexer):
                             data.append(c)
                 self._dip_data = data
 
-        for issn in record.get("issns", []):
+        for issn in record.get("issn", []):
             if issn in self._dip_data:
                 record["doajinprogress"] = True
                 break
@@ -148,7 +148,7 @@ class Journals(Indexer):
                             data.append(c)
                 self._san_data = data
 
-        for issn in record.get("issns", []):
+        for issn in record.get("issn", []):
             if issn in self._san_data:
                 record["sa_prohibited"] = True
                 break
@@ -167,7 +167,7 @@ class Journals(Indexer):
                             data.append(c)
                 self._sap_data = data
 
-        for issn in record.get("issns", []):
+        for issn in record.get("issn", []):
             if issn in self._sap_data:
                 record["retained"] = True
                 break
@@ -186,7 +186,7 @@ class Journals(Indexer):
                             data.append(c)
                 self._oae_data = data
 
-        for issn in record.get("issns", []):
+        for issn in record.get("issn", []):
             if issn in self._oae_data:
                 record["oa_exception"] = True
                 break

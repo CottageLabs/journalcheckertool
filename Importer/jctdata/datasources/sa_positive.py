@@ -36,7 +36,7 @@ class SAPositive(datasource.Datasource):
         coincident_issn_file = os.path.join(self.dir, dir, "coincident_issns.csv")
         title_file = os.path.join(self.dir, dir, "titles.csv")
         publisher_file = os.path.join(self.dir, dir, "publishers.csv")
-        print("SA NEGATIVE: analysing csv {x}".format(x=infile))
+        print("SA POSITIVE: analysing csv {x}".format(x=infile))
 
         self._coincident_issns(infile, coincident_issn_file)
         self._title_map(infile, title_file)

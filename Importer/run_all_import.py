@@ -9,7 +9,7 @@ from jctdata import cli
 messages = []
 messages.append("{x}: Starting importer run.".format(x=datetime.utcnow()))
 
-cli.run("load", "_all")
+cli.run("load", ("_all",))
 messages.append("{x}: Ran all local importer processes".format(x=datetime.utcnow()))
 
 # Start jct import

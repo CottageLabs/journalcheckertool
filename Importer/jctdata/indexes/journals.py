@@ -186,7 +186,16 @@ class Journals(Indexer):
                             data.append(c)
                 self._oae_data = data
 
+            caveats_csv = paths["caveats"]
+            with open(caveats_csv, "r") as f:
+                reader = csv.reader(f)
+                data = {}
+                for row in reader:
+                    data[row[0]] = row[1]
+                self._oae_caveats = data
+
         for issn in record.get("issn", []):
             if issn in self._oae_data:
                 record["oa_exception"] = True
+                record["oa_exception_caveat"] = self._oae_caveats.get(issn, "")
                 break

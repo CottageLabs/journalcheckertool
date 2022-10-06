@@ -1101,6 +1101,14 @@ API.service.jct.fully_oa = (issn) ->
     log: []
 
   if issn
+    if inoae = jct_journal.find 'oa_exception:true AND (issn.exact:"' + issn.join('" OR issn.exact:"') + '")'
+      res.log.push code: 'FullOA.Exception'
+      res.qualifications = [{oa_exception_caveat: {caveat: inoae.oa_exception_caveat}}]
+      res.compliant = "yes"
+      return res
+    else
+      res.log.push code: 'FullOA.NoException'
+
     if ind = jct_journal.find 'indoaj:true AND (issn.exact:"' + issn.join('" OR issn.exact:"') + '")'
       res.log.push code: 'FullOA.InDOAJ'
       db = ind.doaj.bibjson

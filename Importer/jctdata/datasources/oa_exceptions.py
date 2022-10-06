@@ -15,10 +15,12 @@ class OAExceptions(datasource.Datasource):
         coincident_issn_file = os.path.join(self.dir, dir, "coincident_issns.csv")
         title_file = os.path.join(self.dir, dir, "titles.csv")
         publisher_file = os.path.join(self.dir, dir, "publishers.csv")
+        caveats_file = os.path.join(self.dir, dir, "caveats.csv")
         return {
             "coincident_issns" : coincident_issn_file,
             "titles" : title_file,
-            "publishers": publisher_file
+            "publishers": publisher_file,
+            "caveats": caveats_file
         }
 
     def gather(self):
@@ -38,11 +40,13 @@ class OAExceptions(datasource.Datasource):
         coincident_issn_file = os.path.join(self.dir, dir, "coincident_issns.csv")
         title_file = os.path.join(self.dir, dir, "titles.csv")
         publisher_file = os.path.join(self.dir, dir, "publishers.csv")
+        caveats_file = os.path.join(self.dir, dir, "caveats.csv")
         print("OA EXCEPTIONS: analysing csv {x}".format(x=infile))
 
         self._coincident_issns(infile, coincident_issn_file)
         self._title_map(infile, title_file)
         self._publisher_map(infile, publisher_file)
+        self._caveats_map(infile, caveats_file)
 
 
     def _coincident_issns(self, oa_file, outfile):
@@ -53,3 +57,6 @@ class OAExceptions(datasource.Datasource):
 
     def _publisher_map(self, oa_file, outfile):
         analysis.simple_property_extract(oa_file, outfile, property=3, identifiers=[1, 2], skip_title_row=True)
+
+    def _caveats_map(self, oa_file, outfile):
+        analysis.simple_property_extract(oa_file, outfile, property=4, identifiers=[1, 2], skip_title_row=True)

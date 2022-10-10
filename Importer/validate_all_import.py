@@ -78,8 +78,8 @@ def check_indices():
         "jac":             ("jct_jac{0}".format(index_suffix), ''),
         "iac":             ("jct_iac{0}".format(index_suffix), ''),
         "journal":         ("jct{0}".format(index_suffix), 'journal'),
-        "funder_config":   ("jct{0}".format(index_suffix), 'funder_config'),
-        "funder_language": ("jct{0}".format(index_suffix), 'funder_language'),
+        "funder_config":   ("jct_funder_config{0}".format(index_suffix), ''),
+        "funder_language": ("jct_funder_language{0}".format(index_suffix), ''),
         "agreement":       ("jct{0}".format(index_suffix), 'agreement')
     }
 

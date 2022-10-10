@@ -1,0 +1,8 @@
+title: Libre accès intégral
+body:
+  default: "<p>Allez-y et soumettez votre article. N’oubliez pas de sélectionner une <a href=\"https://creativecommons.org/licenses/by/2.0/\" target=\"_blank\" rel=\"noopener\">
+            licence CC BY</a> pour assurer la conformité.</p>
+            <p>Au moment de la publication, vous pouvez auto-archiver l’article final publié en tant que voie de conformité supplémentaire (plutôt que voie de rechange).</p>"
+explain:
+  title: Libre accès intégral
+  text: Cette voie de conformité est proposée car la revue est considérée comme étant intégralement en libre accès par le DOAJ (Directory of Open Access Journals).

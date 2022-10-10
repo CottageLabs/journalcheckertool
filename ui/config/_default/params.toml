@@ -1,10 +1,11 @@
 [main]
-    aosAssetsVersion = "4.1.2"
-    jctAssetsVersion = "4.1.2"
+    aosAssetsVersion = "5.0.0"
+    jctAssetsVersion = "5.0.0"
+    endpoint="_dev"
+    populate = false
+[text]
     feedbackButton = "Send us feedback"
     alert = "The information provided by the <em>Journal Checker Tool</em> represents cOAlition S’s current understanding in relation to the policies of the journals contained within it. We will endeavour to keep it up to date and accurate, but we do not accept any liability in relation to any errors or omissions."
-    comingSoon = "Coming Soon"
-    endpoint="_dev"
 [footer]
     address = '''
     cOAlition S Office<br/>
@@ -21,6 +22,5 @@
     apiURL = "https://api.jct.cottagelabs.com/"
 [results]
     restartButton = "Start over"
-    explainButton = "Explain this result"
     printButton = "Print"
-    populate = false
+    shareButton = "Share this result"

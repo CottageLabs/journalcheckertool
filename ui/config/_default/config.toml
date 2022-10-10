@@ -1,7 +1,9 @@
 disableKinds = ["taxonomy", "taxonomyTerm"]
 languageCode = "en"
+defaultContentLanguage = "en"
 theme = "mainTheme"
-title = "Journal Checker Tool: Plan S Compliance Validator"
+title = "Journal Checker Tool: Check which publishing options are supported by your funder’s OA policy"
 description = "JCT enables researchers to check whether they can comply with their funders Plan S aligned OA policy based on the journal, the funder and the institution affiliated with the research to be published."
 baseURL = "http://localhost:1313/"
 googleAnalytics = ""
+

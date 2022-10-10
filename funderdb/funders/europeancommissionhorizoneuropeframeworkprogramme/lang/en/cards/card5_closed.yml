@@ -1,0 +1,13 @@
+icon: self_archiving
+title: "COMPLIANCE WITH THE HORIZON EUROPE OPEN ACCESS MANDATE IS POSSIBLE THROUGH SELF-ARCHIVING"
+body:
+  default: "<p>Upon publication, ensure the <strong>immediate deposition</strong> and open access of the Author 
+            Accepted Manuscript in a <strong>trusted repository</strong> under a CC BY (or equivalent) licence, as 
+            required by Horizon Europe.</p>
+            <p>No Article Processing Charges, should be required. Other publishing costs (such as page or colour 
+            charges) in hybrid or subscription journals are <strong>not eligible</strong> costs under Horizon Europe 
+            and you must locate alternative funds.</p>
+            <p><a href=\"#\" class=\"modal-trigger\" data-modal=\"he_popup5\">More information</a></p>"
+explain:
+  title: Self-Archiving
+  text: This way to comply is available to you because although the journal is closed, it has a suitable Self-Archving policy.

@@ -359,6 +359,29 @@ let jct = {
     inputsCycle: {
         "journal" : "funder",
         "funder" : "institution"
+    },
+    languageCode: "en",
+    messages: {
+        en: {
+            journal: "Journal",
+            journal_placeholder: "By ISSN or title",
+            funder: "My Funder",
+            funder_placeholder: "By funder name",
+            institution: "My Institution",
+            institution_placeholder: "By ROR or name",
+            no_affiliation: "No affiliation",
+            explain: 'Explain this result'
+        },
+        fr: {
+            journal: "Revue",
+            journal_placeholder: "Par numéro ISSN ou titre",
+            funder: "Mon organisme de financement",
+            funder_placeholder: "Par nom d’organisme de financement",
+            institution: "Mon institution",
+            institution_placeholder: "Par le ROR ou le nom",
+            no_affiliation: "Aucune affiliation",
+            explain: "Explications du résultat"
+        }
     }
 };
 
@@ -372,7 +395,8 @@ jct.d.gebc = document.getElementsByClassName;
 // ----------------------------------------
 // html for input form
 // ----------------------------------------
-jct.inputs_plugin_html =`
+jct.inputs_plugin_html = () => {
+    return `
     <h2 class="sr-only">Make a query</h2>
     <div class="col col--1of3 expression">
         <div class="expression__input" id="jct_journal-container">
@@ -401,7 +425,7 @@ jct.inputs_plugin_html =`
             <br>
             <div class="expression__checkbox">
                 <input type="checkbox" id="jct_notHE" name="notHE">
-                <label for="notHE">No affiliation</label>
+                <label for="notHE">${jct.getText("no_affiliation")}</label>
             </div>
         </div>
         <div class="expression__operator">
@@ -427,7 +451,7 @@ jct.inputs_plugin_html =`
             <span class="sr-only">Loading choices…</span>
         </div>
     </div>
-`;
+`};
 
 // ----------------------------------------
 // html for results_plugin
@@ -523,7 +547,28 @@ jct.buildCard = function(cardConfig, uiText, results, choices) {
         body = body.replace("{institution}", uiText.site.card_institution_missing);
     }
 
-    let cardClass = "card"
+    // FIXME: we should consider a better way to do this, but in the mean time this serves our
+    // basic requirements
+    if (compliantRoutes.includes("ta")) {
+        for (let i = 0; i < results.length; i++) {
+            let r = results[i];
+            if (r.route === "ta") {
+                for (let j = 0; j < r.log.length; j++) {
+                    let log = r.log[j];
+                    if (log.code === "TA.Exists") {
+                        if (log.parameters && log.parameters.end_date && log.parameters.end_date.length > 0) {
+                            body = body.replace("{end_date}", log.parameters.end_date[0]);
+                        } else {
+                            body = body.replace("{end_date}", "an unknown date");
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    let cardClass = "card";
     let why = "";
     // TODO: this enables a "why am I seeing this?" feature on the card which links to the
     // results explanation on a per-card basis.  We have agreed not to enable this for the moment
@@ -634,6 +679,13 @@ jct.build_modal = (modal_id) => {
     let modalText = jct.lang ? jct.lang.modals[modal_id] : "";
     if (!modalText) {
         modalText = jct.site_modals[modal_id];
+        if (modalText.en) {
+            if (modalText[jct.languageCode]) {
+                modalText = modalText[jct.languageCode];
+            } else {
+                modalText = modalText.en;
+            }
+        }
     }
     if (!modalText) {
         return "";
@@ -724,6 +776,23 @@ jct.searchFunders = function(str) {
 ////////////////////////////////////////////////
 // Utilities
 
+jct.getText = (messageKey) => {
+    // start by looking in the desired language pack
+    let pack = jct.messages[jct.languageCode];
+    if (pack[messageKey]) {
+        return pack[messageKey];
+    }
+
+    // fall back to the english language pack
+    pack = jct.messages.en;
+    if (pack[messageKey]) {
+        return pack[messageKey];
+    }
+
+    // if still no luck, return the key with some markup so it's obvious
+    return "[[" + messageKey + "]]";
+};
+
 // ----------------------------------------
 // Function _emptyElement
 // ----------------------------------------
@@ -779,7 +848,7 @@ jct.jx = (route,q,after,api) => {
             jct.load_funder(q.funder, jct.funder_langs[q.funder]);
             return;
         }
-        let funderUrl = new URL("funder_language/" + q.funder, base_url)
+        let funderUrl = new URL("funder_language/" + q.funder + "/" + jct.languageCode, base_url)
         let fxhr = new XMLHttpRequest();
         // fxhr.open("GET", new URL(base_url + "/funder_language/" + q.funder));
         fxhr.open("GET", funderUrl.href);
@@ -1101,7 +1170,7 @@ jct.d.show_detailed_results = () => {
 jct.d.hide_detailed_results = () => {
     let explainResults = jct.d.gebi("jct_explain_results");
     if (explainResults) {
-        explainResults.innerHTML = 'Explain this result';
+        explainResults.innerHTML = jct.getText("explain")
     }
     jct.d.gebi('jct_detailed_results').style.display = "none";
     // let print = jct.d.gebi('jct_print');
@@ -1148,7 +1217,18 @@ jct.suggest_prepare = (txt, stop_words) => {
 // Setup JCT on a fresh page
 // ----------------------------------------
 jct.setup = (manageUrl=true) => {
-    jct.d.gebi("jct_inputs_plugin").innerHTML = jct.inputs_plugin_html;
+    let html = jct.d.getElementsByTagName("html");
+    let lang = "en";
+    if (html.length > 0) {
+        lang = html[0].getAttribute("lang");
+    }
+    if (jct.messages[lang]) {
+        jct.languageCode = lang;
+    } else {
+        jct.languageCode = "en";
+    }
+
+    jct.d.gebi("jct_inputs_plugin").innerHTML = jct.inputs_plugin_html();   // is a function call because it needs to call the language pack
     jct.d.gebi("jct_results_plugin").innerHTML = jct.results_plugin_html;
     jct.d.gebi("jct_tiles_plugin").innerHTML = jct.tiles_plugin_html;
     let f = jct.d.gebi("jct_funder");
@@ -1185,10 +1265,10 @@ jct.setup = (manageUrl=true) => {
     jct.clinputs.journal = clinput.init({
         element: jct.d.gebi("jct_journal-container"),
         id: "jct_journal",
-        label: "Journal",
+        label: jct.getText("journal"),
         inputAttributes : {
             which: "journal",
-            placeholder: "By ISSN or title",
+            placeholder: jct.getText("journal_placeholder"),
             required: true,
             autocomplete: "off"
         },
@@ -1268,10 +1348,10 @@ jct.setup = (manageUrl=true) => {
     jct.clinputs.funder = clinput.init({
         element: jct.d.gebi("jct_funder-container"),
         id: "jct_funder",
-        label: "My funder",
+        label: jct.getText("funder"),
         inputAttributes : {
             which: "funder",
-            placeholder: "By funder name",
+            placeholder: jct.getText("funder_placeholder"),
             required: true,
             autocomplete: "off"
         },
@@ -1316,10 +1396,10 @@ jct.setup = (manageUrl=true) => {
     jct.clinputs.institution = clinput.init({
         element: jct.d.gebi("jct_institution-container"),
         id: "jct_institution",
-        label: "My institution",
+        label: jct.getText("institution"),
         inputAttributes : {
             which: "institution",
-            placeholder: "By ROR or name",
+            placeholder: jct.getText("institution_placeholder"),
             required: true,
             autocomplete: "off"
         },
@@ -1432,7 +1512,7 @@ jct.setup = (manageUrl=true) => {
 
 // -------- funders --------
 
-jct.funderlist=[{"id": "academyoffinlandaka", "name": "Academy of Finland", "abbr": "AKA", "country": null, "primary": true}, {"id": "aligningscienceacrossparkinsonsasap", "name": "Aligning Science Across Parkinson's", "abbr": "ASAP", "country": null, "primary": true}, {"id": "austriansciencefundfwf", "name": "Austrian Science Fund", "abbr": "FWF", "country": null, "primary": true}, {"id": "billmelindagatesfoundation", "name": "Bill & Melinda Gates Foundation", "abbr": null, "country": null, "primary": true}, {"id": "europeancommissionhorizoneuropeframeworkprogramme", "name": "European Commission (Horizon Europe Framework Programme)", "abbr": null, "country": null, "primary": true}, {"id": "formassweden", "name": "Formas", "abbr": null, "country": "Sweden", "primary": true}, {"id": "fortesweden", "name": "FORTE", "abbr": null, "country": "Sweden", "primary": true}, {"id": "frenchnationalresearchagencyanr", "name": "French National Research Agency", "abbr": "ANR", "country": null, "primary": true}, {"id": "highercouncilforscienceandtechnologyhcstjordan", "name": "Higher Council for Science and Technology", "abbr": "HCST", "country": "Jordan", "primary": true}, {"id": "howardhughesmedicalinstitutehhmi", "name": "Howard Hughes Medical Institute", "abbr": "HHMI", "country": null, "primary": true}, {"id": "luxembourgnationalresearchfundfnr", "name": "Luxembourg National Research Fund", "abbr": "FNR", "country": null, "primary": true}, {"id": "nationalinstitutefornuclearphysicsinfnitaly", "name": "National Institute for Nuclear Physics", "abbr": "INFN", "country": "Italy", "primary": true}, {"id": "nationalscienceandtechnologycouncilnstczambia", "name": "National Science and Technology Council", "abbr": "NSTC", "country": "Zambia", "primary": true}, {"id": "nationalsciencecentrepolandncn", "name": "National Science Centre", "abbr": "NCN", "country": "Poland", "primary": true}, {"id": "netherlandsorganisationforscientificresearchnwo", "name": "Netherlands Organisation for Scientific Research", "abbr": "NWO", "country": null, "primary": true}, {"id": "quebecresearchfunds", "name": "Fonds de recherche du Quebec (Quebec Research Funds)", "abbr": "FRQ", "country": null, "primary": true}, {"id": "researchcouncilofnorwayrcn", "name": "Research Council of Norway", "abbr": "RCN", "country": null, "primary": true}, {"id": "sciencefoundationirelandsfi", "name": "Science Foundation Ireland", "abbr": "SFI", "country": null, "primary": true}, {"id": "slovenianresearchagencyarrs", "name": "Slovenian Research Agency", "abbr": "ARRS", "country": null, "primary": true}, {"id": "southafricanmedicalresearchcouncilsamrc", "name": "South African Medical Research Council", "abbr": "SAMRC", "country": null, "primary": true}, {"id": "specialprogrammeforresearchandtrainingintropicaldiseasestdr", "name": "Special Programme for Research and Training in Tropical Diseases", "abbr": "TDR", "country": null, "primary": true}, {"id": "templetonworldcharityfoundationtwcf", "name": "Templeton World Charity Foundation", "abbr": "TWCF", "country": null, "primary": true}, {"id": "unitedkingdomresearchinnovationukri", "name": "UK Research and Innovation.", "abbr": "UKRI", "country": null, "primary": true}, {"id": "unitedkingdomresearchinnovationukri", "name": "Arts and Humanities Research Council", "abbr": "AHRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Biotechnology and Biological Sciences Research Council", "abbr": "BBSRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Economic and Social Research Council", "abbr": "ESRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Engineering and Physical Sciences Research Council", "abbr": "EPSRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Innovate UK", "abbr": "UKRI", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Medical Research Council", "abbr": "MRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Natural Environment Research Council", "abbr": "NERC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Research England", "abbr": "UKRI", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Science and Technology Facilities Council", "abbr": "STFC (UKRI)", "country": null, "primary": false}, {"id": "vinnovasweden", "name": "Vinnova", "abbr": null, "country": "Sweden", "primary": true}, {"id": "wellcome", "name": "Wellcome", "abbr": null, "country": null, "primary": true}, {"id": "worldhealthorganizationwho", "name": "World Health Organization", "abbr": "WHO", "country": null, "primary": true}]
+jct.funderlist=[{"id": "academyoffinlandaka", "name": "Academy of Finland", "abbr": "AKA", "country": null, "primary": true}, {"id": "aligningscienceacrossparkinsonsasap", "name": "Aligning Science Across Parkinson's", "abbr": "ASAP", "country": null, "primary": true}, {"id": "austriansciencefundfwf", "name": "Austrian Science Fund", "abbr": "FWF", "country": null, "primary": true}, {"id": "billmelindagatesfoundation", "name": "Bill & Melinda Gates Foundation", "abbr": null, "country": null, "primary": true}, {"id": "europeancommissionhorizoneuropeframeworkprogramme", "name": "European Commission (Horizon Europe Framework Programme)", "abbr": null, "country": null, "primary": true}, {"id": "formassweden", "name": "Formas", "abbr": null, "country": "Sweden", "primary": true}, {"id": "fortesweden", "name": "FORTE", "abbr": null, "country": "Sweden", "primary": true}, {"id": "frenchnationalresearchagencyanr", "name": "French National Research Agency", "abbr": "ANR", "country": null, "primary": true}, {"id": "highercouncilforscienceandtechnologyhcstjordan", "name": "Higher Council for Science and Technology", "abbr": "HCST", "country": "Jordan", "primary": true}, {"id": "howardhughesmedicalinstitutehhmi", "name": "Howard Hughes Medical Institute", "abbr": "HHMI", "country": null, "primary": true}, {"id": "luxembourgnationalresearchfundfnr", "name": "Luxembourg National Research Fund", "abbr": "FNR", "country": null, "primary": true}, {"id": "nationalinstitutefornuclearphysicsinfnitaly", "name": "National Institute for Nuclear Physics", "abbr": "INFN", "country": "Italy", "primary": true}, {"id": "nationalscienceandtechnologycouncilnstczambia", "name": "National Science and Technology Council", "abbr": "NSTC", "country": "Zambia", "primary": true}, {"id": "nationalsciencecentrepolandncn", "name": "National Science Centre", "abbr": "NCN", "country": "Poland", "primary": true}, {"id": "netherlandsorganisationforscientificresearchnwo", "name": "Netherlands Organisation for Scientific Research", "abbr": "NWO", "country": null, "primary": true}, {"id": "quebecresearchfunds", "name": "Fonds de recherche du Qu\u00e9bec (Quebec Research Funds)", "abbr": "FRQ", "country": null, "primary": true}, {"id": "researchcouncilofnorwayrcn", "name": "Research Council of Norway", "abbr": "RCN", "country": null, "primary": true}, {"id": "sciencefoundationirelandsfi", "name": "Science Foundation Ireland", "abbr": "SFI", "country": null, "primary": true}, {"id": "slovenianresearchagencyarrs", "name": "Slovenian Research Agency", "abbr": "ARRS", "country": null, "primary": true}, {"id": "southafricanmedicalresearchcouncilsamrc", "name": "South African Medical Research Council", "abbr": "SAMRC", "country": null, "primary": true}, {"id": "specialprogrammeforresearchandtrainingintropicaldiseasestdr", "name": "Special Programme for Research and Training in Tropical Diseases", "abbr": "TDR", "country": null, "primary": true}, {"id": "templetonworldcharityfoundationtwcf", "name": "Templeton World Charity Foundation", "abbr": "TWCF", "country": null, "primary": true}, {"id": "unitedkingdomresearchinnovationukri", "name": "UK Research and Innovation.", "abbr": "UKRI", "country": null, "primary": true}, {"id": "unitedkingdomresearchinnovationukri", "name": "Arts and Humanities Research Council", "abbr": "AHRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Biotechnology and Biological Sciences Research Council", "abbr": "BBSRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Economic and Social Research Council", "abbr": "ESRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Engineering and Physical Sciences Research Council", "abbr": "EPSRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Innovate UK", "abbr": "UKRI", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Medical Research Council", "abbr": "MRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Natural Environment Research Council", "abbr": "NERC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "National Centre for the Replacement Refinement & Reduction of Animals in Research", "abbr": "NC3Rs (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Research England", "abbr": "UKRI", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Science and Technology Facilities Council", "abbr": "STFC (UKRI)", "country": null, "primary": false}, {"id": "vinnovasweden", "name": "Vinnova", "abbr": null, "country": "Sweden", "primary": true}, {"id": "wellcome", "name": "Wellcome", "abbr": null, "country": null, "primary": true}, {"id": "worldhealthorganizationwho", "name": "World Health Organization", "abbr": "WHO", "country": null, "primary": true}]
 
 
 // -------- find_out_more --------

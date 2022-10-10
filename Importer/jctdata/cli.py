@@ -12,7 +12,11 @@ from jctdata import settings
 @click.option("-s", "--stage")
 @click.option("-o", "--only", "full_pipeline", flag_value=False)
 @click.option("-a", "--all", "full_pipeline", flag_value=True, default=True)
-def run(mode, targets, stage=None, full_pipeline=True):
+def entry_point(mode, targets, stage=None, full_pipeline=True):
+    run(mode, targets, stage, full_pipeline)
+
+
+def run(mode:str, targets:tuple, stage:str=None, full_pipeline:bool=True):
     processor = MODE_MAP.get(mode)
     if not processor:
         return
@@ -76,4 +80,4 @@ RESOLVE_PIPELINE = ["gather", "analyse"]
 INDEX_PIPELINE = ["gather", "analyse", "assemble"]
 
 if __name__ == "__main__":
-    run()
+    entry_point()

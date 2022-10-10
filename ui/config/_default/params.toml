@@ -1,6 +1,6 @@
 [main]
-    aosAssetsVersion = "4.1.2"
-    jctAssetsVersion = "4.1.2"
+    aosAssetsVersion = "5.0.0"
+    jctAssetsVersion = "5.0.0"
     endpoint="_dev"
     populate = false
 [text]

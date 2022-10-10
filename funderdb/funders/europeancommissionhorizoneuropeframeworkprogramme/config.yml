@@ -135,13 +135,13 @@ cards:
       must:
         - ta
 
-  - id: card5_ta
-    compliant: true
-    preferred: false
-    match_routes:
-      not:
-        - hybrid
-        - tj
-        - fully_oa
-      must:
-        - ta
+#  - id: card5_ta
+#    compliant: true
+#    preferred: false
+#    match_routes:
+#      not:
+#        - hybrid
+#        - tj
+#        - fully_oa
+#      must:
+#        - ta

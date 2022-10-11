@@ -18,7 +18,7 @@ Our current criteria for compliance centres on whether a particular journal enab
 
 ## Do I need to use the Journal Checker Tool?
 
-You are certainly not required to use the Journal Checker Tool. However, it may be useful for you to check if you are able to publish in a particle journal according to the policy set by your funder, if that funder is part of cOAlition S (the Journal Checker Tool will check if your funder is included).
+You are certainly not required to use the Journal Checker Tool. However, it may be useful for you to check if you are able to publish in a particular journal according to the policy set by your funder, if that funder is part of cOAlition S (the Journal Checker Tool will check if your funder is included).
 
 ## My funder is not listed - what should I do?
 

@@ -21,11 +21,11 @@ This runs the following imports
   * Institution autocomplete data import
   * Funder config
   * Funder language
-* JCT import, which in turn imports from
-  * Journals form Crossref and DOAJ
+  * Journals from Crossref and DOAJ
   * TJ
   * SA Prohibited data
   * Rights retention data
+* JCT import, which in turn imports from
   * TA
 
 This will send an email, when the importer has finished running the commands needed to invoke an import. The import task itself runs in the background and could take a couple of hours to complete.

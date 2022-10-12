@@ -1,0 +1,83 @@
+
+limit_req_zone $http_cf_connecting_ip zone=jct:100m rate=10r/s;
+limit_conn_status 429;
+limit_req_status 429;
+
+server {
+    listen      80;
+    server_name journalcheckertool.org api.journalcheckertool.org www.journalcheckertool.org;
+
+    location ^~ /.well-known/acme-challenge/ {
+        default_type "text/plain";
+        root /var/www/letsencrypt;
+    }
+    location = /.well-known/acme-challenge/ {
+        return 404;
+    }
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen      443;
+    server_name www.journalcheckertool.org;
+    return 301 https://journalcheckertool.org$request_uri;
+
+    ssl_certificate /etc/letsencrypt/live/www.journalcheckertool.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/www.journalcheckertool.org/privkey.pem;
+}
+
+server {
+  listen 443 ssl;
+  server_name journalcheckertool.org;
+  root /home/cloo/live/journalcheckertool/ui/public;
+
+  error_log /var/log/nginx/jct_error.log;
+  access_log /var/log/nginx/jct_access.log;
+
+  ssl_certificate /etc/letsencrypt/live/journalcheckertool.org/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/journalcheckertool.org/privkey.pem;
+
+  add_header Pragma public;
+  add_header Cache-Control "public";
+  add_header Access-Control-Allow-Origin *;
+
+  location = /static/jct_plugin.js {
+    return 301 /js/jct_plugin.js;
+  }
+  location = /static/css/plugin.css {
+    return 301 /css/plugin.css;
+  }
+}
+
+upstream noddy_jct {
+    #ip_hash;
+    keepalive 16;
+    server localhost:3333; # max_fails=1 fail_timeout=60;
+    #server some.other.ip:3333 backup weight=5;
+    #server some.other.ip:3333 backup;
+}
+
+server {
+    listen          443 ssl;
+    server_name     api.journalcheckertool.org;
+
+    error_log /var/log/nginx/jct_api_error.log;
+    access_log /var/log/nginx/jct_api_access.log;
+
+    ssl_certificate /etc/letsencrypt/live/api.journalcheckertool.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/api.journalcheckertool.org/privkey.pem;
+
+    location / {
+        limit_req zone=jct burst=6000; # could also add nodelay to this, so anything after the limit immediately gets 503. Without that, later requests just wait
+
+        #proxy_pass http://noddy_jct/api/service/jct/;
+        proxy_pass https://api.jct.cottagelabs.com;
+        add_header Access-Control-Allow-Methods 'GET, PUT, POST, DELETE, OPTIONS';
+        add_header Access-Control-Allow-Headers 'X-apikey,X-id,DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header X-Forwarded-For $remote_addr;
+    }
+}

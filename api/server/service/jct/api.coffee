@@ -394,6 +394,7 @@ API.service.jct.suggest.journal = (str, from, size) ->
     data.push(rec)
   return total: res?.hits?.total ? 0, data: data
 
+ISSN_RX = new RegExp("^[0-9]{4}-[0-9]{3}[0-9Xx]$")
 
 API.service.jct.calculate = (params={}, refresh) ->
   # given funder(s), journal(s), institution(s), find out if compliant or not
@@ -407,6 +408,19 @@ API.service.jct.calculate = (params={}, refresh) ->
     params.institution = params.ror
     delete params.ror
   refresh ?= params.refresh if params.refresh?
+
+  # validate the incoming parameters
+  #
+  # required fields
+  if !params.journal
+    throw {status: 400, stack: "ISSN parameter must be supplied in the `issn` url parameter"} # Meteor.Error(400, "ISSN parameter must be supplied", "")
+  if !params.funder
+    throw {status: 400, stack: "Funder ID must be supplied in the `funder` url parameter"}
+
+  # field formats
+  if params.journal.toString().match(ISSN_RX) == null
+    throw {status: 400, stack: "Supplied ISSN is malformed"}
+
   # all possible checks we can perform
   checks = {
     'self_archiving': 'sa',
@@ -1569,10 +1583,12 @@ API.service.jct.test = (params={}) ->
     # match query - journal
     _add_query_outcome('journal', res)
     _add_query_outcome('funder', res)
-    _add_query_outcome('institution', res)
+    if res.institution.ror isnt ""
+      _add_query_outcome('institution', res)
     for route_name, route_outcomes of res.route
       _add_compliance_outcome(route_name, res)
-      _add_log_codes_outcome(route_name, res)
+      # for the moment disabling log codes checking, as we have a lot of tests which don't have these yet
+      # _add_log_codes_outcome(route_name, res)
     _add_cards_outcome(res)
 
   _add_final_outcome = (res, final_result) ->
@@ -1600,6 +1616,11 @@ API.service.jct.test = (params={}) ->
 
   final_result = _initialise_final_result()
   for test in tests
+    if test['Test ID'].startsWith("#")
+      # test is commented out, skip it
+      console.log("Skipping test " + test["Test ID"])
+      continue
+
     query = _get_query_params(test)
     res = _initialise_result(test)
     console.log('Doing test ' + res.id)

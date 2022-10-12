@@ -35,3 +35,16 @@ The format of the CSV is straightforward:
 * ISSN (electronic) - The Electronic ISSN of the journal, if available
 * Publisher - The name of the publisher
 
+## Open Access Exceptions
+
+This is a list of titles which meet the Plan S criteria for Open Access, but do not meet the criteria for inclusion into DOAJ.
+
+This list is supplied to JCT by cOAlition S, and can be obtained from [this CSV](https://docs.google.com/spreadsheets/d/e/2PACX-1vSexj1DPUkhIDZvVX-CkGTkR_zwduUVlZ4DKVNnS1g0w1AlGKDUSx2t7HAawCcSAR6qqsJAQ7dPHWIa/pub?gid=404801205&single=true&output=csv)
+
+The format of the CSV is straightforward:
+
+* Journal Title	(according to the publisher)
+* ISSN (print) - The Print ISSN of the journal, if available
+* ISSN (electronic) - The Electronic ISSN of the journal, if available
+* Publisher - The name of the publisher
+* Caveat - Any caveats you need to know about the nature of the exception

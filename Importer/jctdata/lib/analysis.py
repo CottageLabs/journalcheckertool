@@ -29,7 +29,7 @@ def pair_manager(source, outfile, first=0, second=1, skip_title_row=False):
         writer.writerows(pairs)
 
 
-def simple_property_extract(source, outfile, property=0, identifiers=None, skip_title_row=False, info=None):
+def simple_property_extract(source, outfile, property=0, identifiers=None, skip_title_row=False, info=None, property_function=None):
     if identifiers is None:
         identifiers = [1, 2]
 
@@ -44,7 +44,10 @@ def simple_property_extract(source, outfile, property=0, identifiers=None, skip_
                 for i in identifiers:
                     if row[i]:
                         if row[property]:
-                            newrow = [row[i], row[property]]
+                            prop = row[property]
+                            if property_function:
+                                prop = property_function(prop)
+                            newrow = [row[i], prop]
                             if info:
                                 newrow.append(info)
                             writer.writerow(newrow)

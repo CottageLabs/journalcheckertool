@@ -5,6 +5,7 @@ from jctdata.lib import analysis
 from datetime import datetime
 import os
 import requests
+import markdown
 
 
 class OAExceptions(datasource.Datasource):
@@ -59,4 +60,8 @@ class OAExceptions(datasource.Datasource):
         analysis.simple_property_extract(oa_file, outfile, property=3, identifiers=[1, 2], skip_title_row=True)
 
     def _caveats_map(self, oa_file, outfile):
-        analysis.simple_property_extract(oa_file, outfile, property=4, identifiers=[1, 2], skip_title_row=True)
+        def markdown_render(prop):
+            np = markdown.markdown(prop)
+            np = np[len("<p>"):-1 * len("</p>")]
+            return np
+        analysis.simple_property_extract(oa_file, outfile, property=4, identifiers=[1, 2], skip_title_row=True, property_function=markdown_render)

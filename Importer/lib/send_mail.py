@@ -1,5 +1,5 @@
 import requests
-from ..jctdata import settings
+from jctdata import settings
 
 
 def send_mail(subject, message, attachment):

@@ -1,19 +1,18 @@
-import csv, json, itertools, os, re, shutil
+import csv, json, os
 from datetime import datetime
 
 from jctdata import settings
 from jctdata import resolver
-from jctdata.lib.title_variants import title_variants
-from jctdata.lib.analysis import cat_and_dedupe, issn_clusters, cluster_to_dict, extract_preferred
+from jctdata.lib.analysis import issn_clusters, cluster_to_dict
 from jctdata.indexes.indexer import Indexer
 
 
-class Journals(Indexer):
-    ID = "journals"
+class Journal(Indexer):
+    ID = "journal"
     SOURCES = ["crossref", "doaj", "tj", "ta", "doaj_inprogress", "sa_negative", "sa_positive", "oa_exceptions"]
 
     def __init__(self):
-        super(Journals, self).__init__()
+        super(Journal, self).__init__()
         self._doaj_data = False
         self._tj_data = False
         self._dip_data = False
@@ -22,15 +21,15 @@ class Journals(Indexer):
         self._oae_data = False
 
     def gather(self):
-        print('JOURNALS: Gathering data for journal compliance from sources: {x}'.format(x=",".join(self.SOURCES)))
+        print('JOURNAL: Gathering data for journal compliance from sources: {x}'.format(x=",".join(self.SOURCES)))
         paths = resolver.gather_data(self.SOURCES, True)
 
         issns = self._get_paths(paths)
 
-        print("JOURNALS: ISSN sources: " + ", ".join([x[0] for x in issns]))
+        print("JOURNAL: ISSN sources: " + ", ".join([x[0] for x in issns]))
 
     def analyse(self):
-        print("JOURNALS: Analysing data for journal compliance")
+        print("JOURNAL: Analysing data for journal compliance")
         dir = datetime.strftime(datetime.utcnow(), settings.DIR_DATE_FORMAT)
         journalsdir = os.path.join(self.dir, dir)
         os.makedirs(journalsdir, exist_ok=True)
@@ -44,13 +43,13 @@ class Journals(Indexer):
 
         issn_clusters(issns, issn_clusters_file)
 
-        print("JOURNALS: analysed data written to directory {x}".format(x=journalsdir))
+        print("JOURNAL: analysed data written to directory {x}".format(x=journalsdir))
 
     def assemble(self):
-        print("JOURNALS: Preparing journal compliance")
+        print("JOURNAL: Preparing journal compliance")
 
         journalsdir = os.path.join(self.dir, self.current_dir())
-        outfile = os.path.join(journalsdir, "journals.json")
+        outfile = os.path.join(journalsdir, self.ID + ".json")
 
         issn_clusters_file = os.path.join(journalsdir, "issn_clusters.csv")
 
@@ -68,7 +67,7 @@ class Journals(Indexer):
 
                 o.write(json.dumps(record) + "\n")
 
-        print("JOURNALS: Journal compliance assembled")
+        print("JOURNAL: Journal compliance assembled")
 
         self._cleanup()
 

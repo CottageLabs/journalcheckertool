@@ -2,14 +2,14 @@ from jctdata.indexes.jac import JAC
 from jctdata.indexes.iac import IAC
 from jctdata.indexes.funder_language import FunderLanguage
 from jctdata.indexes.funder_config import FunderConfig
-from jctdata.indexes.journals import Journals
+from jctdata.indexes.journal import Journal
 
 INDEXERS = {
     JAC.ID: JAC,
     IAC.ID: IAC,
     FunderLanguage.ID: FunderLanguage,
     FunderConfig.ID: FunderConfig,
-    Journals.ID: Journals
+    Journal.ID: Journal
 }
 
 

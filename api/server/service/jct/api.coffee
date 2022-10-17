@@ -58,7 +58,7 @@ jct_unknown = new API.collection {index:index_name, type:"unknown"}
 
 # Journals are held in an alias of the name `[index_name]_journal]`.  Within that
 # index is a single type `journal` which contains the relevant data
-jct_journal = new API.collection {index:index_name + "_journals", type:"journals"}
+jct_journal = new API.collection {index:index_name + "_journal", type:"journal"}
 
 # Funder configurations talk to an alias of the name `[index_name]_funder_config` or
 # `[index_name]_funder_language` which points to the latest import of data.  Within

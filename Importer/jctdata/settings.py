@@ -71,7 +71,7 @@ INDEX_PATH = {
     "iac": os.path.join(DATABASES, "jct", "iac"),
     "funder_language": os.path.join(DATABASES, "jct", "funder_language"),
     "funder_config": os.path.join(DATABASES, "jct", "funder_config"),
-    "journals": os.path.join(DATABASES, "jct", "journals")
+    "journal": os.path.join(DATABASES, "jct", "journal")
 }
 
 INDEX_HISTORY = {
@@ -79,7 +79,7 @@ INDEX_HISTORY = {
     "iac": 5,
     "funder_language": 5,
     "funder_config": 5,
-    "journals": 5
+    "journal": 5
 }
 
 CROSSREF_OLDEST_DOI = 2019

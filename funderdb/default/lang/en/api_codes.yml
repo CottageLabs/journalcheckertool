@@ -9,6 +9,9 @@ qualifications:
   corresponding_authors:
     description: the corresponding author of the submitted article must be based at
                  an institution within this transformative agreement for it to provide a route to compliance.
+  oa_exception_caveat:
+    description: this journal is Open Access according to Plan S criteria, but does not meet the criteria for inclusion into DOAJ.
+    caveat: "The following caveats apply to publishing in this journal: "
   journal:
     description: a transformative agreement is currently in force for this journal.
     start_date: 'Start date of the transformative agreement:'
@@ -19,6 +22,8 @@ qualifications:
     end_date: 'End date of the transformative agreement:'
 logs:
   fully_oa:
+    FullOA.NoException: This journal is not known to have a Plan S compliant Open Access policy which is incompatible with entry into DOAJ
+    FullOA.Exception: This journal has a Plan S compliant Open Access policy, although it does not qualify for inclusion into DOAJ
     FullOA.NotInDOAJ: This journal is not present in DOAJ.
     FullOA.InProgressDOAJ: This journal is currently under review for potential inclusion in DOAJ.
     FullOA.NotInProgressDOAJ: This journal is not currently under review at DOAJ.

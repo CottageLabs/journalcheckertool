@@ -1,5 +1,5 @@
 import requests
-from jctdata import settings
+from ..jctdata import settings
 
 
 def send_mail(subject, message, attachment):
@@ -13,13 +13,13 @@ def send_mail(subject, message, attachment):
     if attachment:
         files = {"attachment": ("details.json", open(attachment, 'rb'))}
     request_url = 'https://api.mailgun.net/v3/{url}/messages'.format(url=url)
-    request = requests.post(request_url, auth=('api', key), files=files, data={
+    response = requests.post(request_url, auth=('api', key), files=files, data={
         'from': sender,
         'to': recipient,
         'subject': subject,
         'text': message
     })
-    if request.status_code != 200:
+    if response.status_code != 200:
         print("error sending email: #{subject}".format(subject=subject))
         print("Email body")
         print(message)

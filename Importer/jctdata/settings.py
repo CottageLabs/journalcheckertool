@@ -38,6 +38,7 @@ MAX_DATASOURCE_AGE = {
     "sa_positive": 60 * 60 * 24 * 7,
     "funderdb": 60,   # funderdb is always updated, only a short delay to avoid importing multiple times in a concurrent run
     "oa_exceptions": 60 * 60 * 24 * 7,
+    "jcs": 60 * 60 * 24 * 7
 }
 
 DATASOURCE_PATH = {
@@ -50,7 +51,8 @@ DATASOURCE_PATH = {
     "sa_negative": os.path.join(DATABASES, "sa_negative"),
     "sa_positive": os.path.join(DATABASES, "sa_positive"),
     "funderdb": os.path.join(DATABASES, "funderdb"),
-    "oa_exceptions": os.path.join(DATABASES, "oa_exceptions")
+    "oa_exceptions": os.path.join(DATABASES, "oa_exceptions"),
+    "jcs": os.path.join(DATABASES, "jcs")
 }
 
 DATASOURCE_HISTORY = {
@@ -63,7 +65,8 @@ DATASOURCE_HISTORY = {
     "sa_negative": 3,
     "sa_positive": 3,
     "funderdb": 2,
-    "oa_exceptions": 3
+    "oa_exceptions": 3,
+    "jcs": 3
 }
 
 INDEX_PATH = {
@@ -102,6 +105,10 @@ SA_POSITIVE_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQXYjTvrKA3
 OA_EXCEPTIONS_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSexj1DPUkhIDZvVX-CkGTkR_zwduUVlZ4DKVNnS1g0w1AlGKDUSx2t7HAawCcSAR6qqsJAQ7dPHWIa/pub?gid=404801205&single=true&output=csv"
 
 FUNDER_DB_DIR = rel2abs(__file__, "..", "..", "funderdb")
+
+JCS_API = "https://journalcomparisonservice.org/issns/{year}"
+
+JCS_FIRST_YEAR = 2021
 
 JAC_PREF_ORDER = ["doaj", "crossref", "tj", "sa_negative", "sa_positive", "oa_exceptions", "ta"]
 

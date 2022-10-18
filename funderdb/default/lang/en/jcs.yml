@@ -1,0 +1,3 @@
+current: "{journal} has provided up-to-date price and service data to the Journal Comparison Service"
+stale: "{journal} has not provided up-to-date price and service data to the Journal Comparison Service, but we do hold some archival data for the year(s) {years}"
+none: "{journal} has not provided any price or service data to the Journal Comparison Service"

@@ -132,6 +132,7 @@ jct.tiles_plugin_html = `
     <section class="row" id="jct_paths_results">
         <h3 class="sr-only">Results</h3>
     </section>
+    <section class="row" id="jct_jcs_price_data"></section>
 `;
 
 // ----------------------------------------
@@ -145,6 +146,38 @@ jct.displayCards = (cardsToDisplay, result) => {
         jct.d.gebi("jct_paths_results").append(jct.htmlToElement(card));
     }
 }
+
+// ----------------------------------------
+// Function to display the JCS price data if relevant
+// ----------------------------------------
+jct.displayPriceData = (journalData) => {
+    let message = jct.lang.jcs.none;
+    if (journalData.price_data_years && journalData.price_data_years.length > 0) {
+        message = jct.lang.jcs.stale;
+
+        let currentDate = new Date();
+        let yearCurrent = currentDate.getUTCFullYear();
+        let latestData = Math.max(journalData.price_data_years);
+        let rolloverDate = new Date(parseInt(yearCurrent) + "-11-01T00:00:00Z");
+
+        // if the current date is before the end of October of the current year, then
+        // we will accept data from up to 2 years ago as current (e.g. in May 2023 data
+        // from 2021 is current).  If not, we will only accept data from one year ago
+        // (e.g. in November 2023 data from 2022 is current, and 2021 is stale)
+        let cutoffYear = yearCurrent - 1;
+        if (currentDate < rolloverDate) {
+            cutoffYear = yearCurrent - 2;
+        }
+        if (latestData >= cutoffYear) {
+            message = jct.lang.jcs.current;
+        }
+
+        message = message.replaceAll("{year}", journalData.price_data_years.join(", "))
+    }
+
+    message = message.replaceAll("{journal}", journalData.title);
+    jct.d.gebi("jct_jcs_price_data").innerHTML = message;
+};
 
 // ----------------------------------------
 // Function to display specific card
@@ -653,6 +686,9 @@ jct.display_result = (js) => {
     // }
     let cardsToDisplay = js.cards;
     jct.displayCards(cardsToDisplay, js.results);
+    if (js.request.journal.length > 0) {
+        jct.displayPriceData(js.request.journal[0]);
+    }
 
     x = window.matchMedia("(max-width: 767px)")
     let results_section_top = jct.d.gebi("jct_results_plugin").offsetTop

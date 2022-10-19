@@ -14,15 +14,15 @@ class IAC(Indexer):
     SOURCES = ["ror"]
 
     def gather(self):
-        print('IAC: Gathering data for institutional autocomplete from sources: {x}'.format(x=",".join(self.SOURCES)))
+        self.log('Gathering data for institutional autocomplete from sources: {x}'.format(x=",".join(self.SOURCES)))
         paths = resolver.gather_data(self.SOURCES, True)
-        print("IAC: ROR source: " + paths.get("ror", {}).get("origin", "no ror source"))
+        self.log("ROR source: " + paths.get("ror", {}).get("origin", "no ror source"))
 
     def analyse(self):
-        print("IAC: No analysis stage required")
+        self.log("No analysis stage required")
 
     def assemble(self):
-        print("IAC: Preparing institution autocomplete data")
+        self.log("Preparing institution autocomplete data")
 
         dir = datetime.strftime(datetime.utcnow(), settings.DIR_DATE_FORMAT)
         iacdir = os.path.join(self.dir, dir)
@@ -33,7 +33,7 @@ class IAC(Indexer):
         ror_file = ror_path.get("origin")
 
         if not os.path.isfile(ror_file):
-            print("IAC: {f} does not exist. Gather data maybe. Bye!".format(f=ror_file))
+            self.log("{f} does not exist. Gather data maybe. Bye!".format(f=ror_file))
             return
 
         with open(ror_file, "r") as f, open(outfile, "w") as o:
@@ -59,7 +59,7 @@ class IAC(Indexer):
                 self._index(record)
                 o.write(json.dumps(record) + "\n")
 
-        print("IAC: Institutional Autocomplete data assembled")
+        self.log("Institutional Autocomplete data assembled")
 
         self._cleanup()
 

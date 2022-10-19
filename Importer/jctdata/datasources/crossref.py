@@ -30,30 +30,30 @@ class Crossref(datasource.Datasource):
             cursor = "*"
             while True:
                 if counter >= self.LIMIT:
-                    print("CROSSREF: configured import limit reached {x}".format(x=self.LIMIT))
+                    self.log("configured import limit reached {x}".format(x=self.LIMIT))
                     break
 
                 url = 'https://api.crossref.org/journals?cursor=' + cursor + '&rows=' + str(self.ROW_PER_PAGE)
-                print("CROSSREF: retrieve from {x}".format(x=url))
+                self.log("retrieve from {x}".format(x=url))
                 resp = requests.get(url)
                 if resp.status_code != 200:
-                    print("CROSSREF: error status code {x}".format(x=resp.status_code))
+                    self.log("error status code {x}".format(x=resp.status_code))
                     break
 
                 data = resp.json()
                 if data.get("status") != "ok":
-                    print("CROSSREF: document status not ok: {x}".format(x=data.get("status")))
+                    self.log("document status not ok: {x}".format(x=data.get("status")))
                     break
 
                 cursor = data.get("message", {}).get("next-cursor")
-                print("CROSSREF: next cursor {x}".format(x=cursor))
+                self.log("next cursor {x}".format(x=cursor))
 
                 items = data.get("message", {}).get("items", [])
                 if len(items) == 0:
-                    print("CROSSREF: zero length results list, terminating")
+                    self.log("zero length results list, terminating")
                     break
 
-                print("CROSSREF: processing {x} items from this page".format(x=len(items)))
+                self.log("processing {x} items from this page".format(x=len(items)))
 
                 for entry in items:
                     publisher = entry.get("publisher")
@@ -64,13 +64,13 @@ class Crossref(datasource.Datasource):
                     last_doi = max(doi_years) if len(doi_years) > 0 else 0
                     discontinued = entry.get("discontinued", False)
                     if len(issns) > 2:
-                        print("CROSSREF: more than 2 ISSNs found: " + ",".join(issns))
+                        self.log("more than 2 ISSNs found: " + ",".join(issns))
                         issns = issns[:2]
                     issns += [""]*(2-len(issns))
                     writer.writerow(issns + [title, publisher, last_doi, str(discontinued)])
 
                 counter += len(items)
-                print ("CROSSREF: Import total so far: {x}".format(x=counter))
+                self.log("Import total so far: {x}".format(x=counter))
 
     def analyse(self):
         dir = self.current_dir()
@@ -137,10 +137,3 @@ class Crossref(datasource.Datasource):
                     if row[1]:
                         if row[3]:
                             writer.writerow([row[1], row[3]])
-
-
-
-if __name__ == "__main__":
-    cr = Crossref()
-    # cr.gather(OUT)
-    cr.analyse()

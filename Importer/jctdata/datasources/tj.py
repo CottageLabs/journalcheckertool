@@ -21,7 +21,7 @@ class TJ(datasource.Datasource):
         }
 
     def gather(self):
-        print("TJ: gathering TJ data from {x}".format(x=settings.TJ_SHEET))
+        self.log("gathering TJ data from {x}".format(x=settings.TJ_SHEET))
         dir = datetime.strftime(datetime.utcnow(), settings.DIR_DATE_FORMAT)
         os.makedirs(os.path.join(self.dir, dir))
         out = os.path.join(self.dir, dir, "origin.csv")
@@ -38,7 +38,7 @@ class TJ(datasource.Datasource):
         coincident_issn_file = os.path.join(self.dir, dir, "coincident_issns.csv")
         title_file = os.path.join(self.dir, dir, "titles.csv")
         publisher_file = os.path.join(self.dir, dir, "publishers.csv")
-        print("TJ: analysing csv {x}".format(x=infile))
+        self.log("analysing csv {x}".format(x=infile))
 
         self._coincident_issns(infile, coincident_issn_file)
         self._title_map(infile, title_file)

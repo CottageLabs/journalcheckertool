@@ -106,11 +106,13 @@ OA_EXCEPTIONS_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSexj1DPU
 
 FUNDER_DB_DIR = rel2abs(__file__, "..", "..", "funderdb")
 
-JCS_API = "https://journalcomparisonservice.org/issns/{year}"
+# FIXME: before release we need to switch to the live version
+JCS_API = "https://jcs.cottagelabs.com/issns/{year}"
+# JCS_API = "https://journalcomparisonservice.org/issns/{year}"
 
 JCS_FIRST_YEAR = 2021
 
-JAC_PREF_ORDER = ["doaj", "crossref", "tj", "sa_negative", "sa_positive", "oa_exceptions", "ta"]
+JAC_PREF_ORDER = ["doaj", "crossref", "jcs", "tj", "sa_negative", "sa_positive", "oa_exceptions", "ta"]
 
 DEFAULT_MAPPING = {
     "dynamic_templates": [

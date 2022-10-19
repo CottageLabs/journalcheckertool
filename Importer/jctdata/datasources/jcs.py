@@ -15,9 +15,9 @@ class JCS(datasource.Datasource):
         publisher_file = os.path.join(self.dir, dir, "publishers.csv")
         return {
             "origin": origin_file,
-            "coincident_issns" : coincident_issn_file#,
-            #"titles" : title_file,
-            #"publishers" : publisher_file
+            "coincident_issns" : coincident_issn_file,
+            "titles" : title_file,
+            "publishers" : publisher_file
         }
 
     def gather(self):
@@ -45,7 +45,7 @@ class JCS(datasource.Datasource):
                 self.log("retrieved {x} records for {y}".format(x=len(entries), y=year))
 
                 for entry in entries:
-                    writer.writerow([entry, year])  # FIXME: when the API change is applied, entry will be a dict that we need to extract
+                    writer.writerow([entry.get("issn"), entry.get("journal_title"), entry.get("publisher"), year])
 
     def analyse(self):
         dir = self.current_dir()
@@ -55,14 +55,13 @@ class JCS(datasource.Datasource):
         publisher_file = os.path.join(self.dir, dir, "publishers.csv")
 
         self._coincident_issns(infile, coincident_issn_file)
-        # FIXME: activate these when the new version of the API is deployed
-        # self._title_map(infile, title_file)
-        # self._publisher_map(infile, publisher_file)
+        self._title_map(infile, title_file)
+        self._publisher_map(infile, publisher_file)
 
     def _coincident_issns(self, infile, outfile):
         with open(infile) as f:
             reader = csv.reader(f)
-            issns = [row[0] for row in reader]
+            issns = [[row[0]] for row in reader]
 
         issns.sort()
 

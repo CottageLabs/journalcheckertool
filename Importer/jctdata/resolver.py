@@ -12,6 +12,8 @@ from jctdata.datasources import funderdb
 from jctdata.datasources import oa_exceptions
 from jctdata.datasources import jcs
 
+from jctdata.lib import logger
+
 
 SOURCES = {
     "crossref" : crossref.Crossref(),
@@ -27,6 +29,8 @@ SOURCES = {
     "jcs": jcs.JCS()
 }
 
+LOG_ID = "RESOLVER"
+
 
 def gather_data(datasources, reanalyse=False):
     pathset = {}
@@ -35,22 +39,18 @@ def gather_data(datasources, reanalyse=False):
         ru = handler.requires_update()
 
         if ru or not handler.paths_exists():
-            print("RESOLVER: {x} requires update".format(x=source))
+            logger.log("{x} requires update".format(x=source), LOG_ID)
             handler.gather()
         else:
-            print("RESOLVER: {x} does not require update".format(x=source))
+            logger.log("{x} does not require update".format(x=source), LOG_ID)
 
         if ru or reanalyse:
-            print("RESOLVER: analysing {x}".format(x=source))
+            logger.log("analysing {x}".format(x=source), LOG_ID)
             handler.analyse()
 
         pathset[source] = handler.current_paths()
-        print("RESOLVER : {y} analysed files: {x}".format(y=source, x=json.dumps(pathset[source])))
+        logger.log("{y} analysed files: {x}".format(y=source, x=json.dumps(pathset[source])), LOG_ID)
 
         handler.cleanup()
 
     return pathset
-
-
-if __name__ == "__main__":
-    gather_data(["sa_positive"], True)

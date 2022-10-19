@@ -16,7 +16,7 @@ class FunderDB(datasource.Datasource):
         }
 
     def gather(self):
-        print("FUNDERDB: gathering funderdb from {x}".format(x=settings.FUNDER_DB_DIR))
+        self.log("gathering funderdb from {x}".format(x=settings.FUNDER_DB_DIR))
 
         dir = datetime.strftime(datetime.utcnow(), settings.DIR_DATE_FORMAT)
         outdir = os.path.join(self.dir, dir, "origin")
@@ -31,7 +31,7 @@ class FunderDB(datasource.Datasource):
         shutil.copytree(default_in, default_out)
         shutil.copytree(funders_in, funders_out)
 
-        print("FUNDERDB: funderdb copied to {x}".format(x=outdir))
+        self.log("funderdb copied to {x}".format(x=outdir))
 
     def analyse(self):
-        print("FUNDERDB: no analyis required")
+        self.log("no analyis required")

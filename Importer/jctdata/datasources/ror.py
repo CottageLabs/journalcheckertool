@@ -46,12 +46,12 @@ class ROR(datasource.Datasource):
         os.makedirs(os.path.join(self.dir, dir), exist_ok=True)
 
         if settings.ROR_DATA_FILE and os.path.exists(settings.ROR_DATA_FILE):
-            print("ROR: extracting data from locally supplied file {x}".format(x=settings.ROR_DATA_FILE))
+            self.log("extracting data from locally supplied file {x}".format(x=settings.ROR_DATA_FILE))
             shutil.copy(settings.ROR_DATA_FILE, zip_file)
         else:
             latest_dt, url = self._get_latest_file()
             if not os.path.exists(zip_file):
-                print("ROR: downloading data dump from {x}".format(x=url))
+                self.log("downloading data dump from {x}".format(x=url))
                 resp = requests.get(url)
                 with open(zip_file, "wb") as f:
                     f.write(resp.content)
@@ -64,7 +64,7 @@ class ROR(datasource.Datasource):
         infile = os.path.join(self.dir, dir, "origin.json")
         ror_file = os.path.join(self.dir, dir, "rors.csv")
         title_file = os.path.join(self.dir, dir, "titles.csv")
-        print("ROR: analysing extracted data dump {x}".format(x=infile))
+        self.log("analysing extracted data dump {x}".format(x=infile))
         self._ror_map(infile, ror_file)
         self._title_map(infile, title_file)
 
@@ -102,9 +102,8 @@ class ROR(datasource.Datasource):
             return latest_dt, url
         return None, None
 
-    @staticmethod
-    def _extract_ror_data(zip_file, out):
-        print("ROR: extracting data dump {x}".format(x=zip_file))
+    def _extract_ror_data(self, zip_file, out):
+        self.log("extracting data dump {x}".format(x=zip_file))
 
         with ZipFile(zip_file, mode="r") as archive, open(out, "w") as o:
             rorfile = None
@@ -176,11 +175,3 @@ class ROR(datasource.Datasource):
                     for a in acronyms:
                         writer.writerow([ror, a, country, 'acronym'])
 
-
-if __name__ == "__main__":
-    print(datetime.utcnow())
-    ror = ROR()
-    if ror.requires_update() or not ror.path_exists():
-        ror.gather()
-    ror.analyse()
-    print(datetime.utcnow())

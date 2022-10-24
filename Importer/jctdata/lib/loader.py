@@ -4,10 +4,13 @@ import uuid
 import os
 import requests
 import re
+import shutil
 from datetime import datetime
 
 from jctdata import settings
 
+################################################
+## Elasicsearch loader functions
 
 def index(infile, bulkfile, conn, index_type, mapping, alias):
     with open(infile, "r") as f, open(bulkfile, "w") as o:
@@ -99,12 +102,31 @@ def index_latest_with_alias(target, index_suffix):
     index(IN, BULK_FILE, CONN, INDEX_TYPE, MAPPING, ALIAS)
 
 
-# if __name__ == "__main__":
-#     import argparse
-#
-#     parser = argparse.ArgumentParser(description='Load data into the index')
-#     parser.add_argument('target')
-#     parser.add_argument("-s", "--index_suffix", default='')
-#
-#     args = parser.parse_args()
-#     index_latest_with_alias(args.target, args.index_suffix)
+################################################
+## File loader functions
+
+def load_to_file(target):
+    target_dir = settings.INDEX_PATH[target]
+    os.makedirs(target_dir, exist_ok=True)
+
+    dirs = []
+    for entry in os.listdir(target_dir):
+        if os.path.isdir(os.path.join(target_dir, entry)):
+            dirs.append(entry)
+
+    if len(dirs) == 0:
+        print("LOADER: target {x} has not got a build to load to file".format(x=target))
+        return
+
+    dirs.sort(reverse=True)
+    latest = dirs[0]
+
+    IN = os.path.join(target_dir, latest, target + ".csv") # FIXME: this assumes a csv, which is fine for the moment, as the only one is
+    OUT = settings.FILE_LOADER_PATHS[target]
+
+    print("LOADER: loading {x} to file".format(x=target))
+    print("LOADER: IN: {x}".format(x=IN))
+    print("LOADER: OUT: {x}".format(x=OUT))
+
+    shutil.copy(IN, OUT)
+

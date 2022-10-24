@@ -74,7 +74,8 @@ INDEX_PATH = {
     "iac": os.path.join(DATABASES, "jct", "iac"),
     "funder_language": os.path.join(DATABASES, "jct", "funder_language"),
     "funder_config": os.path.join(DATABASES, "jct", "funder_config"),
-    "journal": os.path.join(DATABASES, "jct", "journal")
+    "journal": os.path.join(DATABASES, "jct", "journal"),
+    "jcs_csv": os.path.join(DATABASES, "jct", "jcs_csv")
 }
 
 INDEX_HISTORY = {
@@ -82,7 +83,21 @@ INDEX_HISTORY = {
     "iac": 5,
     "funder_language": 5,
     "funder_config": 5,
-    "journal": 5
+    "journal": 5,
+    "jcs_csv": 2
+}
+
+INDEX_LOADERS = {
+    "jac": "es",
+    "iac": "es",
+    "funder_language": "es",
+    "funder_config": "es",
+    "journal": "es",
+    "jcs_csv": "file"
+}
+
+FILE_LOADER_PATHS = {
+    "jcs_csv": rel2abs(__file__, "..", "..", "ui", "static", "data", "jcs_price_data.csv")
 }
 
 CROSSREF_OLDEST_DOI = 2019

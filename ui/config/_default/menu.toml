@@ -1,43 +1,48 @@
 [[main]]
-    name = "Transformative Journals"
+    name = "Transformative&nbsp;Journals"
     url = "/transformative-journals"
     weight = 1
 [[main]]
-    name = "Transformative Agreements"
+    name = "Transformative&nbsp;Agreements"
     pre = " • "
     url = "/transformative-agreements"
     weight = 2
 [[main]]
-    name = "Exception Lists"
+    name = "Exception&nbsp;Lists"
     pre = " • "
     url = "/exception-lists"
     weight = 3
 [[main]]
-    name = "API Documentation"
+    name = "Price&nbsp;Data&nbsp;Providers"
     pre = " • "
-    url = "/apidocs"
+    url = "/jcs"
     weight = 4
 [[main]]
-    name = "Embeddable Widget"
+    name = "API&nbsp;Documentation"
+    pre = " • "
+    url = "/apidocs"
+    weight = 5
+[[main]]
+    name = "Embeddable&nbsp;Widget"
     pre = " • "
     url = "/widget"
-    weight = 5
+    weight = 6
 [[main]]
     name = "FAQ"
     url = "/faq"
-    weight = 6
-[[main]]
-    pre = " • "
-    name = "Privacy Notice"
-    url = "/notices#privacy_notice"
     weight = 7
 [[main]]
-    name = "Disclaimer & Copyright"
     pre = " • "
-    url = "/notices#disclaimer_and_copyright"
+    name = "Privacy&nbsp;Notice"
+    url = "/notices#privacy_notice"
     weight = 8
 [[main]]
-    name = "Release History"
+    name = "Disclaimer&nbsp;&&nbsp;Copyright"
+    pre = " • "
+    url = "/notices#disclaimer_and_copyright"
+    weight = 9
+[[main]]
+    name = "Release&nbsp;History"
     pre = " • "
     url = "/release-history"
-    weight = 9
+    weight = 10

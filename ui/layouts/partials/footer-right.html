@@ -7,7 +7,7 @@
     </button>
     <p>
     {{ range $index, $val := .Site.Menus.main }}
-        {{ if lt $index 5 }}
+        {{ if lt $index 6 }}
             {{ if $val.Pre }}
             {{ $icon := print $val.Pre | safeHTML }}
             {{ $icon }}
@@ -21,7 +21,7 @@
     </p>
     <p>
     {{ range $index, $val := .Site.Menus.main }}
-        {{ if gt $index 4 }}
+        {{ if gt $index 5 }}
             {{ if $val.Pre }}
             {{ $icon := print $val.Pre | safeHTML }}
             {{ $icon }}

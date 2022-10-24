@@ -15,7 +15,7 @@ class IAC(Indexer):
 
     def gather(self):
         print('IAC: Gathering data for institutional autocomplete from sources: {x}'.format(x=",".join(self.SOURCES)))
-        paths = resolver.gather_data(self.SOURCES, True)
+        paths = resolver.gather_data(self.SOURCES, regather=False, reanalyse=True)
         print("IAC: ROR source: " + paths.get("ror", {}).get("origin", "no ror source"))
 
     def analyse(self):

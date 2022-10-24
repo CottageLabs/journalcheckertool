@@ -14,7 +14,7 @@ class FunderLanguage(Indexer):
 
     def gather(self):
         print('FUNDER_LANGUAGE: Gathering data for funder language packs from sources: {x}'.format(x=",".join(self.SOURCES)))
-        paths = resolver.gather_data(self.SOURCES, True)
+        paths = resolver.gather_data(self.SOURCES, regather=False, reanalyse=True)
         print("FUNDER_LANGUAGE: funderdb source: " + paths.get("funderdb", {}).get("origin", "no funderdb source"))
 
     def analyse(self):

@@ -14,7 +14,7 @@ class JAC(Indexer):
 
     def gather(self):
         print('JAC: Gathering data for journal autocomplete from sources: {x}'.format(x=",".join(self.SOURCES)))
-        paths = resolver.gather_data(self.SOURCES, True)
+        paths = resolver.gather_data(self.SOURCES, regather=False, reanalyse=True)
 
         issns, titles, pubs = self._get_paths(paths)
 

@@ -26,11 +26,11 @@ SOURCES = {
 }
 
 
-def gather_data(datasources, reanalyse=False):
+def gather_data(datasources, regather=False, reanalyse=False):
     pathset = {}
     for source in datasources:
         handler = SOURCES[source]
-        ru = handler.requires_update()
+        ru = regather or handler.requires_update()
 
         if ru or not handler.paths_exists():
             print("RESOLVER: {x} requires update".format(x=source))

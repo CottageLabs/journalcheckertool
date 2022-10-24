@@ -69,7 +69,6 @@ def load(targets, stage=None, full_pipeline=True):
         loader.index_latest_with_alias(t, settings.ES_INDEX_SUFFIX)
 
 
-
 MODE_MAP = {
     "resolve": resolve,
     "index": index,

@@ -27,7 +27,7 @@ class FunderConfig(Indexer):
     def gather(self):
         print('FUNDER_CONFIG: Gathering data for funder config from sources: {x}'.format(
             x=",".join(self.SOURCES)))
-        paths = resolver.gather_data(self.SOURCES, True)
+        paths = resolver.gather_data(self.SOURCES, regather=False, reanalyse=True)
         print("FUNDER_CONFIG: funderdb source: " + paths.get("funderdb", {}).get("origin", "no funderdb source"))
 
     def analyse(self):

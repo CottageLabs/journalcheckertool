@@ -22,7 +22,7 @@ class Journal(Indexer):
 
     def gather(self):
         print('JOURNAL: Gathering data for journal compliance from sources: {x}'.format(x=",".join(self.SOURCES)))
-        paths = resolver.gather_data(self.SOURCES, True)
+        paths = resolver.gather_data(self.SOURCES, regather=False, reanalyse=True)
 
         issns = self._get_paths(paths)
 

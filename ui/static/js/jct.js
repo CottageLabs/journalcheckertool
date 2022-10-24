@@ -150,6 +150,21 @@ jct.displayCards = (cardsToDisplay, result) => {
 // ----------------------------------------
 // Function to display the JCS price data if relevant
 // ----------------------------------------
+
+jct.site_modals.jcs = {
+    en: {
+        title: "Journal Comparison Service",
+        body: `<p>The <a href="https://journalcomparisonservice.org/" target="_blank">Journal Comparison Service (JCS)</a> – 
+                developed by cOAlition S - provides libraries and library consortia with the ability to compare journal 
+                publishing services and fees to help determine if the prices charged are commensurate with the services provided.</p>
+                <p>If transparency of price and service data is important to you – and your preferred journal does not 
+                provide these data – then you may wish to consider submitting your manuscript to a journal which supports these values.</p>  
+                <p><a href="https://journalcheckertool.org/jcs">List of journals</a> that are providing current price and service data to the JCS.</p>
+                <p>More information about the JCS is available at: 
+                <a href="https://www.coalition-s.org/journal-comparison-service/" target="_blank">https://www.coalition-s.org/journal-comparison-service/</a></p>`
+    }
+};
+
 jct.displayPriceData = (journalData) => {
     let message = jct.lang.jcs.none;
     if (journalData.price_data_years && journalData.price_data_years.length > 0) {
@@ -176,6 +191,14 @@ jct.displayPriceData = (journalData) => {
     }
 
     message = message.replaceAll("{journal}", journalData.title);
+    message = `
+        <div class="col col--1of1"><div class="jcs_container">
+            <h5>Do you know?</h5>
+            <p>${message}</p>
+            <a href="#" class="modal-trigger" data-modal="jcs">Click here to learn more</a>
+        </div>
+        </div>
+    `;
     jct.d.gebi("jct_jcs_price_data").innerHTML = message;
 };
 

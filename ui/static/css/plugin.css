@@ -684,6 +684,26 @@
         fill: #F5F5F5; }
   #jct_plugin .show_detailed_results {
     display: block; }
+  #jct_plugin .jcs_container {
+    background: #fbf3eb;
+    box-shadow: 0 0 10px #ffb24a;
+    padding: 20px; }
+    #jct_plugin .jcs_container h5 {
+      font-weight: bold;
+      margin-top: 0;
+      font-size: 0.833em; }
+    #jct_plugin .jcs_container p {
+      font-size: 0.833em; }
+    #jct_plugin .jcs_container a {
+      font-weight: bold;
+      text-decoration: none; }
+    #jct_plugin .jcs_container a.modal-trigger {
+      display: block;
+      text-align: right;
+      color: #ffb24a;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.833em; }
   #jct_plugin .query {
     min-height: 0; }
     #jct_plugin .query h2 {

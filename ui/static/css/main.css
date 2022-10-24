@@ -869,4 +869,29 @@ button {
 .show_detailed_results {
   display: block; }
 
+#jct_jcs_price_data {
+  padding-top: 0; }
+
+.jcs_container {
+  background: #fbf3eb;
+  box-shadow: 0 0 10px #ffb24a;
+  padding: 20px; }
+  .jcs_container h5 {
+    font-weight: bold;
+    margin-top: 0;
+    font-size: 0.833em; }
+  .jcs_container p {
+    font-size: 0.833em;
+    margin: 0; }
+  .jcs_container a {
+    font-weight: bold;
+    text-decoration: none; }
+  .jcs_container a.modal-trigger {
+    display: block;
+    text-align: right;
+    color: #ffb24a;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.833em; }
+
 /*# sourceMappingURL=main.css.map */

@@ -232,6 +232,7 @@ jct.buildCard = function(cardConfig, uiText, results, choices) {
         }
     }
 
+    // all the possible card text substitutions
     body = body.replace("{title}", choices.journal.title);
     body = body.replace("{funder}", choices.funder.title);
     body = body.replace("{publisher}", choices.journal.publisher);
@@ -256,6 +257,25 @@ jct.buildCard = function(cardConfig, uiText, results, choices) {
                         } else {
                             body = body.replace("{end_date}", "an unknown date");
                         }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    if (compliantRoutes.includes("fully_oa")) {
+        for (let i = 0; i < results.length; i++) {
+            let r = results[i];
+            if (r.route === "fully_oa" && r.qualifications && r.qualifications.length > 0) {
+                for (let j = 0; j < r.qualifications.length; j++) {
+                    let qual = r.qualifications[j];
+                    if (qual.oa_exception_caveat) {
+                        let cav = qual.oa_exception_caveat.caveat;
+                        if (!cav.endsWith(".")) {
+                            cav = cav + ".";
+                        }
+                        body = body.replace("{oa_exception_caveat}", cav);
                         break;
                     }
                 }

@@ -234,11 +234,15 @@ jct.buildCard = function(cardConfig, uiText, results, choices) {
     if (compliantRoutes.includes("fully_oa")) {
         for (let i = 0; i < results.length; i++) {
             let r = results[i];
-            if (r.route === "fully_oa") {
+            if (r.route === "fully_oa" && r.qualifications && r.qualifications.length > 0) {
                 for (let j = 0; j < r.qualifications.length; j++) {
                     let qual = r.qualifications[j];
                     if (qual.oa_exception_caveat) {
-                        body = body.replace("{oa_exception_caveat}", qual.oa_exception_caveat.caveat);
+                        let cav = qual.oa_exception_caveat.caveat;
+                        if (!cav.endsWith(".")) {
+                            cav = cav + ".";
+                        }
+                        body = body.replace("{oa_exception_caveat}", cav);
                         break;
                     }
                 }

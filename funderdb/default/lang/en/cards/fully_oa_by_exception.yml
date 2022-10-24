@@ -5,7 +5,7 @@ body:
             CC BY licence</a> to ensure compliance.</p>
             <p>Upon publication, you have the right to self-archive the final published article as an additional
             route to compliance rather than an alternative route. </p>
-            <p>Caveats to publishing in this journal apply: {oa_exception_caveat}</p>"
+            <p>{oa_exception_caveat}</p>"
 explain:
   title: Full Open Access
   text: This way to comply is available to you because the journal is regarded as fully Open Access by Plan S

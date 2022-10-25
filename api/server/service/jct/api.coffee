@@ -1189,7 +1189,7 @@ API.service.jct.import = (refresh) ->
 #      res.mapped = JSON.stringify(jct_agreement.mapping()).indexOf('dynamic_templates') isnt -1
   
     API.service.jct.mail
-      subject: 'JCT import complete'
+      subject: (if API.settings.dev then 'dev ' else '') + 'JCT import complete'
       text: JSON.stringify res, '', 2
 
   return res

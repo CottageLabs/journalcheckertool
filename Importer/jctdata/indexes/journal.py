@@ -15,6 +15,7 @@ class Journal(Indexer):
         super(Journal, self).__init__()
         self._doaj_data = False
         self._tj_data = False
+        self._tj_excludes = False
         self._dip_data = False
         self._san_data = False
         self._sap_data = False
@@ -111,10 +112,27 @@ class Journal(Indexer):
                             data.append(c)
                 self._tj_data = data
 
+        if self._tj_excludes is False:
+            paths = resolver.SOURCES["tj"].current_paths()
+            tj_csv = paths["funder_excludes"]
+            self._tj_excludes = {}
+
+            with open(tj_csv, "r") as f:
+                reader = csv.reader(f)
+                data = []
+                for row in reader:
+                    self._tj_excludes[row[0]] = row[1]
+
         for issn in record.get("issn", []):
             if issn in self._tj_data:
                 record["tj"] = True
-                break
+            if issn in self._tj_excludes:
+                if "tj_excluded_by" not in record:
+                    record["tj_excluded_by"] = []
+                excluder = self._tj_excludes[issn]
+                if excluder not in record["tj_excluded_by"]:
+                    record["tj_excluded_by"].append(excluder)
+
 
     def _doaj_in_progress(self, record):
         if self._dip_data is False:

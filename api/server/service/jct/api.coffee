@@ -502,6 +502,8 @@ API.service.jct.calculate = (params={}, refresh) ->
           rs = API.service.jct.sa (issnsets[journal] ? journal), (if institution? then institution else undefined), funder, oa_permissions
         else if route_method is 'hybrid'
           rs =  API.service.jct.hybrid (issnsets[journal] ? journal), (if institution? then institution else undefined), funder, oa_permissions
+        else if route_method is 'tj'
+          rs = API.service.jct.tj (issnsets[journal] ? journal), (if funder? then funder else undefined)
         else
           rs = API.service.jct[route_method] (issnsets[journal] ? journal), (if institution? and route_method is 'ta' then institution else undefined)
         if rs
@@ -750,7 +752,7 @@ API.service.jct.ta.import = (mail=true) ->
 # have submitted to the list with the appropriate responses)
 # fields called pissn and eissn will contain ISSNs to check against
 # check if an issn is in the transformative journals list (to be provided by plan S)
-API.service.jct.tj = (issn, refresh) ->
+API.service.jct.tj = (issn, funder) ->
   issn = issn.split(',') if typeof issn is 'string'
   if issn and issn.length
     res = 
@@ -766,10 +768,16 @@ API.service.jct.tj = (issn, refresh) ->
     else
       res.compliant = 'no'
       res.log.push code: 'TJ.NoTJ'
+
+    if exists.tj_excluded_by and funder in exists.tj_excluded_by
+      res.log.push code: "TJ.FunderNonCompliant"
+      res.compliant = 'no'
+    else
+      res.log.push code: "TJ.Compliant"
+      res.compliant = 'yes'
+
     return res
-    # TODO note there are two more codes in the new API log code spec, 
-    # TJ.NonCompliant - TJ.Compliant
-    # but there is as yet no way to determine those so they are not used here yet.
+
   else
     return jct_journal.count 'tj:true'
 

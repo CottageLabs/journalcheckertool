@@ -42,6 +42,9 @@ you will need to use the following identifiers in place of the name of the funde
 **Luxembourg National Research Fund (FNR)**
 : `luxembourgnationalresearchfundfnr`
 
+**National Health and Medical Research Council (NHMRC, Australia)**
+: `nationalhealthandmedicalresearchcouncil`
+
 **National Institute for Nuclear Physics (INFN, Italy)**
 : `nationalinstitutefornuclearphysicsinfnitaly`
 

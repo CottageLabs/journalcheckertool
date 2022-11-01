@@ -78,8 +78,8 @@ logs:
     TA.Compliant: A Transformative Agreement is available that can provide a route to compliance.
   tj:
     TJ.NoTJ: This journal is not a Transformative Journal.
-    TJ.Exists: This journal is a Transformative Journal.
-    TJ.NonCompliant: As this journal is not a Transformative Journal, this route to compliance is not available.
+    TJ.Exists: This journal is a Transformative Journal according to the Plan S definition.
+    TJ.FunderNonCompliant: Your funder does not consider this Transformative Journal to be compliant by their policy
     TJ.Compliant: This Transformative Journal provides a route to compliance.
   hybrid:
     Hybrid.NotInDOAJ: This journal is not in DOAJ

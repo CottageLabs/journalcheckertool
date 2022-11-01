@@ -109,11 +109,14 @@ API.add 'service/jct/retention',
   get: () -> 
     return API.service.jct.retention this.queryParams.issn
 
-API.add 'service/jct/tj', get: () -> return jct_journal.search this.queryParams, {restrict: [{exists: {field: 'tj'}}]}
 API.add 'service/jct/tj/:issn', 
-  get: () -> 
-    res = API.service.jct.tj this.urlParams.issn
-    return if res?.compliant isnt 'yes' then 404 else issn: this.urlParams.issn, transformative_journal: true
+  get: () ->
+    funder = this.queryParams.funder;
+    res = API.service.jct.tj this.urlParams.issn, (if funder? then funder else false)
+    if res?.compliant isnt 'yes'
+      throw {status: 404, stack: "TJ Not Found"}
+    else
+      return issn: this.urlParams.issn, transformative_journal: true
 
 API.add 'service/jct/feedback',
   get: () -> return API.service.jct.feedback this.queryParams
@@ -769,7 +772,7 @@ API.service.jct.tj = (issn, funder) ->
       res.log.push code: 'TJ.NoTJ'
       return res
 
-    if exists.tj_excluded_by and funder in exists.tj_excluded_by
+    if funder and exists.tj_excluded_by and funder in exists.tj_excluded_by
       res.log.push code: "TJ.FunderNonCompliant"
       res.compliant = 'no'
     else

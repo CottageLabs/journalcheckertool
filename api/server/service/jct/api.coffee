@@ -763,7 +763,6 @@ API.service.jct.tj = (issn, funder) ->
       log: []
 
     if exists = jct_journal.find 'tj:true AND (issn.exact:"' + issn.join('" OR issn.exact:"') + '")'
-      res.compliant = 'yes'
       res.log.push code: 'TJ.Exists'
     else
       res.compliant = 'no'

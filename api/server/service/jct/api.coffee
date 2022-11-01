@@ -768,6 +768,7 @@ API.service.jct.tj = (issn, funder) ->
     else
       res.compliant = 'no'
       res.log.push code: 'TJ.NoTJ'
+      return res
 
     if exists.tj_excluded_by and funder in exists.tj_excluded_by
       res.log.push code: "TJ.FunderNonCompliant"

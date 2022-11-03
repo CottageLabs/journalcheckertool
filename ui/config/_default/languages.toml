@@ -75,9 +75,9 @@
             name = "Acknowledgements"
             pre = " • "
             url = "/acknowledgements"
-            weight = 9
+            weight = 10
         [[fr.menu.main]]
             name = "Historique&nbsp;des&nbsp;versions"
             pre = " • "
             url = "/release-history"
-            weight = 10
+            weight = 11

@@ -72,6 +72,11 @@
             url = "/notices#disclaimer_and_copyright"
             weight = 9
         [[fr.menu.main]]
+            name = "Acknowledgements"
+            pre = " • "
+            url = "/acknowledgements"
+            weight = 9
+        [[fr.menu.main]]
             name = "Historique&nbsp;des&nbsp;versions"
             pre = " • "
             url = "/release-history"

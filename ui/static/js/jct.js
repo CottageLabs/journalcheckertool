@@ -193,7 +193,7 @@ jct.displayPriceData = (journalData) => {
     message = message.replaceAll("{journal}", journalData.title);
     message = `
         <div class="col col--1of1"><div class="jcs_container">
-            <h5>Do you know?</h5>
+            <h5>Transparent price and service data</h5>
             <p>${message}</p>
             <a href="#" class="modal-trigger" data-modal="jcs">Click here to learn more</a>
         </div>

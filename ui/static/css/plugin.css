@@ -684,24 +684,29 @@
         fill: #F5F5F5; }
   #jct_plugin .show_detailed_results {
     display: block; }
+  #jct_plugin #jct_jcs_price_data {
+    padding-top: 0; }
   #jct_plugin .jcs_container {
-    background: #fbf3eb;
-    box-shadow: 0 0 10px #ffb24a;
+    background: #F9F6F6;
+    box-shadow: 0px 0px 8px #FABE5E;
     padding: 20px; }
     #jct_plugin .jcs_container h5 {
-      font-weight: bold;
+      font-weight: 700;
       margin-top: 0;
-      font-size: 0.833em; }
+      font-size: 0.833em;
+      text-transform: uppercase; }
     #jct_plugin .jcs_container p {
-      font-size: 0.833em; }
+      color: #585756;
+      font-size: 0.833em;
+      margin-bottom: 0; }
     #jct_plugin .jcs_container a {
       font-weight: bold;
-      text-decoration: none; }
+      text-decoration: underline; }
     #jct_plugin .jcs_container a.modal-trigger {
       display: block;
-      text-align: right;
-      color: #ffb24a;
-      text-decoration: none;
+      margin-top: 1rem;
+      color: #F39325;
+      text-decoration: underline;
       font-weight: bold;
       font-size: 0.833em; }
   #jct_plugin .query {

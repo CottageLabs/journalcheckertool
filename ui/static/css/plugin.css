@@ -699,6 +699,9 @@
       color: #585756;
       font-size: 0.833em;
       margin-bottom: 0; }
+      #jct_plugin .jcs_container p img {
+        height: 1rem;
+        padding-right: .75rem; }
     #jct_plugin .jcs_container a {
       font-weight: bold;
       text-decoration: underline; }

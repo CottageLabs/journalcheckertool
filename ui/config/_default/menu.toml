@@ -37,7 +37,12 @@
     url = "/notices#disclaimer_and_copyright"
     weight = 8
 [[main]]
+    name = "Acknowledgements"
+    pre = " • "
+    url = "/acknowledgements"
+    weight = 9
+[[main]]
     name = "Release History"
     pre = " • "
     url = "/release-history"
-    weight = 9
+    weight = 10

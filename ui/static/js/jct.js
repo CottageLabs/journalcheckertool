@@ -423,10 +423,11 @@ jct.searchFunders = function(str) {
                     if (idx === 0) {
                         add = 2;
                     }
-                    if (matches.hasOwnProperty(funder.id)) {
-                        matches[funder.id+funder.name].score += add;
+                    let key = funder.id+funder.name;
+                    if (matches.hasOwnProperty(key)) {
+                        matches[key].score += add;
                     } else {
-                        matches[funder.id+funder.name] = {"record" : funder, "score" : add}
+                        matches[key] = {"record" : funder, "score" : add}
                     }
                 }
             }

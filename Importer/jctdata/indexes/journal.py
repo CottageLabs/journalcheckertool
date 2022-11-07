@@ -28,7 +28,7 @@ class Journal(Indexer):
 
         issns = self._get_paths(paths)
 
-        self.log("SSN sources: " + ", ".join([x[0] for x in issns]))
+        self.log("ISSN sources: " + ", ".join([x[0] for x in issns]))
 
     def analyse(self):
         self.log("Analysing data for journal compliance")

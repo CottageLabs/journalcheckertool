@@ -1,0 +1,11 @@
+icon: fully_oa
+title: Full <br>Open Access
+body:
+  default: "<p>Go ahead and submit. Remember to select a <a href=\"https://creativecommons.org/licenses/by/2.0/\" target=\"_blank\" rel=\"noopener\">
+            CC BY licence</a> to ensure compliance.</p>
+            <p>Upon publication, you have the right to self-archive the final published article as an additional
+            route to compliance rather than an alternative route. </p>
+            <p><em>{oa_exception_caveat}</em></p>"
+explain:
+  title: Full Open Access
+  text: This way to comply is available to you because the journal is regarded as fully Open Access by Plan S

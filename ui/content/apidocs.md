@@ -132,7 +132,9 @@ For each route, there is a general response format:
     * no qualification specific data required
 * `corresponding_authors` - the transformative agreement (TA) is only open to corresponding authors
     * no qualification specific data required
-  
+* `oa_exception_caveat` - the journal was OA according to the cOAlition S rules, but not present in DOAJ.
+  * `caveat` - As the journal does not appear in DOAJ it may have caveats to the scope of the OA support
+
 #### Log
 
 The log provides a list of decisions made by the algorithm, in order of traversal.  This allows you to 
@@ -158,15 +160,17 @@ For example, items such as this may be present:
 
 ##### Full OA Route Codes
 
-| Code | Meaning | Property | Property Value |
-| ---- | ------- | -------- | -------------- |
-| FullOA.NotInDOAJ | Journal not found in DOAJ | | |
-| FullOA.InProgressDOAJ | Journal application found in DOAJ | | |
-| FullOA.NotInProgressDOAJ | No application found in DOAJ | | |
-| FullOA.InDOAJ | Journal found in DOAJ | | |
-| FullOA.Compliant | Journal properties are compliant | licence | List of Journal licences |
-| FullOA.Unknown | Journal properties are unclear | missing | List of missing properties |
-| FullOA.NonCompliant | Journal properties are non-compliant | license | List of Journal licences |
+| Code                     | Meaning                                                                                   | Property | Property Value |
+|--------------------------|-------------------------------------------------------------------------------------------| -------- | -------------- |
+| FullOA.NoException       | The Journal is not in the cOAlition S list of compliant OA Journals which are not in DOAJ | | |
+| FullOA.Exception         | The Journal is in the cOAlition S list of compliant OA Journals which are not in DOAJ     | | |
+| FullOA.NotInDOAJ         | Journal not found in DOAJ                                                                 | | |
+| FullOA.InProgressDOAJ    | Journal application found in DOAJ                                                         | | |
+| FullOA.NotInProgressDOAJ | No application found in DOAJ                                                              | | |
+| FullOA.InDOAJ            | Journal found in DOAJ                                                                     | | |
+| FullOA.Compliant         | Journal properties are compliant                                                          | licence | List of Journal licences |
+| FullOA.Unknown           | Journal properties are unclear                                                            | missing | List of missing properties |
+| FullOA.NonCompliant      | Journal properties are non-compliant                                                      | license | List of Journal licences |
 
 ##### Self-Archiving Route Codes
 

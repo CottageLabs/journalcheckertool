@@ -121,9 +121,7 @@ OA_EXCEPTIONS_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSexj1DPU
 
 FUNDER_DB_DIR = rel2abs(__file__, "..", "..", "funderdb")
 
-# FIXME: before release we need to switch to the live version
-JCS_API = "https://jcs.cottagelabs.com/issns/{year}"
-# JCS_API = "https://journalcomparisonservice.org/issns/{year}"
+JCS_API = "https://journalcomparisonservice.org/issns/{year}"
 
 JCS_FIRST_YEAR = 2021
 

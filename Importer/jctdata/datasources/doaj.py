@@ -11,13 +11,17 @@ class DOAJ(datasource.Datasource):
 
     def current_paths(self):
         dir = self.current_dir()
+        origin_file = os.path.join(self.dir, dir, "origin.csv")
         coincident_issn_file = os.path.join(self.dir, dir, "coincident_issns.csv")
         title_file = os.path.join(self.dir, dir, "titles.csv")
         publisher_file = os.path.join(self.dir, dir, "publishers.csv")
+        licences_file = os.path.join(self.dir, dir, "licences.csv")
         return {
+            "origin": origin_file,
             "coincident_issns" : coincident_issn_file,
             "titles" : title_file,
-            "publishers" : publisher_file
+            "publishers" : publisher_file,
+            "licences": licences_file
         }
 
     def gather(self):
@@ -52,7 +56,8 @@ class DOAJ(datasource.Datasource):
                     title = journal.get("bibjson", {}).get("title", "")
                     alt = journal.get("bibjson", {}).get("alternative_title", "")
                     publisher = journal.get("bibjson", {}).get("publisher", {}).get("name", "")
-                    row = [eissn, pissn, title, alt, publisher]
+                    licences = json.dumps(journal.get("bibjson", {}).get("license", []))
+                    row = [eissn, pissn, title, alt, publisher, licences]
 
                     licences = journal.get("bibjson", {}).get("license", [])
                     if len(licences) == 0:
@@ -72,11 +77,13 @@ class DOAJ(datasource.Datasource):
         coincident_issn_file = os.path.join(self.dir, dir, "coincident_issns.csv")
         title_file = os.path.join(self.dir, dir, "titles.csv")
         publisher_file = os.path.join(self.dir, dir, "publishers.csv")
+        licence_file = os.path.join(self.dir, dir, "licences.csv")
         print("DOAJ: analysing extracted data dump {x}".format(x=infile))
 
         self._coincident_issns(infile, coincident_issn_file)
         self._title_map(infile, title_file)
         self._publisher_map(infile, publisher_file)
+        self._licence_map(infile, licence_file)
 
     def _coincident_issns(self, doaj_file, outfile):
         issn_pairs = []
@@ -132,6 +139,22 @@ class DOAJ(datasource.Datasource):
                     if row[1]:
                         if row[4]:
                             writer.writerow([row[1], row[4]])
+
+    def _licence_map(self, doaj_file, outfile):
+        with open(outfile, "w") as o:
+            writer = csv.writer(o)
+
+            with open(doaj_file, "r") as f:
+                reader = csv.reader(f)
+
+                for row in reader:
+                    if row[0]:
+                        if row[5]:
+                            writer.writerow([row[0], row[5]])
+                    if row[1]:
+                        if row[5]:
+                            writer.writerow([row[1], row[5]])
+
 
 if __name__ == "__main__":
     doaj = DOAJ()

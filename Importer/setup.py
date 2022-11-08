@@ -9,6 +9,7 @@ setup(
         "requests==2.22.0",
         "Unidecode==1.1.1",
         "Deprecated==1.2.13",
+        "Markdown==3.1.1",
         "wheel",
         "PyYAML==6.0"
     ],

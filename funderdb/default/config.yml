@@ -52,6 +52,7 @@ routes:
     calculate: true
 card_order:
   - fully_oa
+  - fully_oa_by_exception
   - ta
   - ta_aq
   - tj
@@ -68,6 +69,19 @@ cards:
     match_routes:
       must:
         - fully_oa
+    match_qualifications:
+      not:
+        - fully_oa.oa_exception_caveat
+    preferred: true
+
+  - id: fully_oa_by_exception     # aka Card A
+    compliant: true
+    match_routes:
+      must:
+        - fully_oa
+    match_qualifications:
+      must:
+        - fully_oa.oa_exception_caveat
     preferred: true
 
   # Self-Archiving Rights Retention, for when the self-archiving route can only be achieved via

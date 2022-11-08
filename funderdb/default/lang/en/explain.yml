@@ -80,15 +80,15 @@ routes:
     label: Open Access Journal Route
     yes:
       statement: You are able to comply with your funder's policy as this is a fully open access journal.
-      explanation: "The following checks in the Directory of Open Access Journals (DOAJ) were carried
+      explanation: "The following checks in Plan S databases and the Directory of Open Access Journals (DOAJ) were carried
                    out to determine if your chosen journal is an open access journal that enables compliance:"
     no:
       statement: You are not able to <b>comply with your funder's policy</b> via the fully open access journal route.
-      explanation: "The following checks in the Directory of Open Access Journals (DOAJ) were carried out
+      explanation: "The following checks in Plan S databases and the Directory of Open Access Journals (DOAJ) were carried out
                     to determine that this is not a route to compliance:"
     unknown:
       statement: We are <b>unable to determine if you are complaint</b> via the fully open access journal route.
-      explanation: "The following checks in the Directory of Open Access Journals (DOAJ) were carried out to determine compliance:"
+      explanation: "The following checks in Plan S databases and the Directory of Open Access Journals (DOAJ) were carried out to determine compliance:"
 qualifications:
   fully_oa.doaj_under_review: Under review at DOAJ
   self_archiving.rights_retention_author_advice: RR Author Advice (need wording for this)

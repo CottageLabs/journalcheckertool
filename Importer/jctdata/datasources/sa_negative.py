@@ -27,7 +27,8 @@ class SANegative(datasource.Datasource):
         out = os.path.join(self.dir, dir, "origin.csv")
 
         resp = requests.get(settings.SA_NEGATIVE_SHEET)
-        with open(out, "w") as f:
+        resp.encoding = "utf-8"
+        with open(out, "w", encoding="utf-8") as f:
             f.write(resp.text)
 
     def analyse(self):

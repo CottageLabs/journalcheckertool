@@ -44,6 +44,7 @@ class TA(datasource.Datasource):
                 print("{y} retrieving from {x}".format(x=data_url, y=i))
                 try:
                     resp = requests.get(data_url, timeout=10)
+                    resp.encoding = "utf-8"
                 except requests.Timeout:
                     print("{y} TIMEOUT: {x}".format(x=data_url, y=i))
                 if resp.status_code != 200:

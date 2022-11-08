@@ -9,6 +9,7 @@ from jctdata.datasources import ror
 from jctdata.datasources import sa_negative
 from jctdata.datasources import sa_positive
 from jctdata.datasources import funderdb
+from jctdata.datasources import oa_exceptions
 
 
 SOURCES = {
@@ -20,7 +21,8 @@ SOURCES = {
     "ror": ror.ROR(),
     "sa_negative" : sa_negative.SANegative(),
     "sa_positive" : sa_positive.SAPositive(),
-    "funderdb": funderdb.FunderDB()
+    "funderdb": funderdb.FunderDB(),
+    "oa_exceptions": oa_exceptions.OAExceptions()
 }
 
 

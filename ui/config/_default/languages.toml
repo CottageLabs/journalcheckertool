@@ -43,7 +43,7 @@
             url = "/exception-lists"
             weight = 3
         [[fr.menu.main]]
-            name = "Price&nbsp;Data&nbsp;Providers"
+            name = "Journals&nbsp;participating&nbsp;in&nbsp;JCS"
             pre = " • "
             url = "/jcs"
             weight = 4

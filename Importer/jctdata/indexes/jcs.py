@@ -43,14 +43,22 @@ class JCS_CSV(Indexer):
         current_data_year = self._current_data_year()
         filtered_data = {k: v for k, v in data.items() if max([int(y) for y in v["years"]]) >= current_data_year}
 
+        rows = []
+        for k, v in filtered_data.items():
+            years = sorted(v["years"])
+            rows.append([v.get("publisher", ""), v.get("title", ""), k, ", ".join([str(y) for y in years])])
+
+        rows.sort()
+
         filtered_file = os.path.join(jcsdir, "filtered.csv")
         with open(filtered_file, "w") as f:
             writer = csv.writer(f)
-            keys = sorted(list(filtered_data.keys()))
-            for k in keys:
-                v = filtered_data[k]
-                years = sorted(v["years"])
-                writer.writerow([k, v["title"], v["publisher"], ", ".join([str(y) for y in years])])
+            writer.writerows(rows)
+            # keys = sorted(list(filtered_data.keys()))
+            # for k in keys:
+            #     v = filtered_data[k]
+            #     years = sorted(v["years"])
+            #     writer.writerow([k, v["title"], v["publisher"], ", ".join([str(y) for y in years])])
 
         self.log("analysed data written to directory {x}".format(x=jcsdir))
 
@@ -60,7 +68,7 @@ class JCS_CSV(Indexer):
         filter_file = os.path.join(self.dir, dir, "filtered.csv")
         publish_file = os.path.join(self.dir, dir, self.ID + ".csv")
         with open(publish_file, "w") as f, open(filter_file, "r") as g:
-            f.write("ISSN, Journal Title, Publisher, Years available\n")
+            f.write("Publisher, Journal Title, ISSN, Years available\n")
             f.write(g.read())
 
         self.log("jcs csv data assembled")

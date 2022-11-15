@@ -727,6 +727,11 @@
       text-decoration: underline;
       font-weight: bold;
       font-size: 0.833em; }
+  #jct_plugin .jcs_container p svg {
+    vertical-align: middle;
+    margin-right: 15px;
+    height: 1rem;
+    width: 1rem; }
   #jct_plugin .query {
     min-height: 0; }
     #jct_plugin .query h2 {
@@ -739,6 +744,7 @@
     margin-top: 0.375rem;
     margin-bottom: 0.375rem; }
   #jct_plugin .button {
+    width: 100%;
     margin-bottom: 0.375rem; }
   #jct_plugin #jct_results_plugin {
     margin-bottom: 20px; }

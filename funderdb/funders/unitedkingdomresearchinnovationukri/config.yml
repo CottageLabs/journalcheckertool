@@ -106,6 +106,7 @@ cards:
       not:
         - tj
         - ta
+        - fully_oa
     preferred: false
 
   # Set of cards to display if there are no compliant results

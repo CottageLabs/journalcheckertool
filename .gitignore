@@ -19,6 +19,7 @@ ui/static/_sass/components/*.css.map
 ui/package-lock.json
 ui/package.json
 ui/public/*
+ui/static/data/jcs_price_data.csv
 
 # funderdb
 funderdb/config/

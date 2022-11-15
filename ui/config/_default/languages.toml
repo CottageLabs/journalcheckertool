@@ -29,50 +29,55 @@
             shareButton = "Partager le résultat"
     [fr.menu]
         [[fr.menu.main]]
-            name = "Revues en transformation"
+            name = "Revues&nbsp;en&nbsp;transformation"
             url = "/transformative-journals"
             weight = 1
         [[fr.menu.main]]
-            name = "Ententes de transformation"
+            name = "Ententes&nbsp;de&nbsp;transformation"
             pre = " • "
             url = "/transformative-agreements"
             weight = 2
         [[fr.menu.main]]
-            name = "Listes d’exceptions"
+            name = "Listes&nbsp;d’exceptions"
             pre = " • "
             url = "/exception-lists"
             weight = 3
         [[fr.menu.main]]
-            name = "Documentation API"
+            name = "Journals&nbsp;participating&nbsp;in&nbsp;JCS"
             pre = " • "
-            url = "/apidocs"
+            url = "/jcs"
             weight = 4
         [[fr.menu.main]]
-            name = "Widget intégrable"
+            name = "Documentation&nbsp;API"
             pre = " • "
-            url = "/widget"
+            url = "/apidocs"
             weight = 5
         [[fr.menu.main]]
-            name = " FAQ"
-            url = "/faq"
+            name = "Widget&nbsp;intégrable"
+            pre = " • "
+            url = "/widget"
             weight = 6
         [[fr.menu.main]]
-            pre = " • "
-            name = "Avis de confidentialité"
-            url = "/notices#privacy_notice"
+            name = "FAQ"
+            url = "/faq"
             weight = 7
         [[fr.menu.main]]
-            name = "Avis de non-responsabilité et droits d’auteur"
+            pre = " • "
+            name = "Avis&nbsp;de&nbsp;confidentialité"
+            url = "/notices#privacy_notice"
+            weight = 8
+        [[fr.menu.main]]
+            name = "Avis&nbsp;de&nbsp;non-responsabilité&nbsp;et&nbsp;droits&nbsp;d’auteur"
             pre = " • "
             url = "/notices#disclaimer_and_copyright"
-            weight = 8
+            weight = 9
         [[fr.menu.main]]
             name = "Acknowledgements"
             pre = " • "
             url = "/acknowledgements"
-            weight = 9
+            weight = 10
         [[fr.menu.main]]
-            name = "Historique des versions"
+            name = "Historique&nbsp;des&nbsp;versions"
             pre = " • "
             url = "/release-history"
-            weight = 10
+            weight = 11

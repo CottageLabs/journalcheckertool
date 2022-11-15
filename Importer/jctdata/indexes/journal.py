@@ -9,7 +9,7 @@ from jctdata.indexes.indexer import Indexer
 
 class Journal(Indexer):
     ID = "journal"
-    SOURCES = ["crossref", "doaj", "tj", "ta", "doaj_inprogress", "sa_negative", "sa_positive", "oa_exceptions"]
+    SOURCES = ["crossref", "doaj", "tj", "ta", "doaj_inprogress", "sa_negative", "sa_positive", "oa_exceptions", "jcs"]
 
     def __init__(self):
         super(Journal, self).__init__()
@@ -19,17 +19,18 @@ class Journal(Indexer):
         self._san_data = False
         self._sap_data = False
         self._oae_data = False
+        self._jcs_data = False
 
     def gather(self):
-        print('JOURNAL: Gathering data for journal compliance from sources: {x}'.format(x=",".join(self.SOURCES)))
+        self.log('Gathering data for journal compliance from sources: {x}'.format(x=",".join(self.SOURCES)))
         paths = resolver.gather_data(self.SOURCES, True)
 
         issns = self._get_paths(paths)
 
-        print("JOURNAL: ISSN sources: " + ", ".join([x[0] for x in issns]))
+        self.log("SSN sources: " + ", ".join([x[0] for x in issns]))
 
     def analyse(self):
-        print("JOURNAL: Analysing data for journal compliance")
+        self.log("Analysing data for journal compliance")
         dir = datetime.strftime(datetime.utcnow(), settings.DIR_DATE_FORMAT)
         journalsdir = os.path.join(self.dir, dir)
         os.makedirs(journalsdir, exist_ok=True)
@@ -43,10 +44,10 @@ class Journal(Indexer):
 
         issn_clusters(issns, issn_clusters_file)
 
-        print("JOURNAL: analysed data written to directory {x}".format(x=journalsdir))
+        self.log("analysed data written to directory {x}".format(x=journalsdir))
 
     def assemble(self):
-        print("JOURNAL: Preparing journal compliance")
+        self.log("Preparing journal compliance")
 
         journalsdir = os.path.join(self.dir, self.current_dir())
         outfile = os.path.join(journalsdir, self.ID + ".json")
@@ -64,10 +65,11 @@ class Journal(Indexer):
                 self._sa_negative(record)
                 self._sa_positive(record)
                 self._oa_exceptions(record)
+                self._jcs(record)
 
                 o.write(json.dumps(record) + "\n")
 
-        print("JOURNAL: Journal compliance assembled")
+        self.log("Journal compliance assembled")
 
         self._cleanup()
 
@@ -197,4 +199,22 @@ class Journal(Indexer):
             if issn in self._oae_data:
                 record["oa_exception"] = True
                 record["oa_exception_caveat"] = self._oae_caveats.get(issn, "")
+                break
+
+    def _jcs(self, record):
+        if self._jcs_data is False:
+            paths = resolver.SOURCES["jcs"].current_paths()
+            jcs_csv = paths["origin"]
+            self._jcs_data = {}
+
+            with open(jcs_csv, "r") as f:
+                reader = csv.reader(f)
+                for row in reader:
+                    if row[0] not in self._jcs_data:
+                        self._jcs_data[row[0]] = []
+                    self._jcs_data[row[0]].append(int(row[3]))
+
+        for issn in record.get("issn", []):
+            if issn in self._jcs_data:
+                record["jcs_years"] = self._jcs_data[issn]
                 break

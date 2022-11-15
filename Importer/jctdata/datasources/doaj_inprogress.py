@@ -25,7 +25,7 @@ class DOAJInProgress(datasource.Datasource):
         url = settings.DOAJ_IN_PROGRESS_URL
         url += "?api_key=" + get_secret(settings.DOAJ_IN_PROGRESS_KEYFILE)
 
-        print("DOAJ IN PROGRESS: downloading latest in progress list")
+        self.log("downloading latest in progress list")
         resp = requests.get(url)
 
         with open(out, "w") as f:
@@ -35,7 +35,7 @@ class DOAJInProgress(datasource.Datasource):
         dir = self.current_dir()
         infile = os.path.join(self.dir, dir, "origin.json")
         coincident_issn_file = os.path.join(self.dir, dir, "coincident_issns.csv")
-        print("DOAJ IN PROGRESS: analysing in progress list {x}".format(x=infile))
+        self.log("analysing in progress list {x}".format(x=infile))
 
         self._coincident_issns(infile, coincident_issn_file)
 
@@ -60,7 +60,3 @@ class DOAJInProgress(datasource.Datasource):
             writer = csv.writer(o)
             writer.writerows(issn_pairs)
 
-if __name__ == "__main__":
-    doaj = DOAJInProgress()
-    doaj.gather()
-    doaj.analyse()

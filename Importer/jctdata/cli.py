@@ -66,7 +66,11 @@ def load(targets, stage=None, full_pipeline=True):
         index(targets)
 
     for t in targets:
-        loader.index_latest_with_alias(t, settings.ES_INDEX_SUFFIX)
+        load_type = settings.INDEX_LOADERS[t]
+        if load_type == "es":
+            loader.index_latest_with_alias(t, settings.ES_INDEX_SUFFIX)
+        elif load_type == "file":
+            loader.load_to_file(t)
 
 
 

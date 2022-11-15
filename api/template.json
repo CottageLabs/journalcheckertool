@@ -1,0 +1,28 @@
+{
+  "name": "noddy",
+  "version": "3.1.0",
+  "dev": true,
+  "log": {
+    "level": "debug"
+  },
+  "es": {
+    "url": "http://localhost:9200",
+    "index": "jct"
+  },
+  "service": {
+    "jct": {
+      "doaj": {
+        "apikey": "<add doaj api key here>"
+      }
+    }
+  },
+  "data_url": {
+    "csv" : {
+      "ta": "add gsheets link to ta spreadsheet published as csv",
+      "tj": "add gsheets link to tj spreadsheet published as csv",
+      "sa_rr": "add gsheets link to rights retention spreadsheet published as csv",
+      "sa_prohibited": "add gsheets link to self archiving - rights retention prohibited spreadsheet published as csv"
+    }
+  },
+  "funderdb": "/home/jct/funderdb/funders"
+}

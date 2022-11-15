@@ -29,7 +29,7 @@ class OAExceptions(datasource.Datasource):
         os.makedirs(os.path.join(self.dir, dir), exist_ok=True)
         out = os.path.join(self.dir, dir, "origin.csv")
 
-        print("OA EXCEPTIONS: retrieving from {x}".format(x=settings.OA_EXCEPTIONS_SHEET))
+        self.log("retrieving from {x}".format(x=settings.OA_EXCEPTIONS_SHEET))
         resp = requests.get(settings.OA_EXCEPTIONS_SHEET)
         resp.encoding = "utf-8"
         with open(out, "w", encoding="utf-8") as f:
@@ -42,7 +42,7 @@ class OAExceptions(datasource.Datasource):
         title_file = os.path.join(self.dir, dir, "titles.csv")
         publisher_file = os.path.join(self.dir, dir, "publishers.csv")
         caveats_file = os.path.join(self.dir, dir, "caveats.csv")
-        print("OA EXCEPTIONS: analysing csv {x}".format(x=infile))
+        self.log("analysing csv {x}".format(x=infile))
 
         self._coincident_issns(infile, coincident_issn_file)
         self._title_map(infile, title_file)

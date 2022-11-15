@@ -32,14 +32,14 @@ class DOAJ(datasource.Datasource):
         tarball = os.path.join(self.dir, dir, "origin.tar.gz")
 
         if not os.path.exists(tarball):
-            print("DOAJ: downloading latest data dump")
+            self.log("downloading latest data dump")
             resp = requests.get("https://doaj.org/public-data-dump/journal")
             with open(tarball, "wb") as f:
                 f.write(resp.content)
         self._extract_doaj_data(tarball, out)
 
     def _extract_doaj_data(self, tarball, out):
-        print("DOAJ: extracting data dump {x}".format(x=tarball))
+        self.log("extracting data dump {x}".format(x=tarball))
         tf = tarfile.open(tarball, "r:gz")
         with open(out, "w") as o:
             writer = csv.writer(o)
@@ -78,7 +78,7 @@ class DOAJ(datasource.Datasource):
         title_file = os.path.join(self.dir, dir, "titles.csv")
         publisher_file = os.path.join(self.dir, dir, "publishers.csv")
         licence_file = os.path.join(self.dir, dir, "licences.csv")
-        print("DOAJ: analysing extracted data dump {x}".format(x=infile))
+        self.log("analysing extracted data dump {x}".format(x=infile))
 
         self._coincident_issns(infile, coincident_issn_file)
         self._title_map(infile, title_file)
@@ -155,8 +155,3 @@ class DOAJ(datasource.Datasource):
                         if row[5]:
                             writer.writerow([row[1], row[5]])
 
-
-if __name__ == "__main__":
-    doaj = DOAJ()
-    doaj.gather()
-    doaj.analyse()

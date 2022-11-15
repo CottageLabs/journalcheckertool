@@ -10,20 +10,20 @@ from jctdata.indexes.indexer import Indexer
 
 class JAC(Indexer):
     ID = "jac"
-    SOURCES = ["crossref", "doaj", "tj", "ta", "doaj_inprogress", "sa_negative", "sa_positive", "oa_exceptions"]
+    SOURCES = ["crossref", "doaj", "tj", "ta", "doaj_inprogress", "sa_negative", "sa_positive", "oa_exceptions", "jcs"]
 
     def gather(self):
-        print('JAC: Gathering data for journal autocomplete from sources: {x}'.format(x=",".join(self.SOURCES)))
+        self.log('Gathering data for journal autocomplete from sources: {x}'.format(x=",".join(self.SOURCES)))
         paths = resolver.gather_data(self.SOURCES, True)
 
         issns, titles, pubs = self._get_paths(paths)
 
-        print("JAC: ISSN sources: " + ", ".join([x[0] for x in issns]))
-        print("JAC: TITLE sources: " + ", ".join([x[0] for x in titles]))
-        print("JAC: PUB sources: " + ", ".join([x[0] for x in pubs]))
+        self.log("ISSN sources: " + ", ".join([x[0] for x in issns]))
+        self.log("TITLE sources: " + ", ".join([x[0] for x in titles]))
+        self.log("PUB sources: " + ", ".join([x[0] for x in pubs]))
 
     def analyse(self):
-        print("JAC: Analysing data for journal autocomplete")
+        self.log("Analysing data for journal autocomplete")
         dir = datetime.strftime(datetime.utcnow(), settings.DIR_DATE_FORMAT)
         jacdir = os.path.join(self.dir, dir)
         os.makedirs(jacdir, exist_ok=True)
@@ -49,10 +49,10 @@ class JAC(Indexer):
             writer = csv.writer(f)
             writer.writerows(pubrows)
 
-        print("JAC: analysed data written to directory {x}".format(x=jacdir))
+        self.log("analysed data written to directory {x}".format(x=jacdir))
 
     def assemble(self):
-        print("JAC: Preparing journal autocomplete data")
+        self.log("Preparing journal autocomplete data")
 
         preference_order = settings.JAC_PREF_ORDER
         jacdir = os.path.join(self.dir, self.current_dir())
@@ -93,7 +93,7 @@ class JAC(Indexer):
 
                 o.write(json.dumps(record) + "\n")
 
-        print("JAC: Journal Autocomplete data assembled")
+        self.log("Journal Autocomplete data assembled")
 
         self._cleanup()
 

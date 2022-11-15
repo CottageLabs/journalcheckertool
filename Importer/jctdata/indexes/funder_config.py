@@ -25,13 +25,13 @@ class FunderConfig(Indexer):
     SOURCES = ["funderdb"]
 
     def gather(self):
-        print('FUNDER_CONFIG: Gathering data for funder config from sources: {x}'.format(
+        self.log('Gathering data for funder config from sources: {x}'.format(
             x=",".join(self.SOURCES)))
         paths = resolver.gather_data(self.SOURCES, True)
         print("FUNDER_CONFIG: funderdb source: " + paths.get("funderdb", {}).get("origin", "no funderdb source"))
 
     def analyse(self):
-        print("FUNDER_CONFIG: Preparing funder configuration")
+        self.log("Preparing funder configuration")
 
         dir = datetime.strftime(datetime.utcnow(), settings.DIR_DATE_FORMAT)
         fcdir = os.path.join(self.dir, dir)
@@ -54,10 +54,10 @@ class FunderConfig(Indexer):
             with open(os.path.join(analyse_dir, funder + ".json"), "w") as o:
                 o.write(json.dumps(funder_cfg, indent=2, default=serialiser_help))
 
-        print("FUNDER_CONFIG: Funder configurations built")
+        self.log("Funder configurations built")
 
     def assemble(self):
-        print("FUNDER_CONFIG: Assembling funder configuration index")
+        self.log("Assembling funder configuration index")
 
         fcdir = os.path.join(self.dir, self.current_dir())
         outfile = os.path.join(fcdir, "funder_config.json")
@@ -70,7 +70,7 @@ class FunderConfig(Indexer):
                     data = json.loads(f.read())
                 o.write(json.dumps(data) + "\n")
 
-        print("FUNDER_CONFIG: Funder config index data prepared")
+        self.log("Funder config index data prepared")
 
         self._cleanup()
 

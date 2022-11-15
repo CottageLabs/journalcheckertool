@@ -64,7 +64,8 @@ Examples:
         "id": "<journal issn>", 
         "title": "<journal title>", 
         "issn" : ["<all of the matching ISSNs for this journal>"],
-        "publisher" : "<journal publisher>"
+        "publisher" : "<journal publisher>",
+        "price_data_years" : ["<int:years for which price data has been uploaded to JCS>"]
       }
     ],
     "funder" : [
@@ -84,6 +85,8 @@ Examples:
   ]
 }
 ```
+
+Under `request.journal.price_data_years` you may find a list of years in which this journal's price data has been provided to the [Journal Comparison Service](https://www.coalition-s.org/journal-comparison-service/).  If this is present it means that for all the years listed the journal has provided data to that cOAlition S service.  The most recent possible data that the service could hold is for the previous calendar year.  For example, if the current year is 2023, then the most recent price data possible would be for 2022.
 
 ### Per-Route response data
 

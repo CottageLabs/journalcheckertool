@@ -458,7 +458,11 @@ API.service.jct.calculate = (params={}, refresh) ->
         if sg.data and sg.data.length
           ad = sg.data[0]
           if p is 'journal'
-            res.request[p].push {id: ad.id, title: ad.title, issn: ad.issns, publisher: ad.publisher}
+            obj = {id: ad.id, title: ad.title, issn: ad.issns, publisher: ad.publisher}
+            if journal_record = jct_journal.find 'issn.exact:"' + ad.issns.join('" OR issn.exact:"') + '"'
+              if journal_record.jcs_years
+                obj.price_data_years = journal_record.jcs_years
+            res.request[p].push obj
           else if p is 'funder'
             res.request[p].push {id: ad.id, title: ad.funder}
           else

@@ -13,12 +13,12 @@ class FunderLanguage(Indexer):
     SOURCES = ["funderdb"]
 
     def gather(self):
-        print('FUNDER_LANGUAGE: Gathering data for funder language packs from sources: {x}'.format(x=",".join(self.SOURCES)))
+        self.log('Gathering data for funder language packs from sources: {x}'.format(x=",".join(self.SOURCES)))
         paths = resolver.gather_data(self.SOURCES, True)
-        print("FUNDER_LANGUAGE: funderdb source: " + paths.get("funderdb", {}).get("origin", "no funderdb source"))
+        self.log("funderdb source: " + paths.get("funderdb", {}).get("origin", "no funderdb source"))
 
     def analyse(self):
-        print("FUNDER_LANGUAGE: Preparing funder language packs")
+        self.log("Preparing funder language packs")
 
         dir = datetime.strftime(datetime.utcnow(), settings.DIR_DATE_FORMAT)
         fldir = os.path.join(self.dir, dir)
@@ -56,10 +56,10 @@ class FunderLanguage(Indexer):
                 with open(os.path.join(analyse_dir, funder_dir + "__" + lang + ".json"), "w") as o:
                     o.write(json.dumps(build, indent=2))
 
-        print("FUNDER_LANGUAGE: Funder Language packs built")
+        self.log("Funder Language packs built")
 
     def assemble(self):
-        print("FUNDER_LANGUAGE: Assembling funder language packs index")
+        self.log("Assembling funder language packs index")
 
         fldir = os.path.join(self.dir, self.current_dir())
         outfile = os.path.join(fldir, "funder_language.json")
@@ -73,16 +73,16 @@ class FunderLanguage(Indexer):
                 data["id"] = lang_file.rsplit(".")[0]
                 o.write(json.dumps(data) + "\n")
 
-        print("FUNDER_LANGUAGE: Funder Language packs index data prepared")
+        self.log("Funder Language packs index data prepared")
 
         self._cleanup()
 
     def _compile_multilang(self, base_dir, base_lang):
         if not os.path.exists(base_dir):
-            print("FUNDER_LANGUAGE: no specific language pack at {x}".format(x=base_dir))
+            self.log("no specific language pack at {x}".format(x=base_dir))
             return {}
 
-        print("FUNDER_LANGUAGE: compiling for multiple languages in {x} (base language {y})".format(x=base_dir, y=base_lang))
+        self.log("compiling for multiple languages in {x} (base language {y})".format(x=base_dir, y=base_lang))
         base_lang_dir = os.path.join(base_dir, base_lang)
         base_lang_build = self._compile_dir(base_lang_dir)
 
@@ -100,7 +100,7 @@ class FunderLanguage(Indexer):
         return langs
 
     def _compile_dir(self, path):
-        print("FUNDER_LANGUAGE: compiling language dir {x}".format(x=path))
+        self.log("compiling language dir {x}".format(x=path))
         compiled = {}
         if not os.path.exists(path):
             return compiled

@@ -1,6 +1,7 @@
 import os, shutil
 from datetime import datetime, timedelta
 from jctdata import settings
+from jctdata.lib import logger
 
 class Datasource:
     ID = None
@@ -9,6 +10,9 @@ class Datasource:
         self.max_age = settings.MAX_DATASOURCE_AGE[self.ID]
         self.dir = settings.DATASOURCE_PATH[self.ID]
         self.keep_historic = settings.DATASOURCE_HISTORY.get(self.ID, 3)
+
+    def log(self, msg):
+        logger.log(msg, self.ID.upper())
 
     def requires_update(self):
         dirs = []

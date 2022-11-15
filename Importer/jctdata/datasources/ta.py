@@ -41,16 +41,16 @@ class TA(datasource.Datasource):
                     first = False
                     continue
                 data_url = row[4]
-                print("{y} retrieving from {x}".format(x=data_url, y=i))
+                self.log("{y} retrieving from {x}".format(x=data_url, y=i))
                 try:
                     resp = requests.get(data_url, timeout=10)
                     resp.encoding = "utf-8"
                 except requests.Timeout:
-                    print("{y} TIMEOUT: {x}".format(x=data_url, y=i))
+                    self.log("{y} TIMEOUT: {x}".format(x=data_url, y=i))
                 if resp.status_code != 200:
-                    print("{y} ERROR: Failed to retrieve {x}".format(x=data_url, y=i))
+                    self.log("{y} ERROR: Failed to retrieve {x}".format(x=data_url, y=i))
                 else:
-                    print("{y} Retrieved {x} [{z}]".format(x=row[0], y=i, z=row[1]))
+                    self.log("{y} Retrieved {x} [{z}]".format(x=row[0], y=i, z=row[1]))
 
                 fn = row[0]
                 if row[1]:
@@ -61,7 +61,7 @@ class TA(datasource.Datasource):
                 outfile = os.path.join(outdir, fn)
                 with open(outfile, "w") as o:
                     o.write(resp.text)
-                print("{y} saved to {x}".format(y=i, x=fn))
+                self.log("{y} saved to {x}".format(y=i, x=fn))
 
     def analyse(self):
         dir = self.current_dir()
@@ -69,7 +69,6 @@ class TA(datasource.Datasource):
 
         coincident_issn_file = os.path.join(self.dir, dir, "coincident_issns.csv")
         title_file = os.path.join(self.dir, dir, "titles.csv")
-        publisher_file = os.path.join(self.dir, dir, "publishers.csv")
 
         self._coincident_issns(sheets, coincident_issn_file)
         self._title_map(sheets, title_file)
@@ -123,7 +122,3 @@ class TA(datasource.Datasource):
         with open(outfile, "w") as o:
             writer = csv.writer(o)
             writer.writerows(title_map)
-
-if __name__ == "__main__":
-    ta = TA()
-    ta.gather()

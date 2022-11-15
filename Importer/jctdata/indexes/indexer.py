@@ -1,14 +1,18 @@
 import os, shutil
 
 from jctdata import settings
+from jctdata.lib import logger
 
 class Indexer(object):
-    ID = "override"
+    ID = "indexer"
     SOURCES = []
 
     def __init__(self):
         self.dir = settings.INDEX_PATH[self.ID]
         self.keep_historic = settings.INDEX_HISTORY.get(self.ID, 5)
+
+    def log(self, msg):
+        logger.log(msg, self.ID.upper())
 
     def current_dir(self):
         dirs = []
@@ -44,5 +48,5 @@ class Indexer(object):
         dirs.sort(reverse=True)
         for remove in dirs[self.keep_historic:]:
             removing = os.path.join(dir, remove)
-            print("INDEXER: cleaning up old directory {x}".format(x=removing))
+            self.log("cleaning up old directory {x}".format(x=removing))
             shutil.rmtree(removing)

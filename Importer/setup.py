@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='jctdata',
-    version='1.1.0',
+    version='5.2.0',
     packages=find_packages(),
     install_requires=[
         "click~=8.1.3",

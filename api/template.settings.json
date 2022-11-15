@@ -1,6 +1,6 @@
 {
   "name": "noddy",
-  "version": "3.1.0",
+  "version": "5.2.0",
   "dev": true,
   "log": {
     "level": "debug"

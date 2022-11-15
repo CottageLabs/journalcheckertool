@@ -470,6 +470,11 @@ button {
     button--primary:focus {
       background: #F47115;
       background: linear-gradient(140deg, #FABE5E 20%, #F47115 100%); }
+    @media only screen and (max-width: 767px) {
+      .button--primary,
+      button--primary {
+        margin-left: 0;
+        width: 100%; } }
   .button--secondary,
   button--secondary {
     background-color: #2B2B2B;
@@ -483,9 +488,18 @@ button {
     button--secondary:focus {
       background-color: #FFF;
       color: #2B2B2B; }
+    @media only screen and (max-width: 767px) {
+      .button--secondary,
+      button--secondary {
+        margin-left: 0;
+        width: 100%; } }
   .button + button,
   button + button {
     margin-left: 1.5rem; }
+    @media only screen and (max-width: 767px) {
+      .button + button,
+      button + button {
+        margin-left: 0; } }
 
 .expression {
   display: flex;
@@ -875,7 +889,8 @@ button {
 .jcs_container {
   background: #F9F6F6;
   box-shadow: 0px 0px 8px #FABE5E;
-  padding: 20px; }
+  padding: 20px;
+  margin-bottom: 1.5rem; }
   .jcs_container h5 {
     font-weight: 700;
     margin-top: 0;

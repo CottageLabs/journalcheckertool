@@ -2,9 +2,10 @@ import string
 from unidecode import unidecode
 
 def title_variants(title):
-    title = title.lower()
+    title = title.strip().lower()
     variants = [title]
     variants += _asciifold(title)
+    variants += [x[4:] for x in variants if x.startswith("the ")]
     variants += [x for x in [_ampersander(t) for t in variants] if x is not None]
     return list(set(variants))
 

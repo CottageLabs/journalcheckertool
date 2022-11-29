@@ -193,7 +193,7 @@ jct.displayPriceData = (journalData) => {
     message = message.replaceAll("{journal}", journalData.title);
     message = `
         <div class="col col--1of1"><div class="jcs_container">
-            <h5>Do you know?</h5>
+            <h5>Transparent price and service data</h5>
             <p>${message}</p>
             <a href="#" class="modal-trigger" data-modal="jcs">Click here to learn more</a>
         </div>
@@ -479,10 +479,11 @@ jct.searchFunders = function(str) {
                     if (idx === 0) {
                         add = 2;
                     }
-                    if (matches.hasOwnProperty(funder.id)) {
-                        matches[funder.id+funder.name].score += add;
+                    let key = funder.id+funder.name;
+                    if (matches.hasOwnProperty(key)) {
+                        matches[key].score += add;
                     } else {
-                        matches[funder.id+funder.name] = {"record" : funder, "score" : add}
+                        matches[key] = {"record" : funder, "score" : add}
                     }
                 }
             }

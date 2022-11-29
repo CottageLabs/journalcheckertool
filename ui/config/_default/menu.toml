@@ -13,7 +13,7 @@
     url = "/exception-lists"
     weight = 3
 [[main]]
-    name = "Price&nbsp;Data&nbsp;Providers"
+    name = "Journals&nbsp;participating&nbsp;in&nbsp;JCS"
     pre = " • "
     url = "/jcs"
     weight = 4
@@ -42,7 +42,12 @@
     url = "/notices#disclaimer_and_copyright"
     weight = 9
 [[main]]
+    name = "Acknowledgements"
+    pre = " • "
+    url = "/acknowledgements"
+    weight = 10
+[[main]]
     name = "Release&nbsp;History"
     pre = " • "
     url = "/release-history"
-    weight = 10
+    weight = 11

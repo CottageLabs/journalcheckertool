@@ -470,6 +470,7 @@ jct.tiles_plugin_html = `
     <section class="row" id="jct_paths_results">
         <h3 class="sr-only">Results</h3>
     </section>
+    <section class="row" id="jct_jcs_price_data"></section>
 `;
 
 // ----------------------------------------
@@ -483,6 +484,61 @@ jct.displayCards = (cardsToDisplay, result) => {
         jct.d.gebi("jct_paths_results").append(jct.htmlToElement(card));
     }
 }
+
+// ----------------------------------------
+// Function to display the JCS price data if relevant
+// ----------------------------------------
+
+jct.site_modals.jcs = {
+    en: {
+        title: "Journal Comparison Service",
+        body: `<p>The <a href="https://journalcomparisonservice.org/" target="_blank">Journal Comparison Service (JCS)</a> – 
+                developed by cOAlition S - provides libraries and library consortia with the ability to compare journal 
+                publishing services and fees to help determine if the prices charged are commensurate with the services provided.</p>
+                <p>If transparency of price and service data is important to you – and your preferred journal does not 
+                provide these data – then you may wish to consider submitting your manuscript to a journal which supports these values.</p>  
+                <p><a href="https://journalcheckertool.org/jcs">List of journals</a> that are providing current price and service data to the JCS.</p>
+                <p>More information about the JCS is available at: 
+                <a href="https://www.coalition-s.org/journal-comparison-service/" target="_blank">https://www.coalition-s.org/journal-comparison-service/</a></p>`
+    }
+};
+
+jct.displayPriceData = (journalData) => {
+    let message = jct.lang.jcs.none;
+    if (journalData.price_data_years && journalData.price_data_years.length > 0) {
+        message = jct.lang.jcs.stale;
+
+        let currentDate = new Date();
+        let yearCurrent = currentDate.getUTCFullYear();
+        let latestData = Math.max(journalData.price_data_years);
+        let rolloverDate = new Date(parseInt(yearCurrent) + "-11-01T00:00:00Z");
+
+        // if the current date is before the end of October of the current year, then
+        // we will accept data from up to 2 years ago as current (e.g. in May 2023 data
+        // from 2021 is current).  If not, we will only accept data from one year ago
+        // (e.g. in November 2023 data from 2022 is current, and 2021 is stale)
+        let cutoffYear = yearCurrent - 1;
+        if (currentDate < rolloverDate) {
+            cutoffYear = yearCurrent - 2;
+        }
+        if (latestData >= cutoffYear) {
+            message = jct.lang.jcs.current;
+        }
+
+        message = message.replaceAll("{year}", journalData.price_data_years.join(", "))
+    }
+
+    message = message.replaceAll("{journal}", journalData.title);
+    message = `
+        <div class="col col--1of1"><div class="jcs_container">
+            <h5>Transparent price and service data</h5>
+            <p>${message}</p>
+            <a href="#" class="modal-trigger" data-modal="jcs">Click here to learn more</a>
+        </div>
+        </div>
+    `;
+    jct.d.gebi("jct_jcs_price_data").innerHTML = message;
+};
 
 // ----------------------------------------
 // Function to display specific card
@@ -537,6 +593,7 @@ jct.buildCard = function(cardConfig, uiText, results, choices) {
         }
     }
 
+    // all the possible card text substitutions
     body = body.replace("{title}", choices.journal.title);
     body = body.replace("{funder}", choices.funder.title);
     body = body.replace("{publisher}", choices.journal.publisher);
@@ -561,6 +618,25 @@ jct.buildCard = function(cardConfig, uiText, results, choices) {
                         } else {
                             body = body.replace("{end_date}", "an unknown date");
                         }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    if (compliantRoutes.includes("fully_oa")) {
+        for (let i = 0; i < results.length; i++) {
+            let r = results[i];
+            if (r.route === "fully_oa" && r.qualifications && r.qualifications.length > 0) {
+                for (let j = 0; j < r.qualifications.length; j++) {
+                    let qual = r.qualifications[j];
+                    if (qual.oa_exception_caveat) {
+                        let cav = qual.oa_exception_caveat.caveat;
+                        if (!cav.endsWith(".")) {
+                            cav = cav + ".";
+                        }
+                        body = body.replace("{oa_exception_caveat}", cav);
                         break;
                     }
                 }
@@ -741,10 +817,11 @@ jct.searchFunders = function(str) {
                     if (idx === 0) {
                         add = 2;
                     }
-                    if (matches.hasOwnProperty(funder.id)) {
-                        matches[funder.id+funder.name].score += add;
+                    let key = funder.id+funder.name;
+                    if (matches.hasOwnProperty(key)) {
+                        matches[key].score += add;
                     } else {
-                        matches[funder.id+funder.name] = {"record" : funder, "score" : add}
+                        matches[key] = {"record" : funder, "score" : add}
                     }
                 }
             }
@@ -991,6 +1068,9 @@ jct.display_result = (js) => {
     // }
     let cardsToDisplay = js.cards;
     jct.displayCards(cardsToDisplay, js.results);
+    if (js.request.journal.length > 0) {
+        jct.displayPriceData(js.request.journal[0]);
+    }
 
     x = window.matchMedia("(max-width: 767px)")
     let results_section_top = jct.d.gebi("jct_results_plugin").offsetTop
@@ -1512,7 +1592,7 @@ jct.setup = (manageUrl=true) => {
 
 // -------- funders --------
 
-jct.funderlist=[{"id": "academyoffinlandaka", "name": "Academy of Finland", "abbr": "AKA", "country": null, "primary": true}, {"id": "aligningscienceacrossparkinsonsasap", "name": "Aligning Science Across Parkinson's", "abbr": "ASAP", "country": null, "primary": true}, {"id": "austriansciencefundfwf", "name": "Austrian Science Fund", "abbr": "FWF", "country": null, "primary": true}, {"id": "billmelindagatesfoundation", "name": "Bill & Melinda Gates Foundation", "abbr": null, "country": null, "primary": true}, {"id": "europeancommissionhorizoneuropeframeworkprogramme", "name": "European Commission (Horizon Europe Framework Programme)", "abbr": null, "country": null, "primary": true}, {"id": "formassweden", "name": "Formas", "abbr": null, "country": "Sweden", "primary": true}, {"id": "fortesweden", "name": "FORTE", "abbr": null, "country": "Sweden", "primary": true}, {"id": "frenchnationalresearchagencyanr", "name": "French National Research Agency", "abbr": "ANR", "country": null, "primary": true}, {"id": "highercouncilforscienceandtechnologyhcstjordan", "name": "Higher Council for Science and Technology", "abbr": "HCST", "country": "Jordan", "primary": true}, {"id": "howardhughesmedicalinstitutehhmi", "name": "Howard Hughes Medical Institute", "abbr": "HHMI", "country": null, "primary": true}, {"id": "luxembourgnationalresearchfundfnr", "name": "Luxembourg National Research Fund", "abbr": "FNR", "country": null, "primary": true}, {"id": "nationalinstitutefornuclearphysicsinfnitaly", "name": "National Institute for Nuclear Physics", "abbr": "INFN", "country": "Italy", "primary": true}, {"id": "nationalscienceandtechnologycouncilnstczambia", "name": "National Science and Technology Council", "abbr": "NSTC", "country": "Zambia", "primary": true}, {"id": "nationalsciencecentrepolandncn", "name": "National Science Centre", "abbr": "NCN", "country": "Poland", "primary": true}, {"id": "netherlandsorganisationforscientificresearchnwo", "name": "Netherlands Organisation for Scientific Research", "abbr": "NWO", "country": null, "primary": true}, {"id": "quebecresearchfunds", "name": "Fonds de recherche du Qu\u00e9bec (Quebec Research Funds)", "abbr": "FRQ", "country": null, "primary": true}, {"id": "researchcouncilofnorwayrcn", "name": "Research Council of Norway", "abbr": "RCN", "country": null, "primary": true}, {"id": "sciencefoundationirelandsfi", "name": "Science Foundation Ireland", "abbr": "SFI", "country": null, "primary": true}, {"id": "slovenianresearchagencyarrs", "name": "Slovenian Research Agency", "abbr": "ARRS", "country": null, "primary": true}, {"id": "southafricanmedicalresearchcouncilsamrc", "name": "South African Medical Research Council", "abbr": "SAMRC", "country": null, "primary": true}, {"id": "specialprogrammeforresearchandtrainingintropicaldiseasestdr", "name": "Special Programme for Research and Training in Tropical Diseases", "abbr": "TDR", "country": null, "primary": true}, {"id": "templetonworldcharityfoundationtwcf", "name": "Templeton World Charity Foundation", "abbr": "TWCF", "country": null, "primary": true}, {"id": "unitedkingdomresearchinnovationukri", "name": "UK Research and Innovation.", "abbr": "UKRI", "country": null, "primary": true}, {"id": "unitedkingdomresearchinnovationukri", "name": "Arts and Humanities Research Council", "abbr": "AHRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Biotechnology and Biological Sciences Research Council", "abbr": "BBSRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Economic and Social Research Council", "abbr": "ESRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Engineering and Physical Sciences Research Council", "abbr": "EPSRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Innovate UK", "abbr": "UKRI", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Medical Research Council", "abbr": "MRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Natural Environment Research Council", "abbr": "NERC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "National Centre for the Replacement Refinement & Reduction of Animals in Research", "abbr": "NC3Rs (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Research England", "abbr": "UKRI", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Science and Technology Facilities Council", "abbr": "STFC (UKRI)", "country": null, "primary": false}, {"id": "vinnovasweden", "name": "Vinnova", "abbr": null, "country": "Sweden", "primary": true}, {"id": "wellcome", "name": "Wellcome", "abbr": null, "country": null, "primary": true}, {"id": "worldhealthorganizationwho", "name": "World Health Organization", "abbr": "WHO", "country": null, "primary": true}]
+jct.funderlist=[{"id": "academyoffinlandaka", "name": "Academy of Finland", "abbr": "AKA", "country": null, "primary": true}, {"id": "aligningscienceacrossparkinsonsasap", "name": "Aligning Science Across Parkinson's", "abbr": "ASAP", "country": null, "primary": true}, {"id": "austriansciencefundfwf", "name": "Austrian Science Fund", "abbr": "FWF", "country": null, "primary": true}, {"id": "billmelindagatesfoundation", "name": "Bill & Melinda Gates Foundation", "abbr": null, "country": null, "primary": true}, {"id": "europeancommissionhorizoneuropeframeworkprogramme", "name": "European Commission (Horizon Europe Framework Programme)", "abbr": null, "country": null, "primary": true}, {"id": "formassweden", "name": "Formas", "abbr": null, "country": "Sweden", "primary": true}, {"id": "fortesweden", "name": "FORTE", "abbr": null, "country": "Sweden", "primary": true}, {"id": "frenchnationalresearchagencyanr", "name": "French National Research Agency", "abbr": "ANR", "country": null, "primary": true}, {"id": "highercouncilforscienceandtechnologyhcstjordan", "name": "Higher Council for Science and Technology", "abbr": "HCST", "country": "Jordan", "primary": true}, {"id": "howardhughesmedicalinstitutehhmi", "name": "Howard Hughes Medical Institute", "abbr": "HHMI", "country": null, "primary": true}, {"id": "luxembourgnationalresearchfundfnr", "name": "Luxembourg National Research Fund", "abbr": "FNR", "country": null, "primary": true}, {"id": "nationalhealthandmedicalresearchcouncil", "name": "National Health and Medical Research Council", "abbr": "NHMRC", "country": "Australia", "primary": true}, {"id": "nationalinstitutefornuclearphysicsinfnitaly", "name": "National Institute for Nuclear Physics", "abbr": "INFN", "country": "Italy", "primary": true}, {"id": "nationalscienceandtechnologycouncilnstczambia", "name": "National Science and Technology Council", "abbr": "NSTC", "country": "Zambia", "primary": true}, {"id": "nationalsciencecentrepolandncn", "name": "National Science Centre", "abbr": "NCN", "country": "Poland", "primary": true}, {"id": "netherlandsorganisationforscientificresearchnwo", "name": "Netherlands Organisation for Scientific Research", "abbr": "NWO", "country": null, "primary": true}, {"id": "quebecresearchfunds", "name": "Fonds de recherche du Qu\u00e9bec (Quebec Research Funds)", "abbr": "FRQ", "country": null, "primary": true}, {"id": "researchcouncilofnorwayrcn", "name": "Research Council of Norway", "abbr": "RCN", "country": null, "primary": true}, {"id": "sciencefoundationirelandsfi", "name": "Science Foundation Ireland", "abbr": "SFI", "country": null, "primary": true}, {"id": "slovenianresearchagencyarrs", "name": "Slovenian Research Agency", "abbr": "ARRS", "country": null, "primary": true}, {"id": "southafricanmedicalresearchcouncilsamrc", "name": "South African Medical Research Council", "abbr": "SAMRC", "country": null, "primary": true}, {"id": "specialprogrammeforresearchandtrainingintropicaldiseasestdr", "name": "Special Programme for Research and Training in Tropical Diseases", "abbr": "TDR", "country": null, "primary": true}, {"id": "templetonworldcharityfoundationtwcf", "name": "Templeton World Charity Foundation", "abbr": "TWCF", "country": null, "primary": true}, {"id": "unitedkingdomresearchinnovationukri", "name": "UK Research and Innovation.", "abbr": "UKRI", "country": null, "primary": true}, {"id": "unitedkingdomresearchinnovationukri", "name": "Arts and Humanities Research Council", "abbr": "AHRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Biotechnology and Biological Sciences Research Council", "abbr": "BBSRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Economic and Social Research Council", "abbr": "ESRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Engineering and Physical Sciences Research Council", "abbr": "EPSRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Innovate UK", "abbr": "UKRI", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Medical Research Council", "abbr": "MRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Natural Environment Research Council", "abbr": "NERC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "National Centre for the Replacement Refinement & Reduction of Animals in Research", "abbr": "NC3Rs (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Research England", "abbr": "UKRI", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Science and Technology Facilities Council", "abbr": "STFC (UKRI)", "country": null, "primary": false}, {"id": "vinnovasweden", "name": "Vinnova", "abbr": null, "country": "Sweden", "primary": true}, {"id": "wellcome", "name": "Wellcome", "abbr": null, "country": null, "primary": true}, {"id": "worldhealthorganizationwho", "name": "World Health Organization", "abbr": "WHO", "country": null, "primary": true}]
 
 
 // -------- find_out_more --------

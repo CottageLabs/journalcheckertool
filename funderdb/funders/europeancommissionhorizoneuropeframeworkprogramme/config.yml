@@ -55,6 +55,7 @@ cards:
       not:
         - ta
         - self_archiving
+        - fully_oa
 
   - id: card3a
     compliant: true

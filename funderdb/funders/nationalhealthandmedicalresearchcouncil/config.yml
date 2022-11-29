@@ -1,0 +1,10 @@
+id: nationalhealthandmedicalresearchcouncil
+name: National Health and Medical Research Council
+abbr: NHMRC
+country: Australia
+plan_s: 2022-09-20
+apc:
+  tj: true # implementation roadmap
+routes:
+  self_archiving:
+    rights_retention: 2022-09-20

@@ -209,6 +209,9 @@ During each transition in the above diagram (Figure 6), the algorithm should rec
 This check determines if a journal is a hybrid.  It proceeds as follows (see *Figure 7*)
 
 
+* Check if the Journal appears in the Self-Archiving Negative Exceptions list
+  * If it is present, the journal is automatically Non-Compliant and all other processing can stop
+  * Otherwise carry on
 * Check if the Journal appears in DOAJ.  If it does, it is not a hybrid, and the route can terminate with a Non-Compliant result
 * Check if the Journal appears in the OA.Works Permissions database.
   * If it is not present, we are unable to tell if the journal is a hybrid, and we can terminate with an Unknown result
@@ -231,6 +234,8 @@ During each transition in the above diagram (Figure 7), the algorithm should rec
 
 | Code                  | Associated Properties |
 |-----------------------|-----------------------|
+| Hybrid.Exception      |                       |
+| Hybrid.NoException    |                       |
 | Hybrid.InDOAJ         |                       |
 | Hybrid.NotInDOAJ      |                       |
 | Hybrid.NotInOAW       |                       |

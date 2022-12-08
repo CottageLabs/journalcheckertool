@@ -1,0 +1,9 @@
+id: swissnationalsciencefoundationsnsf
+name: Swiss National Science Foundation
+abbr: SNSF
+plan_s: 2022-11-01
+apc:
+  tj: false
+routes:
+  self_archiving:
+    rights_retention: 2022-11-01

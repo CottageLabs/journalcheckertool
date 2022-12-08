@@ -24,7 +24,9 @@
     "../_sass/components/plugin_query",
     "../_sass/components/clinput",
     "../_sass/components/plugin_results",
-    "../_sass/components/jcs";
+    "../_sass/components/jcs",
+    "../_sass/components/plugin_jcs";
+
 
   width: 300px;
   font-family: open sans,sans-serif;
@@ -55,6 +57,7 @@
   }
 
   .button {
+    width: 100%;
     margin-bottom: $spacing-02;
   }
 

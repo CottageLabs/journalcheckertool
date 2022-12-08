@@ -34,6 +34,7 @@ card_order:
   - tile2
   - tile2_aq
   - tile1
+  - tile1_by_exception
   - tile6
   - tile7
   - tile5
@@ -46,6 +47,19 @@ cards:
     match_routes:
       must:
         - fully_oa  # The rules for tile1 also say "and allows SA" but all Fully OA journals do, so no need for that route check
+    match_qualifications:
+      not:
+        - fully_oa.oa_exception_caveat
+    preferred: false
+
+  - id: tile1_by_exception   # derived from fully_oa
+    compliant: true
+    match_routes:
+      must:
+        - fully_oa  # The rules for tile1 also say "and allows SA" but all Fully OA journals do, so no need for that route check
+    match_qualifications:
+      must:
+        - fully_oa.oa_exception_caveat
     preferred: false
 
   # Transformative Agreements tiles (with and without author qualifications)

@@ -30,6 +30,9 @@ you will need to use the following identifiers in place of the name of the funde
 **FORTE (Sweden)**
 : `fortesweden`
 
+**Foundation for Science and Technology of Portugal (FCT)**
+: `foundationforscienceandtechnologyofportugalfct`
+
 **French National Research Agency (ANR)**
 : `frenchnationalresearchagencyanr`
 

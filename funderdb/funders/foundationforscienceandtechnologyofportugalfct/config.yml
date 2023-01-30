@@ -1,0 +1,9 @@
+id: foundationforscienceandtechnologyofportugalfct
+name: Foundation for Science and Technology of Portugal
+abbr: FCT
+plan_s: 2023-01-01
+apc:
+  tj: true # implementation roadmap
+routes:
+  self_archiving:
+    rights_retention: 2023-01-01  # implementation roadmap

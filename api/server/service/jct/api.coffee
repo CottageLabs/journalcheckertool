@@ -1012,6 +1012,12 @@ API.service.jct.hybrid = (issn, institution, funder, oa_permissions) ->
     funder: funder
     log: []
 
+  # check the negative exceptions registry
+  if issn.length and jct_journal.find 'sa_prohibited:true AND (issn.exact:"' + issn.join('" OR issn.exact:"') + '")'
+    res.compliant = 'no'
+    res.log.push code: 'Hybrid.Exception'
+    return res
+
   # Check DOAJ. If present return non-compliant
   if issn.length and jct_journal.find 'indoaj:true AND (issn.exact:"' + issn.join('" OR issn.exact:"') + '")'
     res.compliant = 'no'

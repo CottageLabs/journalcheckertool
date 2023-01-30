@@ -82,6 +82,8 @@ logs:
     TJ.NonCompliant: As this journal is not a Transformative Journal, this route to compliance is not available.
     TJ.Compliant: This Transformative Journal provides a route to compliance.
   hybrid:
+    Hybrid.Exception: This journal is not considered true Hybrid as it stated that it will reject any manuscript where the author has applied a CC BY public copyright licence to any Author Accepted Manuscript version arising from their submission.
+    Hybrid.NoException: This journal is not in the cOAlition S-managed list of titles which cannot be considered Hybrid
     Hybrid.NotInDOAJ: This journal is not in DOAJ
     Hybrid.InDOAJ: This journal is in DOAJ, which only lists fully Open Access journals, so this journal is not Hybrid
     Hybrid.NotInOAW: This journal is not listed as a Hybrid or Transformative Journal in the OA.Works permissions database, so we are unable to tell if it is Hybrid

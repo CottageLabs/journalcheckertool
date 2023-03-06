@@ -4,7 +4,7 @@ import requests, os
 from jctdata import datasource
 from jctdata import settings
 from datetime import datetime
-
+from jctdata.lib.secrets import get_secret
 
 class DOAJ(datasource.Datasource):
     ID = "doaj"
@@ -33,7 +33,10 @@ class DOAJ(datasource.Datasource):
 
         if not os.path.exists(tarball):
             self.log("downloading latest data dump")
-            resp = requests.get("https://doaj.org/public-data-dump/journal")
+            url = settings.DOAJ_PUBLIC_DATA_DUMP
+            url += "?api_key=" + get_secret(settings.DOAJ_PUBLIC_DATA_DUMP_KEYFILE)
+
+            resp = requests.get(url)
             with open(tarball, "wb") as f:
                 f.write(resp.content)
         self._extract_doaj_data(tarball, out)

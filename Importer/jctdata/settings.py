@@ -106,6 +106,10 @@ TJ_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2SPOjVU4CKhP7FHOga
 
 TA_INDEX_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vStezELi7qnKcyE8OiO2OYx2kqQDOnNsDX1JfAsK487n2uB_Dve5iDTwhUFfJ7eFPDhEjkfhXhqVTGw/pub?gid=1130349201&single=true&output=csv"
 
+DOAJ_PUBLIC_DATA_DUMP = "https://doaj.org/public-data-dump/journal"
+
+DOAJ_PUBLIC_DATA_DUMP_KEYFILE = rel2abs(__file__, "../keyfiles/doaj_public_data_dump.txt")
+
 DOAJ_IN_PROGRESS_URL = "https://doaj.org/jct/inprogress"
 
 DOAJ_IN_PROGRESS_KEYFILE = rel2abs(__file__, "../keyfiles/doaj_inprogress.txt")

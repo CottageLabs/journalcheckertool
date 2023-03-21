@@ -71,7 +71,7 @@ cards:
     match_qualifications:
       not:
         - ta.corresponding_authors
-    preferred: true
+    preferred: false
 
   - id: tile2_aq     # derived from ta_aq
     compliant: true
@@ -81,7 +81,7 @@ cards:
     match_qualifications:
       must:
         - ta.corresponding_authors
-    preferred: true
+    preferred: false
 
   - id: tile4   # Route 2 (UKRI's version of RR)
     compliant: true

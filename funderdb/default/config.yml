@@ -72,7 +72,7 @@ cards:
     match_qualifications:
       not:
         - fully_oa.oa_exception_caveat
-    preferred: true
+    preferred: false
 
   - id: fully_oa_by_exception     # aka Card A
     compliant: true
@@ -82,7 +82,7 @@ cards:
     match_qualifications:
       must:
         - fully_oa.oa_exception_caveat
-    preferred: true
+    preferred: false
 
   # Self-Archiving Rights Retention, for when the self-archiving route can only be achieved via
   # the RR strategy.  Only this or `sa` will be displayed, never both
@@ -96,6 +96,7 @@ cards:
     match_qualifications:
       must:
         - self_archiving.rights_retention_author_advice
+    preferred: false
     modal: sa_rr
 
   # Standard policy-based Self-Archiving route, when RRS is not required.  Only this OR `sa_rr` will
@@ -122,7 +123,7 @@ cards:
     match_qualifications:
       not:
         - ta.corresponding_authors
-    preferred: true
+    preferred: false
 
   - id: ta_aq     # aka Card F (corresponding_authors difference is not modelled in the specification)
     compliant: true
@@ -132,7 +133,7 @@ cards:
     match_qualifications:
       must:
         - ta.corresponding_authors
-    preferred: true
+    preferred: false
 
   # Transformative Journals tile
   - id: tj      # aka Card B
@@ -140,7 +141,7 @@ cards:
     match_routes:
       must:
         - tj
-    preferred: true
+    preferred: false
     modal: tj
 
   # Set of cards to display if there are no compliant results

@@ -69,9 +69,13 @@ class TA(datasource.Datasource):
 
         coincident_issn_file = os.path.join(self.dir, dir, "coincident_issns.csv")
         title_file = os.path.join(self.dir, dir, "titles.csv")
+        issn_registry_file = os.path.join(self.dir, dir, "issn.csv")
+        ror_registry_file = os.path.join(self.dir, dir, "ror.csv")
 
         self._coincident_issns(sheets, coincident_issn_file)
         self._title_map(sheets, title_file)
+        self._issn_registry(sheets, issn_registry_file)
+        self._ror_registry(sheets, ror_registry_file)
 
     def _coincident_issns(self, sheets_dir, outfile):
         issn_pairs = []
@@ -100,6 +104,57 @@ class TA(datasource.Datasource):
             writer.writerows(issn_pairs)
 
     def _title_map(self, sheets_dir, outfile):
+        title_map = []
+        sheets = os.listdir(sheets_dir)
+        for sheet in sheets:
+            infile = os.path.join(sheets_dir, sheet)
+
+            with open(infile, "r") as f:
+                reader = csv.reader(f)
+                reader.__next__()
+                for row in reader:
+                    if row[1]:
+                        if row[0]:
+                            title_map.append([row[1].strip(), row[0].strip(), "main"])
+                    if row[2]:
+                        if row[0]:
+                            title_map.append([row[2].strip(), row[0].strip(), "main"])
+
+        title_map.sort(key=lambda x: x[0] + x[1])
+        title_map = list(k for k, _ in itertools.groupby(title_map))
+
+        with open(outfile, "w") as o:
+            writer = csv.writer(o)
+            writer.writerows(title_map)
+
+    def _issn_registry(self, sheets_dir, outfile):
+        issn_registry = []
+        sheets = os.listdir(sheets_dir)
+        for sheet in sheets:
+            esac_id = sheet.split(".", 1)[0]
+            name_ex_suffix = sheet.rsplit(".", 1)[0]
+            rel = ""
+            if name_ex_suffix != esac_id:
+                rel = name_ex_suffix[len(esac_id) + 1:]
+
+            infile = os.path.join(sheets_dir, sheet)
+            with open(infile, "r") as f:
+                reader = csv.reader(f)
+                reader.__next__()
+                for row in reader:
+                    if row[1]:
+                        issn_registry.append([row[1].strip(), name_ex_suffix, esac_id, rel])
+                    if row[2]:
+                        issn_registry.append([row[2].strip(), name_ex_suffix, esac_id, rel])
+
+        issn_registry.sort(key=lambda x: x[0] + x[1])
+        issn_registry = list(k for k, _ in itertools.groupby(issn_registry))
+
+        with open(outfile, "w") as o:
+            writer = csv.writer(o)
+            writer.writerows(issn_registry)
+
+    def _ror_registry(self, sheets_dir, outfile):
         title_map = []
         sheets = os.listdir(sheets_dir)
         for sheet in sheets:

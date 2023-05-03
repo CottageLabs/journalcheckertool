@@ -210,12 +210,12 @@ For example, items such as this may be present:
 
 ##### Transformative Journals Route Codes
 
-| Code | Meaning | Property | Property Value |
-| ---- | ------- | -------- | -------------- |
-| TJ.NoTJ | The Journal was not registered as a TJ | | |
-| TJ.Exists | The Journal is registered as a TJ | | |
-| TJ.NonCompliant | The parameters of the TJ do not meet the funder's criteria | | |
-| TJ.Compliant | The TJ is compliant with the funder's requirements | | |
+| Code                  | Meaning                                                   | Property | Property Value |
+|-----------------------|-----------------------------------------------------------| -------- | -------------- |
+| TJ.NoTJ               | The Journal was not registered as a TJ                    | | |
+| TJ.Exists             | The Journal is registered as a TJ                         | | |
+| TJ.FunderNonCompliant | The TJ does not meet the funder's criteria                | | |
+| TJ.Compliant          | The TJ is compliant with the Plan S / funder requirements | | |
 
 
 ##### Hybrid Journals Route Codes
@@ -332,11 +332,19 @@ Examples:
 
 ## Transformative Journals
 
-Determine if a journal is a transformative journal, using the issn:
+Determine if a journal is a transformative journal, using the issn, and optionally the funder:
 
 ```bash
 GET /tj/{issn}
 ```
+
+or
+
+```bash
+GET /tj/{issn}?funder={funder_id}
+```
+
+where the `{funder_id}` comes from [this list](/funder-ids).
 
 Response format:
 
@@ -347,7 +355,7 @@ Response format:
 }
 ```
 
-OR `404` if record not found
+OR `404` if the record not found in the TJ database, or if the funder does not recognise the TJ as compliant with their policy.
 
 Examples:
 * PLoS One (not a Transformative Journal): [{{< param apidocs.ApiURL >}}tj/1932-6203]({{< param apidocs.ApiURL >}}tj/1932-6203)

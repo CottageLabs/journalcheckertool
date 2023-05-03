@@ -100,6 +100,10 @@ FILE_LOADER_PATHS = {
     "jcs_csv": rel2abs(__file__, "..", "..", "ui", "static", "data", "jcs_price_data.csv")
 }
 
+TEST_PATH = {
+    "tj": os.path.join(DATABASES, "tests", "tj")
+}
+
 CROSSREF_OLDEST_DOI = 2019
 
 TJ_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2SPOjVU4CKhP7FHOgaf0aRsjSOt-ApwLOy44swojTDFsWlZAIZViC0gdbmxJaEWxdJSnUmNoAnoo9/pub?gid=0&single=true&output=csv"

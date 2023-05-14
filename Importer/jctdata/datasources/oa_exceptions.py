@@ -6,6 +6,7 @@ from datetime import datetime
 import os
 import requests
 import markdown
+import csv
 
 
 class OAExceptions(datasource.Datasource):
@@ -64,4 +65,28 @@ class OAExceptions(datasource.Datasource):
             np = markdown.markdown(prop)
             np = np[len("<p>"):-1 * len("</p>")]
             return np
-        analysis.simple_property_extract(oa_file, outfile, property=4, identifiers=[1, 2], skip_title_row=True, property_function=markdown_render)
+
+        with open(outfile, "w") as o:
+            writer = csv.writer(o)
+
+            with open(oa_file, "r") as f:
+                reader = csv.reader(f)
+                headers = reader.__next__()
+                for row in reader:
+                    if row[1]:
+                        defaultrow = [row[1], markdown_render(row[4])]
+                        writer.writerow(defaultrow)
+                        if len(row) > 5:
+                            for i in range(5, len(row)):
+                                if row[i] != "" and row[i] is not None:
+                                    funderrow = [row[1], markdown_render(row[i]), headers[i]]
+                                    writer.writerow(funderrow)
+
+                    if row[2]:
+                        defaultrow = [row[2], markdown_render(row[4])]
+                        writer.writerow(defaultrow)
+                        if len(row) > 5:
+                            for i in range(5, len(row)):
+                                if row[i] != "" and row[i] is not None:
+                                    funderrow = [row[2], markdown_render(row[i]), headers[i]]
+                                    writer.writerow(funderrow)

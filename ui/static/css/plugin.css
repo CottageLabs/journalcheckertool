@@ -364,6 +364,11 @@
       #jct_plugin button--primary:focus {
         background: #F47115;
         background: linear-gradient(140deg, #FABE5E 20%, #F47115 100%); }
+      @media only screen and (max-width: 767px) {
+        #jct_plugin .button--primary,
+        #jct_plugin button--primary {
+          margin-left: 0;
+          width: 100%; } }
     #jct_plugin .button--secondary,
     #jct_plugin button--secondary {
       background-color: #2B2B2B;
@@ -377,9 +382,18 @@
       #jct_plugin button--secondary:focus {
         background-color: #FFF;
         color: #2B2B2B; }
+      @media only screen and (max-width: 767px) {
+        #jct_plugin .button--secondary,
+        #jct_plugin button--secondary {
+          margin-left: 0;
+          width: 100%; } }
     #jct_plugin .button + button,
     #jct_plugin button + button {
       margin-left: 1.5rem; }
+      @media only screen and (max-width: 767px) {
+        #jct_plugin .button + button,
+        #jct_plugin button + button {
+          margin-left: 0; } }
   #jct_plugin .expression {
     display: flex;
     padding: 0 20px; }
@@ -689,7 +703,8 @@
   #jct_plugin .jcs_container {
     background: #F9F6F6;
     box-shadow: 0px 0px 8px #FABE5E;
-    padding: 20px; }
+    padding: 20px;
+    margin-bottom: 1.5rem; }
     #jct_plugin .jcs_container h5 {
       font-weight: 700;
       margin-top: 0;
@@ -712,6 +727,11 @@
       text-decoration: underline;
       font-weight: bold;
       font-size: 0.833em; }
+  #jct_plugin .jcs_container p svg {
+    vertical-align: middle;
+    margin-right: 15px;
+    height: 1rem;
+    width: 1rem; }
   #jct_plugin .query {
     min-height: 0; }
     #jct_plugin .query h2 {
@@ -724,6 +744,7 @@
     margin-top: 0.375rem;
     margin-bottom: 0.375rem; }
   #jct_plugin .button {
+    width: 100%;
     margin-bottom: 0.375rem; }
   #jct_plugin #jct_results_plugin {
     margin-bottom: 20px; }

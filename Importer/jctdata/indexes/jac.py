@@ -158,9 +158,9 @@ class JAC(Indexer):
         idx["issns"] += [issn.replace("-", "") for issn in idx["issns"]]
 
         idx["title"] = title_variants(record.get("title", ""))
+        idx["alts"] = idx["title"]  # This helps with getting better index scores because alts also contains the main titles
 
         if "alts" in record:
-            idx["alts"] = []
             for alt in record["alts"]:
                 idx["alts"] += title_variants(alt)
             idx["alts"] = list(set(idx["alts"]))

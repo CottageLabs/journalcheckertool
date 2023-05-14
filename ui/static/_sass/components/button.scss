@@ -35,11 +35,17 @@ button {
       background: $orange;
       background: $gradient-reverse;
     }
+
+    @media only screen and (max-width: 767px) {
+      margin-left:0;
+      width: 100%;
+    }
   }
 
   &--secondary {
     background-color: $dark-grey;
     color: $white;
+    //background-color: hotpink;
 
     svg {
       fill: $white;
@@ -49,9 +55,17 @@ button {
       background-color: $white;
       color: $dark-grey;
     }
+
+    @media only screen and (max-width: 767px) {
+      margin-left:0;
+      width: 100%;
+    }
   }
 
   + button {
     margin-left: $spacing-04;
+    @media only screen and (max-width: 767px) {
+      margin-left:0;
+    }
   }
 }

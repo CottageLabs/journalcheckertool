@@ -187,19 +187,23 @@ jct.displayPriceData = (journalData) => {
             message = jct.lang.jcs.current;
         }
 
-        message = message.replaceAll("{year}", journalData.price_data_years.join(", "))
+        if (message) {
+            message = message.replaceAll("{year}", journalData.price_data_years.join(", "))
+        }
     }
 
-    message = message.replaceAll("{journal}", journalData.title);
-    message = `
-        <div class="col col--1of1"><div class="jcs_container">
-            <h5>Transparent price and service data</h5>
-            <p>${message}</p>
-            <a href="#" class="modal-trigger" data-modal="jcs">Click here to learn more</a>
-        </div>
-        </div>
-    `;
-    jct.d.gebi("jct_jcs_price_data").innerHTML = message;
+    if (message) {
+        message = message.replaceAll("{journal}", journalData.title);
+        message = `
+            <div class="col col--1of1"><div class="jcs_container">
+                <h5>Transparent price and service data</h5>
+                <p>${message}</p>
+                <a href="#" class="modal-trigger" data-modal="jcs">Click here to learn more</a>
+            </div>
+            </div>
+        `;
+        jct.d.gebi("jct_jcs_price_data").innerHTML = message;
+    }
 };
 
 // ----------------------------------------

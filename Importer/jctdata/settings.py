@@ -75,7 +75,8 @@ INDEX_PATH = {
     "funder_language": os.path.join(DATABASES, "jct", "funder_language"),
     "funder_config": os.path.join(DATABASES, "jct", "funder_config"),
     "journal": os.path.join(DATABASES, "jct", "journal"),
-    "jcs_csv": os.path.join(DATABASES, "jct", "jcs_csv")
+    "jcs_csv": os.path.join(DATABASES, "jct", "jcs_csv"),
+    "ta": os.path.join(DATABASES, "jct", "ta")
 }
 
 INDEX_HISTORY = {
@@ -84,7 +85,8 @@ INDEX_HISTORY = {
     "funder_language": 5,
     "funder_config": 5,
     "journal": 5,
-    "jcs_csv": 2
+    "jcs_csv": 2,
+    "ta": 5
 }
 
 INDEX_LOADERS = {
@@ -93,7 +95,8 @@ INDEX_LOADERS = {
     "funder_language": "es",
     "funder_config": "es",
     "journal": "es",
-    "jcs_csv": "file"
+    "jcs_csv": "file",
+    "ta": "es"
 }
 
 FILE_LOADER_PATHS = {

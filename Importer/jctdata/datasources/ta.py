@@ -15,8 +15,10 @@ class TA(datasource.Datasource):
         coincident_issn_file = os.path.join(self.dir, dir, "coincident_issns.csv")
         title_file = os.path.join(self.dir, dir, "titles.csv")
         return {
+            "origin": os.path.join(self.dir, dir, "origin.csv"),
             "coincident_issns" : coincident_issn_file,
-            "titles" : title_file
+            "titles" : title_file,
+            "issns": os.path.join(self.dir, dir, "issn.csv")
         }
 
     def gather(self):

@@ -20,6 +20,7 @@ class Journal(Indexer):
         self._sap_data = False
         self._oae_data = False
         self._jcs_data = False
+        self._ta_data = False
 
     def gather(self):
         self.log('Gathering data for journal compliance from sources: {x}'.format(x=",".join(self.SOURCES)))
@@ -66,6 +67,7 @@ class Journal(Indexer):
                 self._sa_positive(record)
                 self._oa_exceptions(record)
                 self._jcs(record)
+                self._ta(record)
 
                 o.write(json.dumps(record) + "\n")
 
@@ -218,3 +220,25 @@ class Journal(Indexer):
             if issn in self._jcs_data:
                 record["jcs_years"] = self._jcs_data[issn]
                 break
+
+    def _ta(self, record):
+        if self._ta_data is False:
+            paths = resolver.SOURCES["ta"].current_paths()
+            issn_csv = paths["issns"]
+            self._ta_data = {}
+
+            with open(issn_csv, "r") as f:
+                reader = csv.reader(f)
+                for row in reader:
+                    if row[0] not in self._ta_data:
+                        self._ta_data[row[0]] = []
+                    self._ta_data[row[0]].append(row[1])
+
+        for issn in record.get("issn", []):
+            if issn in self._ta_data:
+                if "tas" not in record:
+                    record["tas"] = []
+                record["tas"] += self._ta_data[issn]
+
+        if "tas" in record:
+            record["tas"] = list(set(record["tas"]))

@@ -424,6 +424,10 @@ API.service.jct.calculate = (params={}, refresh) ->
   if params.journal.toString().match(ISSN_RX) == null
     throw {status: 400, stack: "Supplied ISSN is malformed"}
 
+  funder_record = jct_funder_config.find 'id.exact:"' + params.funder + '"'
+  if !funder_record
+    throw {status: 400, stack: "Supplied funder id is not valid.  Please use a funder ID from https://journalcheckertool.org/funder-ids/"}
+
   # all possible checks we can perform
   checks = {
     'self_archiving': 'sa',

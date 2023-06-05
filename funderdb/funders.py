@@ -43,6 +43,12 @@ def list_funders(path, out_dir):
     with open(os.path.join(out_dir, "funders.js"), "w") as o:
         o.write("jct.funderlist=" + json.dumps(funders))
 
+    # write a markdown fragment which can be used in the API documentation
+    with open(os.path.join(out_dir, "funder-ids.md"), "w") as o:
+        funders.sort(key=lambda x: x["name"])
+        for funder in funders:
+            o.write("**{x}**\n: `{y}`\n\n".format(x=funder["name"], y=funder["id"]))
+
 
 if __name__ == "__main__":
     list_funders("funders", "autocomplete")

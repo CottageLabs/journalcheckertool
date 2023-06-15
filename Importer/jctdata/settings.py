@@ -77,7 +77,8 @@ INDEX_PATH = {
     "journal": os.path.join(DATABASES, "jct", "journal"),
     "jcs_csv": os.path.join(DATABASES, "jct", "jcs_csv"),
     "ta": os.path.join(DATABASES, "jct", "ta"),
-    "institution": os.path.join(DATABASES, "jct", "institution")
+    "institution": os.path.join(DATABASES, "jct", "institution"),
+    "bad_ta_issns": os.path.join(DATABASES, "jct", "bad_ta_issns")
 }
 
 INDEX_HISTORY = {
@@ -88,7 +89,8 @@ INDEX_HISTORY = {
     "journal": 5,
     "jcs_csv": 2,
     "ta": 5,
-    "institution": 5
+    "institution": 5,
+    "bad_ta_issns": 2
 }
 
 INDEX_LOADERS = {
@@ -99,11 +101,19 @@ INDEX_LOADERS = {
     "journal": "es",
     "jcs_csv": "file",
     "ta": "es",
-    "institution": "es"
+    "institution": "es",
+    "bad_ta_issns": "helpdesk"
 }
 
 FILE_LOADER_PATHS = {
     "jcs_csv": rel2abs(__file__, "..", "..", "ui", "static", "data", "jcs_price_data.csv")
+}
+
+HELPDESK_LOADER_PATHS = {
+    "bad_ta_issns": {
+        "subject": "Bad TA ISSNs (testing, Laura you can ignore this)",
+        "message": "The following ISSNs were found to be invalid in the TA dataset"
+    }
 }
 
 CROSSREF_OLDEST_DOI = 2019

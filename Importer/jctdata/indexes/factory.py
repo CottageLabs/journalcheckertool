@@ -6,6 +6,7 @@ from jctdata.indexes.journal import Journal
 from jctdata.indexes.jcs import JCS_CSV
 from jctdata.indexes.ta import TA
 from jctdata.indexes.institution import Institution
+from jctdata.indexes.bad_ta_issns import BadTAIssns
 
 INDEXERS = {
     JAC.ID: JAC,
@@ -15,7 +16,8 @@ INDEXERS = {
     Journal.ID: Journal,
     JCS_CSV.ID: JCS_CSV,
     TA.ID: TA,
-    Institution.ID: Institution
+    Institution.ID: Institution,
+    BadTAIssns.ID: BadTAIssns
 }
 
 

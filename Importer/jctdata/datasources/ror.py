@@ -18,8 +18,10 @@ class ROR(datasource.Datasource):
         #     "titles": title_file
         # }
         origin_file = os.path.join(self.dir, dir, "origin.json")
+        ror_file = os.path.join(self.dir, dir, "rors.csv")
         return {
-            "origin": origin_file
+            "origin": origin_file,
+            "rors": ror_file
         }
 
     # def requires_update(self):

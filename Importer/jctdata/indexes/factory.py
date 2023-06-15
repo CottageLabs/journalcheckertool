@@ -5,7 +5,7 @@ from jctdata.indexes.funder_config import FunderConfig
 from jctdata.indexes.journal import Journal
 from jctdata.indexes.jcs import JCS_CSV
 from jctdata.indexes.ta import TA
-
+from jctdata.indexes.institution import Institution
 
 INDEXERS = {
     JAC.ID: JAC,
@@ -14,7 +14,8 @@ INDEXERS = {
     FunderConfig.ID: FunderConfig,
     Journal.ID: Journal,
     JCS_CSV.ID: JCS_CSV,
-    TA.ID: TA
+    TA.ID: TA,
+    Institution.ID: Institution
 }
 
 

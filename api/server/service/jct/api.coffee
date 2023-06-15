@@ -52,7 +52,7 @@ funders will be a list given to us by JCT detailing their particular requirement
 # (for convenience the settings have initially been set up to only run import on dev as well, to make the most 
 # of the dev machine and minimise any potential memory or CPU intense work 
 index_name = API.settings.es.index ? 'jct'
-jct_agreement = new API.collection {index:index_name, type:"agreement"}
+# jct_agreement = new API.collection {index:index_name, type:"agreement"}
 jct_compliance = new API.collection {index:index_name, type:"compliance"}
 jct_unknown = new API.collection {index:index_name, type:"unknown"}
 
@@ -77,6 +77,14 @@ jct_journal_autocomplete = new API.collection {index:index_name + "_jac", type: 
 # one that contains the institution autocomplete data
 jct_institution_autocomplete = new API.collection {index:index_name + "_iac", type: "iac"}
 
+# Institutions are held in an alias of the name `[index_name]_institution`.  Within that index
+# is a single type `institution` which contains the relevant data
+jct_institution = new API.collection {index: index_name + "_institution", type: "institution"}
+
+# TAs are held in an alias of the name `[index_name]_ta`.  Within that index
+# is a single type `ta` which contains the relevant data
+jct_ta = new API.collection {index:index_name + "_ta", type:"ta"}
+
 # define endpoints that the JCT requires (to be served at a dedicated domain)
 API.add 'service/jct', get: () -> return 'cOAlition S Journal Checker Tool. Service provided by Cottage Labs LLP. Contact us@cottagelabs.com'
 
@@ -96,10 +104,13 @@ API.add 'service/jct/ta',
       return if ret.length then ret else 404
     else
       return jct_agreement.search this.queryParams
-API.add 'service/jct/ta/import', 
-  get: () -> 
-    Meteor.setTimeout (() => API.service.jct.ta.import this.queryParams.mail), 1
-    return true
+
+API.add 'service/jct/ta_search',
+  get: () ->
+    issn = this.queryParams.issn
+    ror = this.queryParams.ror
+    res = API.service.jct.ta_search issn, ror
+    return res
 
 API.add 'service/jct/sa_prohibited',
   get: () ->
@@ -563,25 +574,57 @@ API.service.jct.calculate = (params={}, refresh) ->
   res.request.took = res.request.ended - res.request.started
   return res
 
+API.service.jct.ta_search = (issn, ror) ->
+  journal_ta_ids = []
+  institution_ta_ids = []
 
-# For a TA to be in force, an agreement record for the the ISSN and also one for 
-# the ROR mus be found, and the current date must be after those record start dates 
-# and before those record end dates. A journal and institution could be in more than 
-# one TA at a time - return all cases where both journal and institution are in the 
-# same TA
+  if issn
+    issn = issn.split(',') if typeof issn is 'string'
+    issn_qr = 'issn.exact:"' + issn.join('" OR issn.exact:"') + '"'
+    journal = jct_journal.find issn_qr
+    if journal.tas
+      journal_ta_ids = journal.tas
+
+  if ror
+    ror_qr = 'ror.exact:"' + ror + '"'
+    if typeof ror is 'string' and ror.indexOf(',') isnt -1
+      ror = ror.split(',')
+      ror_qr = 'ror.exact:"' + ror.join('" OR ror.exact:"') + '"'
+    institution = jct_institution.find ror_qr
+    if institution.tas
+      institution_ta_ids = institution.tas
+
+  ta_ids = []
+  if issn and ror
+    ta_ids = _.intersection journal_ta_ids, institution_ta_ids
+  else if issn
+    ta_ids = journal_ta_ids
+  else if ror
+    ta_ids = institution_ta_ids
+
+  res = []
+  for ta_id in ta_ids
+    ta_qr = 'jct_id.exact:"' + ta_id + '"'
+    agreement = jct_ta.find ta_qr
+    if agreement
+      res.push {
+        "jct_id": agreement.jct_id,
+        "esac_id": agreement.esac_id,
+        "end_date": agreement.end_date,
+        "data_url": agreement.data_url
+      }
+
+  return res
+
 API.service.jct.ta = (issn, ror) ->
   issn = issn.split(',') if typeof issn is 'string'
-  tas = []
-  qr = ''
-  if issn
-    qr += 'issn.exact:"' + issn.join('" OR issn.exact:"') + '"'
-  if ror
-    qr += ' OR ' if qr isnt ''
-    if typeof ror is 'string' and ror.indexOf(',') isnt -1
-      ror = ror.split(',') 
-      qr += 'ror.exact:"' + ror.join('" OR ror.exact:"') + '"'
-    else
-      qr += 'ror.exact:"' + ror + '"'
+  issn_qr = 'issn.exact:"' + issn.join('" OR issn.exact:"') + '"'
+
+  ror_qr = 'ror.exact:"' + ror + '"'
+  if typeof ror is 'string' and ror.indexOf(',') isnt -1
+    ror = ror.split(',')
+    ror_qr = 'ror.exact:"' + ror.join('" OR ror.exact:"') + '"'
+
   res =
     route: 'ta'
     compliant: 'unknown'
@@ -589,47 +632,35 @@ API.service.jct.ta = (issn, ror) ->
     issn: issn
     ror: ror
     log: []
-  # what if start or end dates do not exist, but at least one of them does? Must they all exist?
-  journals = {}
-  institutions = {}
-  count = 0
-  jct_agreement.each qr, (rec) -> # how many could this be? If many, will it be fast enough?
-    count += 1
-    if rec.issn?
-      journals[rec.rid] = rec
-    else if rec.ror?
-      institutions[rec.rid] = rec
-  agreements = {}
-  for j of journals
-    if institutions[j]?
-      allow = true # avoid possibly duplicate TAs
-      agreements[j] ?= {}
-      for isn in (if typeof journals[j].issn is 'string' then [journals[j].issn] else journals[j].issn)
-        agreements[j][isn] ?= []
-        if institutions[j].ror not in agreements[j][isn]
-          agreements[j][isn].push institutions[j].ror
-        else
-          allow = false
-      if allow
-        rs = _.clone res
-        rs.compliant = 'yes'
-        rs.qualifications = if journals[j].corresponding_authors or institutions[j].corresponding_authors then [{corresponding_authors: {}}] else []
-        ta_info_log = {ta_id: [j]}
-        if journals[j]["End Date"]
-          ta_info_log["end_date"] = [journals[j]["End Date"]]
-        rs.log.push {code: 'TA.Exists', parameters: ta_info_log}
-        tas.push rs
+
+  journal = jct_journal.find issn_qr
+  institution = jct_institution.find ror_qr
+
+  ta_ids = []
+  if journal.tas and institution.tas
+    ta_ids = _.intersection(journal.tas, institution.tas)
+
+  tas = []
+  if ta_ids.length > 0
+    for ta_id in ta_ids
+      ta_qr = 'jct_id.exact:"' + ta_id + '"'
+      agreement = jct_ta.find ta_qr
+
+      rs = _.clone res
+      rs.compliant = 'yes'
+      rs.qualifications = if agreement.corresponding_authors then [{corresponding_authors: {}}] else []
+      ta_info_log = {ta_id: [ta_id]}
+      if agreement.end_date
+        ta_info_log["end_date"] = [agreement.end_date]
+      rs.log.push {code: 'TA.Exists', parameters: ta_info_log}
+      tas.push rs
+
   if tas.length is 0
     res.compliant = 'no'
     res.log.push code: 'TA.NoTA'
     tas.push res
+
   return if tas.length is 1 then tas[0] else tas
-  # NOTE there are more log codes to use in the new API log codes spec, 
-  # https://github.com/CottageLabs/jct/blob/feature/api_codes/markdown/apidocs.md#per-route-response-data
-  # TA.NotAcive	- TA.Active	- TA.Unknown - TA.NonCompliant - TA.Compliant
-  # but it is not known how these could be used here, as all TAs in the system appear to be active - anything with an end date in the past is not imported
-  # and there is no way to identify plan S compliant / not compliant  unknown from the current algorithm spec
-  
 
 # import transformative agreements data from sheets 
 # https://github.com/antleaf/jct-project/blob/master/ta/public_data.md

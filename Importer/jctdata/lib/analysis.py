@@ -138,6 +138,14 @@ def cluster_to_dict(rows, n):
     return d
 
 
+def find_invalid_issns(input):
+    invalid = []
+    for row in input:
+        invalids = invalid_issns(row)
+        if len(invalids) > 0:
+            invalid += invalids
+    return invalid
+
 def remove_invalid_issns(input):
     valid = []
     for row in input:
@@ -150,6 +158,8 @@ def remove_invalid_issns(input):
 def valid_issns(issns):
     return [issn.upper() for issn in issns if re.match(ISSN_RX, issn)]
 
+def invalid_issns(issns):
+    return [issn.upper() for issn in issns if issn != "" and not re.match(ISSN_RX, issn)]
 
 def extract_preferred(source_pairs, preference_order):
     selected = None

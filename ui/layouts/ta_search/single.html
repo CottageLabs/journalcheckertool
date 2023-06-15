@@ -1,0 +1,41 @@
+<head>
+    <meta charset="utf-8">
+    {{ $title := print .Site.Title " | " .Title }}
+    <title>{{ $title }}</title>
+    <meta name="description" content="{{ with .Description }}{{ . }}{{end }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#282624">
+
+    <link rel="apple-touch-icon" href="icon.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
+    <link href="/css/main.css?v={{.Site.Params.Main.jctAssetsVersion}}" rel='stylesheet' type='text/css'>
+
+    <script type="text/javascript" src="/js/api_endpoint{{.Site.Params.Main.Endpoint}}.js?v={{.Site.Params.Main.jctAssetsVersion}}"></script>
+    <script type="text/javascript" src="/js/clinput2.js?v={{.Site.Params.Main.jctAssetsVersion}}"></script>
+    <script type="text/javascript" src="/js/jct_ta.js?v={{.Site.Params.Main.jctAssetsVersion}}"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=URL"></script>
+    {{ if .Site.GoogleAnalytics }}
+    {{- partial "google-analytics.html" . }}
+    {{ end }}
+</head>
+
+
+<header class="query" id="jct_query">
+    <div class="container">
+        {{- partial "header-logo.html" . -}}
+        <h1>Search Transformative Agreements</h1>
+        <div class="row row-inputs" id="jct_ta_inputs"></div>
+    </div>
+</header>
+
+<main class="container" id="jct_ta_results">
+    <div id="jct_ta_results_list"></div>
+</main>
+
+{{- partial "main-footer.html" . -}}
+
+<script>
+    jct_ta.setup();
+</script>

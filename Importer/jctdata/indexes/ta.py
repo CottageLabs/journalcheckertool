@@ -36,7 +36,8 @@ class TA(Indexer):
                     "jct_id": row[0],
                     "esac_id": row[0],
                     "end_date": row[2],
-                    "data_url": row[4]
+                    "data_url": row[4],
+                    "corresponding_author": row[3] == "yes"
                 }
                 if row[1]:
                     taobj["relationship"] = row[1]

@@ -130,11 +130,6 @@ API.add 'service/jct/feedback',
   get: () -> return API.service.jct.feedback this.queryParams
   post: () -> return API.service.jct.feedback this.bodyParams
 
-API.add 'service/jct/import', 
-  get: () -> 
-    Meteor.setTimeout (() => API.service.jct.import this.queryParams.refresh), 1
-    return true
-
 API.add 'service/jct/unknown', get: () -> return jct_unknown.search this.queryParams
 API.add 'service/jct/unknown/:start/:end', 
   get: () -> 
@@ -662,120 +657,6 @@ API.service.jct.ta = (issn, ror) ->
 
   return if tas.length is 1 then tas[0] else tas
 
-# import transformative agreements data from sheets 
-# https://github.com/antleaf/jct-project/blob/master/ta/public_data.md
-# only validated agreements will be exposed at the following sheet
-# https://docs.google.com/spreadsheets/d/e/2PACX-1vStezELi7qnKcyE8OiO2OYx2kqQDOnNsDX1JfAsK487n2uB_Dve5iDTwhUFfJ7eFPDhEjkfhXhqVTGw/pub?gid=1130349201&single=true&output=csv
-# get the "Data URL" - if it's a valid URL, and the End Date is after current date, get the csv from it
-API.service.jct.ta.import = (mail=true) ->
-  bads = []
-  records = []
-  res = sheets: 0, ready: 0, processed:0, records: 0, failed: [], not_processed:0
-  console.log 'Starting ta import'
-  # batch = []
-  bissns = [] # track ones going into the batch
-  for ov in API.service.jct.csv2json 'https://docs.google.com/spreadsheets/d/e/2PACX-1vStezELi7qnKcyE8OiO2OYx2kqQDOnNsDX1JfAsK487n2uB_Dve5iDTwhUFfJ7eFPDhEjkfhXhqVTGw/pub?gid=1130349201&single=true&output=csv'
-    res.sheets += 1
-    # Removed check for TA end date. Expired TAs are handled as a part of data management
-    if typeof ov?['Data URL'] is 'string' and ov['Data URL'].trim().indexOf('http') is 0
-      res.ready += 1
-      src = ov['Data URL'].trim()
-      console.log res
-      future = new Future()
-      Meteor.setTimeout (() -> future.return()), 1000 # wait 1s so don't instantly send 200 requests to google
-      future.wait()
-      _src = (src, ov) ->
-        Meteor.setTimeout () ->
-          console.log src
-          try
-            for rec in API.service.jct.csv2json src
-              for e of rec # get rid of empty things
-                delete rec[e] if not rec[e]
-              ri = {}
-              for ik in ['Institution Name', 'ROR ID', 'Institution First Seen', 'Institution Last Seen']
-                ri[ik] = rec[ik]
-                delete rec[ik]
-              if not _.isEmpty(ri) and not ri['Institution Last Seen'] # if these are present then it is too late to use this agreement
-                ri[k] = ov[k] for k of ov
-                # pick out records relevant to institution type
-                ri.rid = (if ri['ESAC ID'] then ri['ESAC ID'].trim() else '') + (if ri['ESAC ID'] and ri['Relationship'] then '_' + ri['Relationship'].trim() else '') # are these sufficient to be unique?
-                ri.institution = ri['Institution Name'].trim() if ri['Institution Name']
-                ri.ror = ri['ROR ID'].split('/').pop().trim() if ri['ROR ID']?
-                ri.corresponding_authors = true if ri['C/A Only'].trim().toLowerCase() is 'yes'
-                res.records += 1
-                records.push(ri) if ri.institution and ri.ror
-              if not _.isEmpty(rec) and not rec['Journal Last Seen']
-                rec[k] = ov[k] for k of ov
-                rec.rid = (if rec['ESAC ID'] then rec['ESAC ID'].trim() else '') + (if rec['ESAC ID'] and rec['Relationship'] then '_' + rec['Relationship'].trim() else '') # are these sufficient to be unique?
-                rec.issn = []
-                bad = false
-                for ik in ['ISSN (Print)','ISSN (Online)']
-                  for isp in (if typeof rec[ik] is 'string' then rec[ik].split(',') else [])
-                    if not isp? or typeof isp isnt 'string' or isp.indexOf('-') is -1 or isp.split('-').length > 2 or isp.length < 5
-                      bads.push issn: isp, esac: rec['ESAC ID'], rid: rec.rid, src: src
-                      bad = true
-                    else if typeof isp is 'string'
-                      nisp = isp.toUpperCase().trim().replace(/ /g, '')
-                      rec.issn.push(nisp) if nisp.length and nisp not in rec.issn
-                rec.journal = rec['Journal Name'].trim() if rec['Journal Name']?
-                rec.corresponding_authors = true if rec['C/A Only'].trim().toLowerCase() is 'yes'
-                res.records += 1
-                if not bad and rec.journal and rec.issn.length
-                  if exists = jct_journal.find 'issn.exact:"' + rec.issn.join('" OR issn.exact:"') + '"'
-                    for ei in exists.issn
-                      # don't take in ISSNs from TAs because we know they've been incorrect
-                      rec.issn.push(ei) if typeof ei is 'string' and ei.length and ei not in rec.issn
-                  else
-                    inbi = false
-                    # but if no record at all, not much choice so may as well accept
-                    for ri in rec.issn
-                      if ri in bissns
-                        inbi = true
-                      else
-                        bissns.push ri
-#                    if not inbi
-#                      batch.push issn: rec.issn, title: rec.journal, ta: true
-                  records.push rec
-          catch
-            console.log src + ' FAILED'
-            res.failed.push src
-          res.processed += 1
-        , 1
-      _src src, ov
-    else
-      src = ''
-      if ov?['Data URL']
-        src = ov['Data URL']
-        if typeof ov['Data URL'] is 'string'
-          src = ov['Data URL'].trim()
-      console.log 'sheet ' + res.sheets + ' with url ' + src + ' was not processed'
-      res.not_processed += 1
-  while res.sheets isnt (res.processed + res.not_processed)
-    future = new Future()
-    Meteor.setTimeout (() -> future.return()), 5000 # wait 5s repeatedly until all sheets are done
-    future.wait()
-    console.log 'TA sheets still processing, ' + (res.sheets - res.processed - res.not_processed)
-  if records.length
-    console.log 'Removing and reloading ' + records.length + ' agreements'
-    jct_agreement.remove '*'
-    jct_agreement.insert records
-    res.extracted = records.length
-#  if batch.length
-#    jct_journal.insert batch
-#    batch = []
-  if mail
-    API.service.jct.mail
-      subject: 'JCT TA import complete'
-      text: JSON.stringify res, '', 2
-  if bads.length
-    API.service.jct.mail
-      subject: 'JCT TA import found ' + bads.length + ' bad ISSNs'
-      text: bads.length + ' bad ISSNs listed in attached file'
-      attachment: bads
-      filename: 'bad_issns.csv'
-  return res
-
-
 # import transformative journals data, which should indicate if the journal IS 
 # transformative or just in the list for tracking (to be transformative means to 
 # have submitted to the list with the appropriate responses)
@@ -1195,33 +1076,6 @@ API.service.jct.fully_oa = (issn) ->
           res.compliant = 'no'
       else
         res.log.push code: 'FullOA.NotInProgressDOAJ' # there is no application, so still may or may not be compliant
-
-  return res
-
-API.service.jct.import = (refresh) ->
-  res = {started: Date.now()}
-  res.newest = jct_agreement.find '*', true
-  if refresh or res.newest?.createdAt < Date.now()-86400000
-    # run all imports necessary for up to date data
-    console.log 'Starting JCT imports'
-
-    console.log 'Starting TAs data import'
-    res.ta = API.service.jct.ta.import false # this is the slowest, takes about twenty minutes
-    console.log 'JCT import TAs complete'
-
-    # check the mappings on jct_journal, jct_agreement, any others that get used and changed during import
-    # include a warning in the email if they seem far out of sync
-    # and include the previously and presently count, they should not be too different
-    # res.presently = jct_journal.count()
-    res.ended = Date.now()
-    res.took = res.ended - res.started
-    res.minutes = Math.ceil res.took/60000
-#    if res.mapped = JSON.stringify(jct_journal.mapping()).indexOf('dynamic_templates') isnt -1
-#      res.mapped = JSON.stringify(jct_agreement.mapping()).indexOf('dynamic_templates') isnt -1
-  
-    API.service.jct.mail
-      subject: (if API.settings.dev then 'dev ' else '') + 'JCT import complete'
-      text: JSON.stringify res, '', 2
 
   return res
 

@@ -161,5 +161,3 @@ def load_to_helpdesk(target):
     send_mail.send_mail(subject, message, attachment, attachment_name=attachment_name)
 
     print("LOADER: sending {x} to helpdesk for {y}".format(x=attachment, y=target))
-
-

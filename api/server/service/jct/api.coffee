@@ -109,7 +109,7 @@ API.add 'service/jct/retention',
   get: () -> 
     return API.service.jct.retention this.queryParams.issn
 
-API.add 'service/jct/tj/:issn', 
+API.add 'service/jct/tj/:issn',
   get: () ->
     funder = this.queryParams.funder;
     res = API.service.jct.tj this.urlParams.issn, (if funder? then funder else false)
@@ -511,6 +511,8 @@ API.service.jct.calculate = (params={}, refresh) ->
           rs =  API.service.jct.hybrid (issnsets[journal] ? journal), (if institution? then institution else undefined), funder, oa_permissions
         else if route_method is 'tj'
           rs = API.service.jct.tj (issnsets[journal] ? journal), (if funder? then funder else undefined)
+        else if route_method is 'fully_oa'
+          rs = API.service.jct.fully_oa (issnsets[journal] ? journal), (if funder? then funder else undefined)
         else
           rs = API.service.jct[route_method] (issnsets[journal] ? journal), (if institution? and route_method is 'ta' then institution else undefined)
         if rs
@@ -1130,7 +1132,7 @@ API.service.jct.sa = (journal, institution, funder, oa_permissions) ->
   return rs
 
 
-API.service.jct.fully_oa = (issn) ->
+API.service.jct.fully_oa = (issn, funder) ->
   issn = issn.split(',') if typeof issn is 'string'
   res =
     route: 'fully_oa'
@@ -1142,7 +1144,15 @@ API.service.jct.fully_oa = (issn) ->
   if issn
     if inoae = jct_journal.find 'oa_exception:true AND (issn.exact:"' + issn.join('" OR issn.exact:"') + '")'
       res.log.push code: 'FullOA.Exception'
-      res.qualifications = [{oa_exception_caveat: {caveat: inoae.oa_exception_caveat}}]
+
+      caveat = inoae.oa_exception_caveat
+      if funder and inoae.oa_exception_funder_caveats
+        for cav in inoae.oa_exception_funder_caveats
+          if cav.funder == funder
+            caveat = cav.caveat
+            break
+
+      res.qualifications = [{oa_exception_caveat: {caveat: caveat}}]
       res.compliant = "yes"
       return res
     else

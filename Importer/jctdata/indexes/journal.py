@@ -210,14 +210,32 @@ class Journal(Indexer):
                 reader = csv.reader(f)
                 data = {}
                 for row in reader:
-                    data[row[0]] = row[1]
+                    if row[0] not in data:
+                        data[row[0]] = {}
+
+                    if len(row) == 2:
+                        data[row[0]]["default"] = row[1]
+                    else:
+                        if "funders" not in data[row[0]]:
+                            data[row[0]]["funders"] = {}
+                        data[row[0]]["funders"][row[2]] = row[1]
                 self._oae_caveats = data
 
         for issn in record.get("issn", []):
             if issn in self._oae_data:
                 record["oa_exception"] = True
-                record["oa_exception_caveat"] = self._oae_caveats.get(issn, "")
-                break
+                caveats = self._oae_caveats.get(issn, {})
+                record["oa_exception_caveat"] = caveats.get("default", "")
+                if "funders" in caveats:
+                    if "oa_exception_funder_caveats" not in record:
+                        record["oa_exception_funder_caveats"] = []
+                    for f, c in caveats["funders"].items():
+                        if f in [fc["funder"] for fc in record["oa_exception_funder_caveats"]]:
+                            continue
+                        record["oa_exception_funder_caveats"].append({
+                            "funder": f,
+                            "caveat": c
+                        })
 
     def _jcs(self, record):
         if self._jcs_data is False:

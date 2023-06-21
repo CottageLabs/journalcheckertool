@@ -17,7 +17,9 @@ routes:
       - cc-by # 6.3 / 6.7
 card_order:
   - card1
+  - card1_by_exception
   - card2
+  - card2_by_exception
   - card3
   - card3a
   - card4
@@ -36,6 +38,21 @@ cards:
         - fully_oa  # no need to consider the SA route, as this is implicit in Fully OA
       not:
         - ta
+    match_qualifications:
+      not:
+        - fully_oa.oa_exception_caveat
+
+  - id: card1_by_exception
+    compliant: true
+    preferred: false
+    match_routes:
+      must:
+        - fully_oa  # no need to consider the SA route, as this is implicit in Fully OA
+      not:
+        - ta
+    match_qualifications:
+      must:
+        - fully_oa.oa_exception_caveat
 
   - id: card2
     compliant: true
@@ -44,6 +61,20 @@ cards:
       must:
         - fully_oa  # no need to consider the SA route, as this is implicit in Fully OA
         - ta
+    match_qualifications:
+      not:
+        - fully_oa.oa_exception_caveat
+
+  - id: card2_by_exception
+    compliant: true
+    preferred: false
+    match_routes:
+      must:
+        - fully_oa  # no need to consider the SA route, as this is implicit in Fully OA
+        - ta
+    match_qualifications:
+      must:
+        - fully_oa.oa_exception_caveat
 
   - id: card3
     compliant: true

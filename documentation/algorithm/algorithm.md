@@ -74,7 +74,10 @@ At the stage “Check DOAJ record against funder requirements”, the following 
 Add a statement to inform the user that their journal is in the “in progress” state at DOAJ.
 
 **OA Exception Caveat Qualification**
-Add a statement to inform the user that the journal is exceptional, with a specific caveat taken from the datasource
+Add a statement to inform the user that the journal is exceptional, with a specific caveat taken from the datasource.  There are two possible caveats that the algorithm needs to choose from:
+1. A funder-specific caveat.  If one is present for the journal, for the funder that the user has queried, this should be returned as the caveat
+2. A generic caveat.  If there is no funder-specific caveat that is relevant for this query, the default caveat should be used.
+
 
 | Code                     | Associated Properties                                          |
 |--------------------------|----------------------------------------------------------------|

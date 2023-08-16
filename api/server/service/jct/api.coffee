@@ -609,7 +609,19 @@ API.service.jct.ta_search = (issn, ror) ->
         "data_url": agreement.data_url
       }
 
+  res.sort(API.service.jct.ta_sort);
+
   return res
+
+API.service.jct.ta_sort = (a, b) ->
+  # if the esac ids are different, sort by them
+  if a.jct_id < b.jct_id
+    return -1
+
+  if a.jct_id > b.jct_id
+    return 1
+
+  return 0
 
 API.service.jct.ta = (issn, ror) ->
   issn = issn.split(',') if typeof issn is 'string'

@@ -18,11 +18,11 @@ jct_ta.inputs_plugin_html = () => {
     <div class="col col--1of2 expression">
         <div class="expression__input" id="jct_journal-container">
         </div>
-        <div class="expression__operator">
-            <svg width="36" height="36" viewbox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M18.3 3L18.3 33M3 17.7H33" stroke="white" stroke-width="5" stroke-linecap="round"></path>
-            </svg>
-        </div>
+<!--        <div class="expression__operator">-->
+<!--            <svg width="36" height="36" viewbox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">-->
+<!--                <path d="M18.3 3L18.3 33M3 17.7H33" stroke="white" stroke-width="5" stroke-linecap="round"></path>-->
+<!--            </svg>-->
+<!--        </div>-->
     </div>
 
     <div class="col col--1of2 expression">
@@ -30,13 +30,13 @@ jct_ta.inputs_plugin_html = () => {
             <div id="jct_institution-container">
             </div>
         </div>
-        <div class="expression__operator">
-            <div>
-                <svg width="70" height="70" viewbox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M22.5 22C21.1193 22 20 23.1193 20 24.5C20 25.8807 21.1193 27 22.5 27H47.5C48.8807 27 50 25.8807 50 24.5C50 23.1193 48.8807 22 47.5 22H22.5ZM22.5 42C21.1193 42 20 43.1193 20 44.5C20 45.8807 21.1193 47 22.5 47H47.5C48.8807 47 50 45.8807 50 44.5C50 43.1193 48.8807 42 47.5 42H22.5Z" fill="white"></path>
-                </svg>
-            </div>
-        </div>
+<!--        <div class="expression__operator">-->
+<!--            <div>-->
+<!--                <svg width="70" height="70" viewbox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">-->
+<!--                    <path fill-rule="evenodd" clip-rule="evenodd" d="M22.5 22C21.1193 22 20 23.1193 20 24.5C20 25.8807 21.1193 27 22.5 27H47.5C48.8807 27 50 25.8807 50 24.5C50 23.1193 48.8807 22 47.5 22H22.5ZM22.5 42C21.1193 42 20 43.1193 20 44.5C20 45.8807 21.1193 47 22.5 47H47.5C48.8807 47 50 45.8807 50 44.5C50 43.1193 48.8807 42 47.5 42H22.5Z" fill="white"></path>-->
+<!--                </svg>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
 
     <div class="col col--1of2 suggest" id="jct_suggestjournal">
@@ -110,28 +110,67 @@ jct_ta.result_loaded = (xhr) => {
 
 jct_ta.drawResults = () => {
     let results = jct_ta.latest_full_response;
-    let frag = `<table>
-        <thead>
-            <tr>
-                <td>JCT ID / Data Link</td>
-                <td>ESAC ID / Link</td>
+    let frag = `
+    <style>
+        #jct_ta_results_list td {
+            padding: 3px 5px 0 5px;
+        }
+        #jct_ta_results_list td a {
+            text-decoration: none;
+        }
+    </style>
+    <table style="width: 100%">
+        <thead style="color: #fff;
+                    font-weight: bold;">
+            <tr style="border-bottom: #fff 2px solid;">
+                <td>ESAC ID</td>
+                <td title="Some TAs specify more than one list of Journals and Institutions.  Where present, the different relationships between those lists are identified here">Journal to Institution Relationship</td>
                 <td>Expires</td>
             </tr>
             </thead>
-            <tbody>`;
-    for (let result of results) {
-        frag += jct_ta.result_html(result);
+            <tbody style="color: #ffffff">`;
+
+    if (results.length > 0) {
+        let last_result = false;
+        for (let result of results) {
+            frag += jct_ta.result_html(result, last_result);
+            last_result = result;
+        }
+    } else {
+        let journal = "";
+        let institution = "";
+        let and = "";
+        if (jct_ta.chosen.journal) {
+            journal = " Journal ";
+        }
+        if (jct_ta.chosen.institution) {
+            institution = " Institution ";
+        }
+        if (journal !== "" && institution !== "") {
+            and = " and ";
+        }
+        frag += `<tr><td colspan="3">No Transformative Agreements found which contain your selected ${journal} ${and} ${institution}</td></tr>`;
     }
     frag += `</tbody></table>`;
     jct_ta.d.gebi('jct_ta_results_list').innerHTML = frag;
     jct_ta.d.gebi('jct_ta_results').style.display = 'block';
 };
 
-jct_ta.result_html = (result) => {
+jct_ta.result_html = (result, last_result) => {
+    let rel = result.jct_id.substring(result.esac_id.length + 1);
+    if (rel.length === 0) {
+        rel = "No additional relationships specified";
+    }
+
+    let esac_link = `<a href="https://esac-initiative.org/about/transformative-agreements/agreement-registry/${result.esac_id}" target="_blank">${result.esac_id}</a>`;
+    if (last_result && last_result.esac_id === result.esac_id) {
+        esac_link = "&nbsp;";
+    }
+
     return `
     <tr>
-    <td><a href="${result.data_url}">${result.jct_id}</a></td>
-    <td><a href="https://esac-initiative.org/about/transformative-agreements/agreement-registry/${result.esac_id}" target="_blank">${result.esac_id}</a></td> 
+    <td>${esac_link}</td> 
+    <td><a href="${result.data_url}">${rel}</a></td>
     <td>${result.end_date}</td>
     </tr>
     `;
@@ -222,7 +261,7 @@ jct_ta.setup = () => {
     jct_ta.clinputs.journal = clinput.init({
         element: jct_ta.d.gebi("jct_journal-container"),
         id: "jct_journal",
-        label: "Journal",
+        label: "Limit by Journal",
         // initialSelection: params.value,
         // inputAttributes: params.inputAttributes,
         logState: false,
@@ -293,7 +332,7 @@ jct_ta.setup = () => {
     jct_ta.clinputs.institution = clinput.init({
         element: jct_ta.d.gebi("jct_institution-container"),
         id: "jct_institution",
-        label: "Institution",
+        label: "Limit by Institution",
         // initialSelection: params.value,
         // inputAttributes: params.inputAttributes,
         logState: false,

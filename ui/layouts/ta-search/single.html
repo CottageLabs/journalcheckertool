@@ -25,13 +25,16 @@
 <header class="query" id="jct_query">
     <div class="container">
         {{- partial "header-logo.html" . -}}
-        <h1>Search Transformative Agreements</h1>
+        <h1>Transformative Agreements Search</h1>
         <div class="row row-inputs" id="jct_ta_inputs"></div>
     </div>
 </header>
 
-<main class="container" id="jct_ta_results">
-    <div id="jct_ta_results_list"></div>
+<main class="query" id="jct_ta_results">
+    <div id="jct_ta_results_list" style="
+        padding-left: 10%;
+        padding-right: 10%;
+        padding-top: 40px;"></div>
 </main>
 
 {{- partial "main-footer.html" . -}}

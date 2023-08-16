@@ -38,46 +38,51 @@
             url = "/transformative-agreements"
             weight = 2
         [[fr.menu.main]]
+             name = "Transformative&nbsp;Agreements&nbsp;Search"
+             pre = " • "
+             url = "/ta-search"
+             weight = 3
+        [[fr.menu.main]]
             name = "Listes&nbsp;d’exceptions"
             pre = " • "
             url = "/exception-lists"
-            weight = 3
+            weight = 4
         [[fr.menu.main]]
             name = "Journals&nbsp;participating&nbsp;in&nbsp;JCS"
             pre = " • "
             url = "/jcs"
-            weight = 4
+            weight = 5
         [[fr.menu.main]]
             name = "Documentation&nbsp;API"
             pre = " • "
             url = "/apidocs"
-            weight = 5
+            weight = 6
         [[fr.menu.main]]
             name = "Widget&nbsp;intégrable"
             pre = " • "
             url = "/widget"
-            weight = 6
+            weight = 7
         [[fr.menu.main]]
             name = "FAQ"
             url = "/faq"
-            weight = 7
+            weight = 8
         [[fr.menu.main]]
             pre = " • "
             name = "Avis&nbsp;de&nbsp;confidentialité"
             url = "/notices#privacy_notice"
-            weight = 8
+            weight = 9
         [[fr.menu.main]]
             name = "Avis&nbsp;de&nbsp;non-responsabilité&nbsp;et&nbsp;droits&nbsp;d’auteur"
             pre = " • "
             url = "/notices#disclaimer_and_copyright"
-            weight = 9
+            weight = 10
         [[fr.menu.main]]
             name = "Acknowledgements"
             pre = " • "
             url = "/acknowledgements"
-            weight = 10
+            weight = 11
         [[fr.menu.main]]
             name = "Historique&nbsp;des&nbsp;versions"
             pre = " • "
             url = "/release-history"
-            weight = 11
+            weight = 12

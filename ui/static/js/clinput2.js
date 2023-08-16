@@ -54,7 +54,7 @@ clinput.CLInput = class {
         return this.search;
     }
 
-    clear() {
+    clear(params) {
         this.search = "";
         this.selection = false;
         this.options = [];
@@ -62,13 +62,13 @@ clinput.CLInput = class {
         this.clearOptions();
 
         this._log("clear");
-        if (this.onClear) {
+        if (this.onClear && !params.silent) {
             this.onClear();
         }
     }
 
-    reset() {
-        this.clear();
+    reset(params) {
+        this.clear(params);
         this._clearEventListeners();
         this.transition(false, "Initial");
     }

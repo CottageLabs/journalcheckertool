@@ -119,6 +119,7 @@ jct_ta.drawResults = () => {
             text-decoration: none;
         }
     </style>
+    <a href="#" id="jct_ta_results_clear">Clear search and start again</a>
     <table style="width: 100%">
         <thead style="color: #fff;
                     font-weight: bold;">
@@ -154,6 +155,16 @@ jct_ta.drawResults = () => {
     frag += `</tbody></table>`;
     jct_ta.d.gebi('jct_ta_results_list').innerHTML = frag;
     jct_ta.d.gebi('jct_ta_results').style.display = 'block';
+
+    jct_ta.d.gebi('jct_ta_results_clear').addEventListener('click', (e) => {
+        e.preventDefault();
+        jct_ta.clinputs.journal.reset({silent: true});
+        jct_ta.clinputs.institution.reset({silent: true});
+        jct_ta.chosen = {};
+        jct_ta.d.gebi('jct_ta_results_list').innerHTML = "";
+        jct_ta.d.gebi('jct_ta_results').style.display = 'none';
+
+    });
 };
 
 jct_ta.result_html = (result, last_result) => {

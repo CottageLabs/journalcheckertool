@@ -55,6 +55,7 @@ clinput.CLInput = class {
     }
 
     clear(params) {
+        params = params || {};
         this.search = "";
         this.selection = false;
         this.options = [];
@@ -68,6 +69,7 @@ clinput.CLInput = class {
     }
 
     reset(params) {
+        params = params || {};
         this.clear(params);
         this._clearEventListeners();
         this.transition(false, "Initial");
@@ -77,8 +79,8 @@ clinput.CLInput = class {
     ////////////////////////////////
 
     draw() {
-        let attrs = []
-        let keys = Object.keys(this.inputAttrs)
+        let attrs = [];
+        let keys = Object.keys(this.inputAttrs);
         for (var i = 0; i < keys.length; i++) {
             var key = keys[i];
             var val = this.inputAttrs[key];
@@ -233,7 +235,7 @@ clinput.CLInput = class {
                 }
             }
         }
-        this.eventListeners = {};``
+        this.eventListeners = {};
     }
 
     _log(msg) {
@@ -346,7 +348,7 @@ clinput.CLInput = class {
                 this.lookupOptions(() => {
                     if (this.options.length > 0) {
                         let oldEntries = document.getElementsByClassName("clinput__option_"+this.id);
-                        for (let i = 0; i < entries.length; i++) {
+                        for (let i = 0; i < oldEntries.length; i++) {
                             this._removeEventListener(oldEntries[i], "mouseover");
                         }
 
@@ -354,13 +356,14 @@ clinput.CLInput = class {
 
                         let newEntries = document.getElementsByClassName("clinput__option_"+this.id);
                         for (let i = 0; i < newEntries.length; i++) {
-                            this._addEventListener(entries[i], "mouseover", (e) => {
+                            this._addEventListener(newEntries[i], "mouseover", (e) => {
                                 this.transitionInfo.toSelecting = true;
                                 this.transitionInfo.targetEntry = e.target;
                                 this.transition("ActiveInputWithOptions", "Selecting", "entry mouseover");
                             });
                         }
                     } else {
+                        this.clearOptions();
                         this.transition("ActiveInputWithOptions", "ActiveInput", "input keyup no options")
                     }
                 });
@@ -426,7 +429,7 @@ clinput.CLInput = class {
                 this.transition("Selecting", "Selected", "entry click");
             });
             this._addEventListener(entries[i], "keydown", (e) => {
-                let code = this._getKeyCode(e)
+                let code = this._getKeyCode(e);
                 let idx = parseInt(e.target.getAttribute("data-idx"));
 
                 if (entries.length !== 0) {
@@ -452,11 +455,42 @@ clinput.CLInput = class {
                 }
             });
         }
+
+        if (document.activeElement === this.input) {
+            this._addEventListener(this.input, "keyup", (e) => {
+                let code = this._getKeyCode(e);
+                if (code === "ArrowDown") {
+                    entries[0].focus();
+                } else if (code === "Enter") {
+                    if (entries.length === 1) {
+                        this.chooseOption(e, 0);
+                        this.transition("Selecting", "Selected", "input enter");
+                    }
+                } else {
+                    this.lookupOptions(() => {
+                        if (this.options.length > 0) {
+                            // let oldEntries = document.getElementsByClassName("clinput__option_"+this.id);
+                            for (let i = 0; i < entries.length; i++) {
+                                this._removeEventListener(entries[i], "mouseover");
+                            }
+
+                            this.renderOptions();
+                            this.transition("Selecting", "Selecting", "new options in selecting mode");
+                        } else {
+                            this.clearOptions();
+                            this.transition("Selecting", "ActiveInput", "input keyup no options");
+                        }
+                    });
+                }
+            });
+        }
+
     }
 
     stateSelectingExit() {
         this._removeEventListener(window, "click");
         this._removeEventListener(this.input, "focus");
+        this._removeEventListener(this.input, "keyup");
 
         let entries = document.getElementsByClassName("clinput__option_"+this.id);
         for (let i = 0; i < entries.length; i++) {

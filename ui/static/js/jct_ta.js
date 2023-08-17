@@ -273,9 +273,9 @@ jct_ta.setup = () => {
         element: jct_ta.d.gebi("jct_journal-container"),
         id: "jct_journal",
         label: "Limit by Journal",
+        logState: true,
         // initialSelection: params.value,
         // inputAttributes: params.inputAttributes,
-        logState: false,
         options: (text, callback) => {
             let effectiveTextLength = text.length;
             let pattern = /[0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9xX]/;
@@ -289,6 +289,9 @@ jct_ta.setup = () => {
                     callback(js.data);
                 };
                 jct_ta.jx('suggest/journal/'+text, false, ourcb);
+            } else {
+                // FIXME: this should be handled inside clinput
+                callback([]);
             }
         },
         optionsTemplate: (obj) => {
@@ -356,6 +359,9 @@ jct_ta.setup = () => {
                     callback(js.data);
                 };
                 jct_ta.jx('suggest/institution/'+text, false, ourcb);
+            } else {
+                // FIXME: this should be handled inside clinput
+                callback([]);
             }
         },
         optionsTemplate: (obj) => {

@@ -273,7 +273,7 @@ jct_ta.setup = () => {
         element: jct_ta.d.gebi("jct_journal-container"),
         id: "jct_journal",
         label: "Limit by Journal",
-        logState: true,
+        logState: false,
         // initialSelection: params.value,
         // inputAttributes: params.inputAttributes,
         options: (text, callback) => {

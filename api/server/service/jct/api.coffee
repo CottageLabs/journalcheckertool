@@ -624,13 +624,20 @@ API.service.jct.ta_sort = (a, b) ->
   return 0
 
 API.service.jct.ta = (issn, ror) ->
-  issn = issn.split(',') if typeof issn is 'string'
-  issn_qr = 'issn.exact:"' + issn.join('" OR issn.exact:"') + '"'
+  journal = undefined
+  institution = undefined
 
-  ror_qr = 'ror.exact:"' + ror + '"'
-  if typeof ror is 'string' and ror.indexOf(',') isnt -1
-    ror = ror.split(',')
-    ror_qr = 'ror.exact:"' + ror.join('" OR ror.exact:"') + '"'
+  if issn
+    issn = issn.split(',') if typeof issn is 'string'
+    issn_qr = 'issn.exact:"' + issn.join('" OR issn.exact:"') + '"'
+    journal = jct_journal.find issn_qr
+
+  if ror
+    ror_qr = 'ror.exact:"' + ror + '"'
+    if typeof ror is 'string' and ror.indexOf(',') isnt -1
+      ror = ror.split(',')
+      ror_qr = 'ror.exact:"' + ror.join('" OR ror.exact:"') + '"'
+      institution = jct_institution.find ror_qr
 
   res =
     route: 'ta'
@@ -640,11 +647,8 @@ API.service.jct.ta = (issn, ror) ->
     ror: ror
     log: []
 
-  journal = jct_journal.find issn_qr
-  institution = jct_institution.find ror_qr
-
   ta_ids = []
-  if journal.tas and institution.tas
+  if journal and journal.tas and institution and institution.tas
     ta_ids = _.intersection(journal.tas, institution.tas)
 
   tas = []

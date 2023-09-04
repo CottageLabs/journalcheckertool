@@ -112,20 +112,37 @@ jct_ta.drawResults = () => {
     let results = jct_ta.latest_full_response;
     let frag = `
     <style>
-        #jct_ta_results_list td {
-            padding: 3px 5px 0 5px;
+        #jct_query {
+            min-height: auto;
         }
+        
+        #jct_ta_results_clear {
+            display: block;
+            margin: auto;
+        }
+        
+        #jct_ta_results_list td {
+            padding: 10px 5px 10px 15px;
+        }
+        
         #jct_ta_results_list td a {
-            text-decoration: none;
+            
+        }
+        
+        .jct_results_list_first {
+            border-top: #fff 1px solid;
         }
     </style>
-    <a href="#" id="jct_ta_results_clear">Clear search and start again</a>
+    <button id="jct_ta_results_clear" class="button button--primary">
+        <img src="/img/restart.svg" alt="restart"> Start over
+    </button>
+    
     <table style="width: 100%">
         <thead style="color: #fff;
                     font-weight: bold;">
             <tr style="border-bottom: #fff 2px solid;">
                 <td>ESAC ID</td>
-                <td title="Some TAs specify more than one list of Journals and Institutions.  Where present, the different relationships between those lists are identified here">Journal to Institution Relationship</td>
+                <td title="Some TAs specify more than one list of Journals and Institutions.  Where present, the different relationships between those lists are identified here">Participating journals and institutions</td>
                 <td>Expires</td>
             </tr>
             </thead>
@@ -133,8 +150,18 @@ jct_ta.drawResults = () => {
 
     if (results.length > 0) {
         let last_result = false;
-        for (let result of results) {
-            frag += jct_ta.result_html(result, last_result);
+        for (let i = 0; i < results.length; i++) {
+            let result = results[i];
+            let showEsac = result.esac_id !== last_result.esac_id;
+
+            let hasRelationships = false;
+            if (results.length > i + 1) {
+                let nextResult = results[i + 1];
+                if (nextResult.esac_id === result.esac_id && last_result.esac_id !== result.esac_id) {
+                    hasRelationships = true;
+                }
+            }
+            frag += jct_ta.result_html(result, showEsac, hasRelationships);
             last_result = result;
         }
     } else {
@@ -167,24 +194,44 @@ jct_ta.drawResults = () => {
     });
 };
 
-jct_ta.result_html = (result, last_result) => {
+jct_ta.result_html = (result, showEsac, hasRelationships) => {
     let rel = result.jct_id.substring(result.esac_id.length + 1);
     if (rel.length === 0) {
-        rel = "No additional relationships specified";
+        rel = "See all participating journals and institutions";
+    }
+    // else {
+    //     rel = "Subgroup of participating journals and instititons: " + rel;
+    // }
+
+    let esac_link = "&nbsp;";
+    let start_class = "";
+    if (showEsac) {
+        esac_link = `<a href="https://esac-initiative.org/about/transformative-agreements/agreement-registry/${result.esac_id}" target="_blank">${result.esac_id}</a>`;
+        start_class=" class='jct_results_list_first' ";
     }
 
-    let esac_link = `<a href="https://esac-initiative.org/about/transformative-agreements/agreement-registry/${result.esac_id}" target="_blank">${result.esac_id}</a>`;
-    if (last_result && last_result.esac_id === result.esac_id) {
-        esac_link = "&nbsp;";
+    if (hasRelationships) {
+        return `
+            <tr${start_class}>
+            <td>${esac_link}</td> 
+            <td>This agreement defines the following groups of participating journals and institutions:</td>
+            <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td><a href="${result.data_url}">${rel}</a></td>
+                <td>${result.end_date}</td>
+            </tr>
+            `;
+    } else {
+        return `
+        <tr${start_class}>
+        <td>${esac_link}</td> 
+        <td><a href="${result.data_url}">${rel}</a></td>
+            <td>${result.end_date}</td>
+        </tr>
+        `;
     }
-
-    return `
-    <tr>
-    <td>${esac_link}</td> 
-    <td><a href="${result.data_url}">${rel}</a></td>
-    <td>${result.end_date}</td>
-    </tr>
-    `;
 };
 
 jct_ta.choose = (e, el, which) => {

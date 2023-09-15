@@ -75,6 +75,8 @@ def load(targets, stage=None, full_pipeline=True, force_resolve=False):
             loader.index_latest_with_alias(t, settings.ES_INDEX_SUFFIX)
         elif load_type == "file":
             loader.load_to_file(t)
+        elif load_type == "helpdesk":
+            loader.load_to_helpdesk(t)
 
 
 

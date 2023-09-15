@@ -8,6 +8,8 @@ import shutil
 from datetime import datetime
 
 from jctdata import settings
+from jctdata.lib import send_mail
+
 
 ################################################
 ## Elasicsearch loader functions
@@ -130,3 +132,32 @@ def load_to_file(target):
 
     shutil.copy(IN, OUT)
 
+
+################################################
+## Send to helpdesk function
+
+def load_to_helpdesk(target):
+    target_dir = settings.INDEX_PATH[target]
+    os.makedirs(target_dir, exist_ok=True)
+
+    dirs = []
+    for entry in os.listdir(target_dir):
+        if os.path.isdir(os.path.join(target_dir, entry)):
+            dirs.append(entry)
+
+    if len(dirs) == 0:
+        print("LOADER: target {x} has not got a build to load to file".format(x=target))
+        return
+
+    dirs.sort(reverse=True)
+    latest = dirs[0]
+
+    # FIXME: this assumes a csv, which is fine for the moment, as the only one is
+    attachment_name = target + ".csv"
+    attachment = os.path.join(target_dir, latest, attachment_name)
+    subject = settings.HELPDESK_LOADER_PATHS[target]['subject']
+    message = settings.HELPDESK_LOADER_PATHS[target]['message']
+
+    send_mail.send_mail(subject, message, attachment, attachment_name=attachment_name)
+
+    print("LOADER: sending {x} to helpdesk for {y}".format(x=attachment, y=target))

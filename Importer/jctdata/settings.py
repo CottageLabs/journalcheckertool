@@ -75,7 +75,10 @@ INDEX_PATH = {
     "funder_language": os.path.join(DATABASES, "jct", "funder_language"),
     "funder_config": os.path.join(DATABASES, "jct", "funder_config"),
     "journal": os.path.join(DATABASES, "jct", "journal"),
-    "jcs_csv": os.path.join(DATABASES, "jct", "jcs_csv")
+    "jcs_csv": os.path.join(DATABASES, "jct", "jcs_csv"),
+    "ta": os.path.join(DATABASES, "jct", "ta"),
+    "institution": os.path.join(DATABASES, "jct", "institution"),
+    "bad_ta_issns": os.path.join(DATABASES, "jct", "bad_ta_issns")
 }
 
 INDEX_HISTORY = {
@@ -84,7 +87,10 @@ INDEX_HISTORY = {
     "funder_language": 5,
     "funder_config": 5,
     "journal": 5,
-    "jcs_csv": 2
+    "jcs_csv": 2,
+    "ta": 5,
+    "institution": 5,
+    "bad_ta_issns": 2
 }
 
 INDEX_LOADERS = {
@@ -93,7 +99,10 @@ INDEX_LOADERS = {
     "funder_language": "es",
     "funder_config": "es",
     "journal": "es",
-    "jcs_csv": "file"
+    "jcs_csv": "file",
+    "ta": "es",
+    "institution": "es",
+    "bad_ta_issns": "helpdesk"
 }
 
 FILE_LOADER_PATHS = {
@@ -102,6 +111,13 @@ FILE_LOADER_PATHS = {
 
 TEST_PATH = {
     "tj": os.path.join(DATABASES, "tests", "tj")
+}
+
+HELPDESK_LOADER_PATHS = {
+    "bad_ta_issns": {
+        "subject": "Bad TA ISSNs (testing, Laura you can ignore this)",
+        "message": "The following ISSNs were found to be invalid in the TA dataset"
+    }
 }
 
 CROSSREF_OLDEST_DOI = 2019

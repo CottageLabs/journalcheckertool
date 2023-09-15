@@ -12,19 +12,20 @@ from jctdata import settings
 @click.option("-s", "--stage")
 @click.option("-o", "--only", "full_pipeline", flag_value=False)
 @click.option("-a", "--all", "full_pipeline", flag_value=True, default=True)
-def entry_point(mode, targets, stage=None, full_pipeline=True):
-    run(mode, targets, stage, full_pipeline)
+@click.option("-f", "--force-resolve", is_flag=True)
+def entry_point(mode, targets, stage=None, full_pipeline=True, force_resolve=False):
+    run(mode, targets, stage, full_pipeline, force_resolve)
 
 
-def run(mode:str, targets:tuple, stage:str=None, full_pipeline:bool=True):
+def run(mode:str, targets:tuple, stage:str=None, full_pipeline:bool=True, force_resolve:bool=False):
     processor = MODE_MAP.get(mode)
     if not processor:
         return
 
-    processor(targets, stage, full_pipeline)
+    processor(targets, stage, full_pipeline, force_resolve)
 
 
-def resolve(targets, stage=None, full_pipeline=True):
+def resolve(targets, stage=None, full_pipeline=True, force_resolve=False):
     if targets[0] == "_all":
         targets = resolver.SOURCES.keys()
 
@@ -42,7 +43,7 @@ def resolve(targets, stage=None, full_pipeline=True):
             getattr(datasource, stage)()
 
 
-def index(targets, stage=None, full_pipeline=True):
+def index(targets, stage=None, full_pipeline=True, force_resolve=False):
     if targets[0] == "_all":
         indexers = factory.get_all_indexers()
     else:
@@ -51,14 +52,17 @@ def index(targets, stage=None, full_pipeline=True):
     for indexer in indexers:
         if full_pipeline:
             for s in INDEX_PIPELINE:
-                getattr(indexer, s)()
+                if s == "gather" and force_resolve:
+                    getattr(indexer, s)(force=True)
+                else:
+                    getattr(indexer, s)()
                 if s == stage:
                     break
         else:
             getattr(indexer, stage)()
 
 
-def load(targets, stage=None, full_pipeline=True):
+def load(targets, stage=None, full_pipeline=True, force_resolve=False):
     if targets[0] == "_all":
         targets = factory.get_all_index_names()
 

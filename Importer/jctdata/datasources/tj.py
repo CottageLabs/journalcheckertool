@@ -14,10 +14,12 @@ class TJ(datasource.Datasource):
         coincident_issn_file = os.path.join(self.dir, dir, "coincident_issns.csv")
         title_file = os.path.join(self.dir, dir, "titles.csv")
         publisher_file = os.path.join(self.dir, dir, "publishers.csv")
+        funder_file = os.path.join(self.dir, dir, "funder_excludes.csv")
         return {
             "coincident_issns" : coincident_issn_file,
             "titles" : title_file,
-            "publishers": publisher_file
+            "publishers": publisher_file,
+            "funder_excludes": funder_file
         }
 
     def gather(self):
@@ -30,7 +32,7 @@ class TJ(datasource.Datasource):
         resp.encoding = "utf-8"
         with open(out, "w") as f:
             f.write(resp.text)
-        print("TJ: data written to {x}".format(x=out))
+        self.log("TJ: data written to {x}".format(x=out))
 
     def analyse(self):
         dir = self.current_dir()
@@ -38,11 +40,13 @@ class TJ(datasource.Datasource):
         coincident_issn_file = os.path.join(self.dir, dir, "coincident_issns.csv")
         title_file = os.path.join(self.dir, dir, "titles.csv")
         publisher_file = os.path.join(self.dir, dir, "publishers.csv")
+        funder_file = os.path.join(self.dir, dir, "funder_excludes.csv")
         self.log("analysing csv {x}".format(x=infile))
 
         self._coincident_issns(infile, coincident_issn_file)
         self._title_map(infile, title_file)
         self._publisher_map(infile, publisher_file)
+        self._funder_excludes(infile, funder_file)
 
     def _coincident_issns(self, tj_file, outfile):
         issn_pairs = []
@@ -95,3 +99,21 @@ class TJ(datasource.Datasource):
                         if row[3]:
                             writer.writerow([row[2], row[3]])
 
+    def _funder_excludes(self, tj_file, outfile):
+        with open(outfile, "w") as o, open(tj_file, "r") as f:
+            writer = csv.writer(o)
+            reader = csv.reader(f)
+
+            headers = reader.__next__()
+            funders = headers[5:]
+
+            for row in reader:
+                excludes = [funders[i] for i in range(len(funders)) if row[5+i] == "no"]
+                if len(excludes) == 0:
+                    continue
+                if row[1]:
+                    for e in excludes:
+                        writer.writerow([row[1], e])
+                if row[2]:
+                    for e in excludes:
+                        writer.writerow([row[2], e])

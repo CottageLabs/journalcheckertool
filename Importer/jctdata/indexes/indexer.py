@@ -26,7 +26,7 @@ class Indexer(object):
         dirs.sort(reverse=True)
         return dirs[0]
 
-    def gather(self):
+    def gather(self, force=False):
         raise NotImplementedError()
 
     def analyse(self):

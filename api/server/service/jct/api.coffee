@@ -120,11 +120,14 @@ API.add 'service/jct/retention',
   get: () -> 
     return API.service.jct.retention this.queryParams.issn
 
-API.add 'service/jct/tj', get: () -> return jct_journal.search this.queryParams, {restrict: [{exists: {field: 'tj'}}]}
-API.add 'service/jct/tj/:issn', 
-  get: () -> 
-    res = API.service.jct.tj this.urlParams.issn
-    return if res?.compliant isnt 'yes' then 404 else issn: this.urlParams.issn, transformative_journal: true
+API.add 'service/jct/tj/:issn',
+  get: () ->
+    funder = this.queryParams.funder;
+    res = API.service.jct.tj this.urlParams.issn, (if funder? then funder else false)
+    if res?.compliant isnt 'yes'
+      throw {status: 404, stack: "TJ Not Found"}
+    else
+      return issn: this.urlParams.issn, transformative_journal: true
 
 API.add 'service/jct/feedback',
   get: () -> return API.service.jct.feedback this.queryParams
@@ -427,6 +430,10 @@ API.service.jct.calculate = (params={}, refresh) ->
   if params.journal.toString().match(ISSN_RX) == null
     throw {status: 400, stack: "Supplied ISSN is malformed"}
 
+  funder_record = jct_funder_config.find 'id.exact:"' + params.funder + '"'
+  if !funder_record
+    throw {status: 400, stack: "Supplied funder id is not valid.  Please use a funder ID from https://journalcheckertool.org/funder-ids/"}
+
   # all possible checks we can perform
   checks = {
     'self_archiving': 'sa',
@@ -508,6 +515,10 @@ API.service.jct.calculate = (params={}, refresh) ->
           rs = API.service.jct.sa (issnsets[journal] ? journal), (if institution? then institution else undefined), funder, oa_permissions
         else if route_method is 'hybrid'
           rs =  API.service.jct.hybrid (issnsets[journal] ? journal), (if institution? then institution else undefined), funder, oa_permissions
+        else if route_method is 'tj'
+          rs = API.service.jct.tj (issnsets[journal] ? journal), (if funder? then funder else undefined)
+        else if route_method is 'fully_oa'
+          rs = API.service.jct.fully_oa (issnsets[journal] ? journal), (if funder? then funder else undefined)
         else
           rs = API.service.jct[route_method] (issnsets[journal] ? journal), (if institution? and route_method is 'ta' then institution else undefined)
         if rs
@@ -678,7 +689,7 @@ API.service.jct.ta = (issn, ror) ->
 # have submitted to the list with the appropriate responses)
 # fields called pissn and eissn will contain ISSNs to check against
 # check if an issn is in the transformative journals list (to be provided by plan S)
-API.service.jct.tj = (issn, refresh) ->
+API.service.jct.tj = (issn, funder) ->
   issn = issn.split(',') if typeof issn is 'string'
   if issn and issn.length
     res = 
@@ -689,15 +700,21 @@ API.service.jct.tj = (issn, refresh) ->
       log: []
 
     if exists = jct_journal.find 'tj:true AND (issn.exact:"' + issn.join('" OR issn.exact:"') + '")'
-      res.compliant = 'yes'
       res.log.push code: 'TJ.Exists'
     else
       res.compliant = 'no'
       res.log.push code: 'TJ.NoTJ'
+      return res
+
+    if funder and exists.tj_excluded_by and funder in exists.tj_excluded_by
+      res.log.push code: "TJ.FunderNonCompliant"
+      res.compliant = 'no'
+    else
+      res.log.push code: "TJ.Compliant"
+      res.compliant = 'yes'
+
     return res
-    # TODO note there are two more codes in the new API log code spec, 
-    # TJ.NonCompliant - TJ.Compliant
-    # but there is as yet no way to determine those so they are not used here yet.
+
   else
     return jct_journal.count 'tj:true'
 
@@ -940,6 +957,12 @@ API.service.jct.hybrid = (issn, institution, funder, oa_permissions) ->
     funder: funder
     log: []
 
+  # check the negative exceptions registry
+  if issn.length and jct_journal.find 'sa_prohibited:true AND (issn.exact:"' + issn.join('" OR issn.exact:"') + '")'
+    res.compliant = 'no'
+    res.log.push code: 'Hybrid.Exception'
+    return res
+
   # Check DOAJ. If present return non-compliant
   if issn.length and jct_journal.find 'indoaj:true AND (issn.exact:"' + issn.join('" OR issn.exact:"') + '")'
     res.compliant = 'no'
@@ -1037,7 +1060,7 @@ API.service.jct.sa = (journal, institution, funder, oa_permissions) ->
   return rs
 
 
-API.service.jct.fully_oa = (issn) ->
+API.service.jct.fully_oa = (issn, funder) ->
   issn = issn.split(',') if typeof issn is 'string'
   res =
     route: 'fully_oa'
@@ -1049,7 +1072,15 @@ API.service.jct.fully_oa = (issn) ->
   if issn
     if inoae = jct_journal.find 'oa_exception:true AND (issn.exact:"' + issn.join('" OR issn.exact:"') + '")'
       res.log.push code: 'FullOA.Exception'
-      res.qualifications = [{oa_exception_caveat: {caveat: inoae.oa_exception_caveat}}]
+
+      caveat = inoae.oa_exception_caveat
+      if funder and inoae.oa_exception_funder_caveats
+        for cav in inoae.oa_exception_funder_caveats
+          if cav.funder == funder
+            caveat = cav.caveat
+            break
+
+      res.qualifications = [{oa_exception_caveat: {caveat: caveat}}]
       res.compliant = "yes"
       return res
     else

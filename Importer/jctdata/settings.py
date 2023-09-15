@@ -25,7 +25,7 @@ DIR_DATE_FORMAT = "%Y-%m-%d_%H%M"
 # ROR_TREE_SHA = "8ec3e0e5bce8a33c644f1544b877d756eca1a2f6"
 
 # Found at https://zenodo.org/record/6657125 - manually download and add to this repo when updated
-ROR_DATA_FILE = os.path.join(RESOURCES, "ror", "v1.1-2022-06-16-ror-data.zip")
+ROR_DATA_FILE = os.path.join(RESOURCES, "ror", "v1.26-2023-05-25-ror-data.zip")
 
 MAX_DATASOURCE_AGE = {
     "crossref": 60 * 60 * 24 * 7,
@@ -107,6 +107,10 @@ INDEX_LOADERS = {
 
 FILE_LOADER_PATHS = {
     "jcs_csv": rel2abs(__file__, "..", "..", "ui", "static", "data", "jcs_price_data.csv")
+}
+
+TEST_PATH = {
+    "tj": os.path.join(DATABASES, "tests", "tj")
 }
 
 HELPDESK_LOADER_PATHS = {

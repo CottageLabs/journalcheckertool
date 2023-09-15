@@ -15,6 +15,7 @@ class Journal(Indexer):
         super(Journal, self).__init__()
         self._doaj_data = False
         self._tj_data = False
+        self._tj_excludes = False
         self._dip_data = False
         self._san_data = False
         self._sap_data = False
@@ -28,7 +29,7 @@ class Journal(Indexer):
 
         issns = self._get_paths(paths)
 
-        self.log("SSN sources: " + ", ".join([x[0] for x in issns]))
+        self.log("ISSN sources: " + ", ".join([x[0] for x in issns]))
 
     def analyse(self):
         self.log("Analysing data for journal compliance")
@@ -113,10 +114,27 @@ class Journal(Indexer):
                             data.append(c)
                 self._tj_data = data
 
+        if self._tj_excludes is False:
+            paths = resolver.SOURCES["tj"].current_paths()
+            tj_csv = paths["funder_excludes"]
+            self._tj_excludes = {}
+
+            with open(tj_csv, "r") as f:
+                reader = csv.reader(f)
+                data = []
+                for row in reader:
+                    self._tj_excludes[row[0]] = row[1]
+
         for issn in record.get("issn", []):
             if issn in self._tj_data:
                 record["tj"] = True
-                break
+            if issn in self._tj_excludes:
+                if "tj_excluded_by" not in record:
+                    record["tj_excluded_by"] = []
+                excluder = self._tj_excludes[issn]
+                if excluder not in record["tj_excluded_by"]:
+                    record["tj_excluded_by"].append(excluder)
+
 
     def _doaj_in_progress(self, record):
         if self._dip_data is False:
@@ -194,14 +212,32 @@ class Journal(Indexer):
                 reader = csv.reader(f)
                 data = {}
                 for row in reader:
-                    data[row[0]] = row[1]
+                    if row[0] not in data:
+                        data[row[0]] = {}
+
+                    if len(row) == 2:
+                        data[row[0]]["default"] = row[1]
+                    else:
+                        if "funders" not in data[row[0]]:
+                            data[row[0]]["funders"] = {}
+                        data[row[0]]["funders"][row[2]] = row[1]
                 self._oae_caveats = data
 
         for issn in record.get("issn", []):
             if issn in self._oae_data:
                 record["oa_exception"] = True
-                record["oa_exception_caveat"] = self._oae_caveats.get(issn, "")
-                break
+                caveats = self._oae_caveats.get(issn, {})
+                record["oa_exception_caveat"] = caveats.get("default", "")
+                if "funders" in caveats:
+                    if "oa_exception_funder_caveats" not in record:
+                        record["oa_exception_funder_caveats"] = []
+                    for f, c in caveats["funders"].items():
+                        if f in [fc["funder"] for fc in record["oa_exception_funder_caveats"]]:
+                            continue
+                        record["oa_exception_funder_caveats"].append({
+                            "funder": f,
+                            "caveat": c
+                        })
 
     def _jcs(self, record):
         if self._jcs_data is False:

@@ -1,10 +1,10 @@
 ---
-title: "List of publishers/journals that provide price and serice data to the Journal Comparison Service"
+title: "List of publishers/journals that provide price and service data to the Journal Comparison Service"
 date: 2021-02-13T23:43:22Z
 description: "Journal Comparison Service Price Data explained for the Journal Checker Tool"
 ---
 
-# List of publishers/journals that provide price and serice data to the Journal Comparison Service
+# List of publishers/journals that provide price and service data to the Journal Comparison Service
 
 
 The Journal Comparison Service (JCS) provides the Journal
@@ -29,5 +29,5 @@ The format of the CSV is as follows:
 
 <p xmlns:dct="http://purl.org/dc/terms/">
   <a rel="license"
-     href="http://creativecommons.org/publicdomain/zero/1.0/"><img src="https://licensebuttons.net/p/zero/1.0/88x31.png" style="border-style: none;" alt="CC0" /></a> To the extent possible under law, <span rel="dct:publisher" resource="[_:publisher]">the person who associated CC0</span> with this work has waived all copyright and related or neighboring rights to this work.
+     href="https://creativecommons.org/publicdomain/zero/1.0/"><img src="https://licensebuttons.net/p/zero/1.0/88x31.png" style="border-style: none;" alt="CC0" /></a> To the extent possible under law, <span rel="dct:publisher" resource="[_:publisher]">the person who associated CC0</span> with this work has waived all copyright and related or neighboring rights to this work.
 </p>

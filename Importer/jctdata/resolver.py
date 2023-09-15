@@ -32,11 +32,11 @@ SOURCES = {
 LOG_ID = "RESOLVER"
 
 
-def gather_data(datasources, reanalyse=False):
+def gather_data(datasources, reanalyse=False, force=False):
     pathset = {}
     for source in datasources:
         handler = SOURCES[source]
-        ru = handler.requires_update()
+        ru = True if force else handler.requires_update()
 
         if ru or not handler.paths_exists():
             logger.log("{x} requires update".format(x=source), LOG_ID)

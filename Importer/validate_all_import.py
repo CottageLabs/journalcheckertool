@@ -4,7 +4,7 @@ from datetime import datetime
 import requests
 import esprit
 from jctdata import settings
-from lib.send_mail import send_mail
+from jctdata.lib.send_mail import send_mail
 
 
 def get_old_counts():

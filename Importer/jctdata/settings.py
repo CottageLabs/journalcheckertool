@@ -13,19 +13,14 @@ RESOURCES = rel2abs(__file__, "..", "resources")
 
 DIR_DATE_FORMAT = "%Y-%m-%d_%H%M"
 
-# # === DEPRECATED: ROR switched to Zenodo to serve these data dumps, we can no longer use this GitHub repo
-# ROR_DIR_DATE_FORMAT = "%Y-%m-%d"
-# ROR_DOWNLOAD_PATH = "https://github.com/ror-community/ror-api/raw/master/rorapi/data/"
-# # Using github api to get the list of files in dir
-# #         To get the tree sha,
-# #         git clone https://github.com/ror-community/ror-api.git
-# #         cd ror-api/rorapi/
-# #         git ls-tree HEAD | grep data
-# #         > 040000 tree 8ec3e0e5bce8a33c644f1544b877d756eca1a2f6    data
-# ROR_TREE_SHA = "8ec3e0e5bce8a33c644f1544b877d756eca1a2f6"
+# ROR Zenodo configuration settings
+# Doc URL - https://ror.readme.io/docs/data-dump#download-ror-data-dumps-programmatically-with-the-zenodo-api
+ZENODO_ROR_DOWNLOAD_PATH = "https://zenodo.org/api/records/?communities=ror-data&sort=mostrecent"
+ROR_DIR_DATE_FORMAT = "%Y-%m-%d"
 
 # Found at https://zenodo.org/record/6657125 - manually download and add to this repo when updated
-ROR_DATA_FILE = os.path.join(RESOURCES, "ror", "v1.26-2023-05-25-ror-data.zip")
+# ROR_DATA_FILE = os.path.join(RESOURCES, "ror", "v1.32-2023-09-14-ror-data.zip")
+ROR_DATA_FILE = None
 
 MAX_DATASOURCE_AGE = {
     "crossref": 60 * 60 * 24 * 7,
@@ -169,7 +164,7 @@ DEFAULT_MAPPING = {
     ]
 }
 
-ES_HOST = "http://localhost:9200"
+ES_HOST = "http://localhost:9201"
 INDEX_SUFFIX_DATE_FORMAT = "%Y%m%d%H%M%S"
 INDEX_KEEP_OLD_INDICES = 2
 ES_INDEX_PREFIX = 'jct'

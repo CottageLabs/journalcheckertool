@@ -644,11 +644,10 @@ API.service.jct.ta = (issn, ror) ->
     journal = jct_journal.find issn_qr
 
   if ror
-    ror_qr = 'ror.exact:"' + ror + '"'
-    if typeof ror is 'string' and ror.indexOf(',') isnt -1
-      ror = ror.split(',')
-      ror_qr = 'ror.exact:"' + ror.join('" OR ror.exact:"') + '"'
-      institution = jct_institution.find ror_qr
+    ror = ror.split(",") if typeof ror is 'string'
+    # ror_qr = 'ror.exact:"' + ror + '"'
+    ror_qr = 'ror.exact:"' + ror.join('" OR ror.exact:"') + '"'
+    institution = jct_institution.find ror_qr
 
   res =
     route: 'ta'

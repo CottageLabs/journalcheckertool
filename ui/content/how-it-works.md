@@ -57,7 +57,7 @@ updates to existing records.
 
 ## <a name="api"></a>API
 
-The API to the the back-end component of the JCT is used by the front-end component. This API is also made openly 
+The API to the back-end component of the JCT is used by the front-end component. This API is also made openly 
 available so that others may use it directly. 
 The API is [documented here](/apidocs).
 
@@ -67,7 +67,7 @@ The API is [documented here](/apidocs).
 
 The JCT makes its calculations according to a defined algorithm.
 
-<img src="/img/algorithm_main.svg">
+<img src="/img/algorithm_main.svg" alt="Flowchart explaining the JCT algorithm">
 
 ### Inputs
 
@@ -110,7 +110,7 @@ When JCT checks for compliance with the Full OA route, this is the algorithm whi
 
 Note that transitions are annotated with the codes you will see in the API logs for your request.
 
-<img src="/img/algorithm_fulloa.svg">
+<img src="/img/algorithm_fulloa.svg" alt="Flowchart showing Full Open Access check">
 
 
 ### Self Archiving Check
@@ -119,7 +119,7 @@ When JCT checks for compliance with the Self Archiving route, this is the algori
 
 Note that transitions are annotated with the codes you will see in the API logs for your request.
 
-<img src="/img/algorithm_sa.svg">
+<img src="/img/algorithm_sa.svg" alt="Flowchart showing Self Archiving check">
 
 
 ### TA Check
@@ -128,7 +128,7 @@ When JCT checks for compliance with the Transformative Agreements route, this is
 
 Note that transitions are annotated with the codes you will see in the API logs for your request.
 
-<img src="/img/algorithm_ta.svg">
+<img src="/img/algorithm_ta.svg" alt="Flowchart showing Transformative Agreement check">
 
 
 ### TJ Check
@@ -137,5 +137,5 @@ When JCT checks for compliance with the Transformative Journals route, this is t
 
 Note that transitions are annotated with the codes you will see in the API logs for your request.
 
-<img src="/img/algorithm_tj.svg">
+<img src="/img/algorithm_tj.svg" alt="Flowchart showing Transformative Journal check">
 

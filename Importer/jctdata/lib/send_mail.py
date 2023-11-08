@@ -2,7 +2,8 @@ import requests
 from jctdata import settings
 
 
-def send_mail(subject, message, attachment):
+def send_mail(subject, message, attachment, attachment_name="details.json"):
+    """Send an email to the status email address, with the given subject and message."""
     print("Sending email: {subject}".format(subject=subject))
     key = settings.MAILGUN_KEY
     url = settings.MAILGUN_DOMAIN
@@ -11,7 +12,7 @@ def send_mail(subject, message, attachment):
     subject = "{a}: {b}".format(a=settings.MAILGUN_SUBJECT_PREFIX, b=subject)
     files = {}
     if attachment:
-        files = {"attachment": ("details.json", open(attachment, 'rb'))}
+        files = {"attachment": (attachment_name, open(attachment, 'rb'))}
     request_url = 'https://api.mailgun.net/v3/{url}/messages'.format(url=url)
     response = requests.post(request_url, auth=('api', key), files=files, data={
         'from': sender,

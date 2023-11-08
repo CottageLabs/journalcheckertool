@@ -12,9 +12,9 @@ class JAC(Indexer):
     ID = "jac"
     SOURCES = ["crossref", "doaj", "tj", "ta", "doaj_inprogress", "sa_negative", "sa_positive", "oa_exceptions", "jcs"]
 
-    def gather(self):
+    def gather(self, force=False):
         self.log('Gathering data for journal autocomplete from sources: {x}'.format(x=",".join(self.SOURCES)))
-        paths = resolver.gather_data(self.SOURCES, True)
+        paths = resolver.gather_data(self.SOURCES, True, force)
 
         issns, titles, pubs = self._get_paths(paths)
 

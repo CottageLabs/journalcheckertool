@@ -914,4 +914,9 @@ button {
     font-weight: bold;
     font-size: 0.833em; }
 
+#jct_ta_results_list {
+  padding-left: 10%;
+  padding-right: 10%;
+  padding-top: 40px; }
+
 /*# sourceMappingURL=main.css.map */

@@ -3,51 +3,56 @@
     url = "/transformative-journals"
     weight = 1
 [[main]]
-    name = "Transformative&nbsp;Agreements"
+    name = "Transformative&nbsp;Agreements&nbsp;Public&nbsp;Data"
     pre = " • "
     url = "/transformative-agreements"
     weight = 2
 [[main]]
+    name = "Transformative&nbsp;Agreements&nbsp;Search"
+    pre = " • "
+    url = "/ta-search"
+    weight = 3
+[[main]]
     name = "Exception&nbsp;Lists"
     pre = " • "
     url = "/exception-lists"
-    weight = 3
+    weight = 4
 [[main]]
     name = "Journals&nbsp;participating&nbsp;in&nbsp;JCS"
     pre = " • "
     url = "/jcs"
-    weight = 4
+    weight = 5
 [[main]]
     name = "API&nbsp;Documentation"
     pre = " • "
     url = "/apidocs"
-    weight = 5
+    weight = 6
 [[main]]
     name = "Embeddable&nbsp;Widget"
     pre = " • "
     url = "/widget"
-    weight = 6
+    weight = 7
 [[main]]
     name = "FAQ"
     url = "/faq"
-    weight = 7
+    weight = 8
 [[main]]
     pre = " • "
     name = "Privacy&nbsp;Notice"
     url = "/notices#privacy_notice"
-    weight = 8
+    weight = 9
 [[main]]
     name = "Disclaimer&nbsp;&&nbsp;Copyright"
     pre = " • "
     url = "/notices#disclaimer_and_copyright"
-    weight = 9
+    weight = 10
 [[main]]
     name = "Acknowledgements"
     pre = " • "
     url = "/acknowledgements"
-    weight = 10
+    weight = 11
 [[main]]
     name = "Release&nbsp;History"
     pre = " • "
     url = "/release-history"
-    weight = 11
+    weight = 12

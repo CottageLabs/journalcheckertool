@@ -20,6 +20,8 @@
     <script type="text/javascript" src="/js/api_endpoint{{.Site.Params.Main.Endpoint}}.js?v={{.Site.Params.Main.jctAssetsVersion}}"></script>
     <script type="text/javascript" src="/js/clinput2.js?v={{.Site.Params.Main.jctAssetsVersion}}"></script>
     <script type="text/javascript" src="/js/jct_ta.js?v={{.Site.Params.Main.jctAssetsVersion}}"></script>
+    <script type="text/javascript" src="/js/modals.js?v={{.Site.Params.Main.jctAssetsVersion}}"></script>
+    <script type="text/javascript" src="/js/feedback.js?v={{.Site.Params.Main.jctAssetsVersion}}"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=URL"></script>
     {{ if .Site.GoogleAnalytics }}
     {{- partial "google-analytics.html" . }}
@@ -43,7 +45,9 @@
 </main>
 
 {{- partial "main-footer.html" . -}}
+{{- partial "modal.html" . -}}
 
 <script>
     jct_ta.setup();
+    jct.bindModalTriggers();
 </script>

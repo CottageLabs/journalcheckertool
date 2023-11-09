@@ -19,7 +19,7 @@ This is a [cOAlition S](https://www.coalition-s.org/) project.
 
 Install meteor framework:
 
-curl https://install.meteor.com/ | sh
+    curl https://install.meteor.com/ | sh
 
 Clone this repo, and go into the repo folder
 
@@ -57,11 +57,16 @@ about getting a special API key for this, as it is a unique feature for JCT).
 
 Run the install command to set up dependencies:
 
-meteor npm install
+    meteor npm install
+
+or:
+
+    meteor npm install --save fibers connect connect-route body-parser moment mailgun-js tar unidecode csvtojson js-yaml adm-zip @babel/runtime
+
 
 Finally, to start the app, run:
 
-MONGO_URL="http://nowhere" && meteor --port 3002 --settings settings.json
+    MONGO_URL="http://nowhere" && meteor --port 3002 --settings settings.json
 
 We use port 3002 for dev and 3333 for live by default. We don't use MongoDB but 
 it's a default for Meteor, so we set the MONGO_URL to nowhere. Start it in a 
@@ -70,7 +75,7 @@ for running it in production.
 
 You can also control how much memory it can take up, such as: 
 
-export NODE_OPTIONS='--max-old-space-size=3072' && export MONGO_URL="http://nowhere" && meteor --port 3333 --settings settings.json
+    export NODE_OPTIONS='--max-old-space-size=3072' && export MONGO_URL="http://nowhere" && meteor --port 3333 --settings settings.json
 
 
 ## About the code
@@ -101,7 +106,7 @@ just a preference. Any future development can be written in .js files instead
 if preferred, and merging them all together is automatically handled anyway.
 
 If you develop the code and add a new dependency, use 
-"meteor npm install --save ..." to add it to the package list, and then when 
+`meteor npm install --save ...` to add it to the package list, and then when 
 you deploy the code, "meteor npm install" will need to be run again too.
 
 
@@ -115,15 +120,15 @@ was designed for are not used because JCT is only an API with a separate static
 UI and we don't use MongoDB, the build, run, and management features of meteor 
 are still used.
 
-"meteor list" lists all the installed meteor packages
+`meteor list` lists all the installed meteor packages
 
-"meteor add ..." can be used to add a meteor package
+`meteor add ...` can be used to add a meteor package
 
-"meteor remove ..." will remove one
+`meteor remove ...` will remove one
 
-"meteor npm install --save ..." can be used to install and manage node packages
+`meteor npm install --save ...` can be used to install and manage node packages
 
-"meteor npm uninstall ..." will uninstall a node package.
+`meteor npm uninstall ...` will uninstall a node package.
 
 Meteor also handles dependencies, and the version of Node to use, internally.
 
@@ -133,6 +138,7 @@ Meteor also handles dependencies, and the version of Node to use, internally.
 A 4GB 2vCPU DO machine with the latest Ubuntu server works fine.
 (2GB would run the app but it needs up to 4GB for some of the data uploads.)
 
+```bash
 adduser --gecos "" USERNAME
 
 cd /home/USERNAME
@@ -182,11 +188,12 @@ ufw allow 80
 ufw allow 443
 
 ufw enable
+```
 
 (if your Elasticsearch machine/cluster requires specific IP addresses to be 
 given access, then run the necessary commands on your ES gateway machine, e.g.)
 
-sudo ufw allow in on eth1 from MACHINEINTERNALIP to any port 9200
+    sudo ufw allow in on eth1 from MACHINEINTERNALIP to any port 9200
 
 You will also need to setup nginx and certbot - there are nginx configs provided 
 in the repo. Symlink these into /etc/nginx/sites-enabled and restart nginx. 
@@ -195,7 +202,7 @@ with certbot. A command such as the following should get your certbot setup,
 but note you may need to comment out the SSL sections of the nginx config first, 
 as nginx won't accept them before the certs exist.
 
-sudo certbot certonly -d YOURDOMAINNAME.COM
+   sudo certbot certonly -d YOURDOMAINNAME.COM
 
 Now follow the normal Installation instructions above. By default we run dev on 
 port 3002 and production on port 3333, and the nginx configs expect that, but 

@@ -76,7 +76,7 @@ jct.modal_setup.feedback = () => {
                 "vendor": navigator.vendor
             }
         };
-        if (window.hasOwnProperty("jct") && jct.hasOwnProperty("get_from_url")) {
+        if (window.hasOwnProperty("jct") && jct.get_fom_url) {
             context.page = "JCT";
             context.request = {
                 "timestamp" : timestamp,

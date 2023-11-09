@@ -4,6 +4,9 @@
 
 ```yaml
 id: academyoffinlandaka
+alternate_ids:
+  - altid1
+  - altid2
 name: Academy of Finland
 abbr: AKA
 country: Finland

@@ -605,7 +605,7 @@ jct.displayPriceData = (journalData) => {
 
         let currentDate = new Date();
         let yearCurrent = currentDate.getUTCFullYear();
-        let latestData = Math.max(journalData.price_data_years);
+        let latestData = Math.max.apply(null, journalData.price_data_years);
         let rolloverDate = new Date(parseInt(yearCurrent) + "-11-01T00:00:00Z");
 
         // if the current date is before the end of October of the current year, then
@@ -621,7 +621,7 @@ jct.displayPriceData = (journalData) => {
         }
 
         if (message) {
-            message = message.replaceAll("{year}", journalData.price_data_years.join(", "))
+            message = message.replaceAll("{years}", journalData.price_data_years.join(", "))
         }
     }
 
@@ -1770,7 +1770,7 @@ jct.modal_setup.feedback = () => {
                 "vendor": navigator.vendor
             }
         };
-        if (window.hasOwnProperty("jct") && jct.hasOwnProperty("get_from_url")) {
+        if (window.hasOwnProperty("jct") && jct.get_fom_url) {
             context.page = "JCT";
             context.request = {
                 "timestamp" : timestamp,

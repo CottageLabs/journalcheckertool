@@ -1,3 +1,9 @@
+if (!window.hasOwnProperty("jct")) { jct = {}; }
+if (!jct.site_modals) { jct.site_modals = {}; }
+if (!jct.modal_setup) { jct.modal_setup = {}; }
+
+if (!jct.api) { jct.api = JCT_API_endpoint; }
+
 jct.site_modals.feedback = {
     title: `Feedback? Suggestion? Contact us here.`,
     body: `<p>This tool is delivered by <a href="https://cottagelabs.com/" target="_blank" rel="noopener">
@@ -47,61 +53,74 @@ jct.site_modals.feedback = {
             <a href="/notices#privacy_notice">Privacy Notice</a> •
             <a href="/notices#disclaimer_and_copyright">Disclaimer & Copyright</a>
         </p>` // Feedback modal uses generic id names. If embedding in the plugin, need to change id names
-}
+};
 
 jct.modal_setup.feedback = () => {
     // WARNING: Feedback modal uses generic id names. If embedding in the plugin, need to change id names
-    jct.d.gebi("contact_form")
-        .addEventListener("submit", (event) => {
-            event.preventDefault()
+    jct.d.gebi("contact_form").addEventListener("submit", (event) => {
+        event.preventDefault();
         let name  = jct.d.gebi("name").value;
         let email = jct.d.gebi("email").value;
         let message = jct.d.gebi("message").value;
-        let timestamp = new Date().toUTCString()
+        let timestamp = new Date().toUTCString();
+
+        let context = {
+            "navigator data": {
+                "appCodeName": navigator.appCodeName,
+                "appName": navigator.appName,
+                "appVersion": navigator.appVersion,
+                "cookieEnabled": navigator.cookieEnabled,
+                "language": navigator.language,
+                "platform": navigator.platform,
+                "userAgent": navigator.userAgent,
+                "vendor": navigator.vendor
+            }
+        };
+        if (window.hasOwnProperty("jct") && jct.get_fom_url) {
+            context.page = "JCT";
+            context.request = {
+                "timestamp" : timestamp,
+                "issn" : jct.chosen.journal ? jct.chosen.journal.id : "",
+                "funder" : jct.chosen.funder ? jct.chosen.funder.id : "",
+                "ror" : jct.chosen.institution ? jct.chosen.institution.id : ""
+            };
+            context.results = [
+                jct.latest_response
+            ];
+            context.url = jct.get_fom_url();
+        }
+
+        if (window.hasOwnProperty("jct_ta")) {
+            context.page = "JCT TA";
+            context.request = {
+                "timestamp" : timestamp,
+                "issn" : jct_ta.chosen.journal ? jct_ta.chosen.journal.id : "",
+                "ror" : jct_ta.chosen.institution ? jct_ta.chosen.institution.id : ""
+            };
+        }
 
         let data =
             JSON.stringify({
                 "name" : name,
                 "email" : email,
                 "feedback" : message,
-                "context" : {
-                    "request" : {
-                        "timestamp" : timestamp,
-                        "issn" : jct.chosen.journal ? jct.chosen.journal.id : "",
-                        "funder" : jct.chosen.funder ? jct.chosen.funder.id : "",
-                        "ror" : jct.chosen.institution ? jct.chosen.institution.id : "",
-                        "navigator data": {
-                            "appCodeName": navigator.appCodeName,
-                            "appName": navigator.appName,
-                            "appVersion": navigator.appVersion,
-                            "cookieEnabled": navigator.cookieEnabled,
-                            "language": navigator.language,
-                            "platform": navigator.platform,
-                            "userAgent": navigator.userAgent,
-                            "vendor": navigator.vendor
-                        }
-                    },
-                    "results" : [
-                        jct.latest_response
-                    ],
-                    "url" : jct.get_fom_url()
-                }
+                "context" : context
             });
 
         let xhr = new XMLHttpRequest();
         xhr.open('POST', jct.api + '/feedback');
         xhr.onload = () => {
-            alert("message sent successfully")
+            alert("Message sent successfully");
             //jct.d.gebi("feedback_success").style.display = "block"
         };
         xhr.onerror = () => {
             //jct.d.gebi("feedback_error").style.display = "block"
-            alert("Oops, something went wrong");
+            alert("We were unable to send your feedback, please try again.");
         };
         xhr.setRequestHeader('Content-type', 'application/json');
         xhr.send(data);
         jct.closeModal();
-        return false
+        return false;
     });
-}
+};
 

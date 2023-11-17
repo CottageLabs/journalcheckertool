@@ -1,6 +1,6 @@
-id: slovenianresearchagencyarrs
-name: Slovenian Research Agency
-abbr: ARRS
+id: slovenianresearchandinnovationagency
+name: Slovenian Research and Innovation Agency
+abbr: ARIS
 plan_s: 2021-01-01
 apc:
   tj: true # implementation roadmap

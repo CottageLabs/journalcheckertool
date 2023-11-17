@@ -99,8 +99,8 @@ you will need to use the following identifiers in place of the name of the funde
 **Science and Technology Facilities Council**
 : `unitedkingdomresearchinnovationukri`
 
-**Slovenian Research Agency**
-: `slovenianresearchagencyarrs`
+**Slovenian Research and Innovation Agency**
+: `slovenianresearchandinnovationagency`
 
 **South African Medical Research Council**
 : `southafricanmedicalresearchcouncilsamrc`
@@ -125,5 +125,6 @@ you will need to use the following identifiers in place of the name of the funde
 
 **World Health Organization**
 : `worldhealthorganizationwho`
+
 
 

@@ -334,57 +334,152 @@ clinput.init = (params) => {
 }
 
 
+// -------- modals --------
+
+if (!window.hasOwnProperty("jct")) { jct = {}; }
+
+// some convenience shortcuts
+jct.d = document;
+jct.d.gebi = document.getElementById;
+jct.d.gebc = document.getElementsByClassName;
+
+////////////////////////////////////////////////
+// Modal handling
+
+jct.bindModalTriggers = function() {
+    let triggers = document.getElementsByClassName("modal-trigger");
+    for (let i = 0; i < triggers.length; i++) {
+        let trigger = triggers[i];
+        trigger.removeEventListener("click", jct.modalTrigger);
+        trigger.addEventListener("click", jct.modalTrigger)
+    }
+};
+
+jct.modalTrigger = function(event) {
+    event.preventDefault();
+    let element = event.currentTarget;
+    let modalId = element.getAttribute("data-modal");
+    let modal = jct.build_modal(modalId);
+    jct.modalShow(modal);
+    if (jct.modal_setup.hasOwnProperty(modalId)) {
+        jct.modal_setup[modalId]();
+    }
+};
+
+jct.modalShow = function(content) {
+    let modal_div = jct.d.gebi("jct_modal_container");
+    modal_div.innerHTML = content;
+
+    let closers = document.getElementsByClassName("jct_modal_close");
+    for (let i = 0; i < closers.length; i++) {
+        closers[i].addEventListener("click", (e) => {
+            jct.closeModal();
+        });
+    }
+
+    window.addEventListener("click", jct._windowCloseModal)
+};
+
+jct.closeModal = function() {
+    let modal_div = jct.d.gebi("jct_modal_container");
+    modal_div.innerText = "";
+    window.removeEventListener("click", jct._windowCloseModal)
+};
+
+jct._windowCloseModal = function(e) {
+    let modals = [].slice.call(jct.d.gebc("modal"));
+    if (modals.includes(e.target)){
+        jct.closeModal();
+    }
+};
+
+jct.build_modal = (modal_id) => {
+    let modalText = jct.lang ? jct.lang.modals[modal_id] : "";
+    if (!modalText) {
+        modalText = jct.site_modals[modal_id];
+        if (!modalText) {
+            console.log("No modal text found for " + modal_id);
+            return "";
+        }
+        if (modalText.en) {
+            if (modalText[jct.languageCode]) {
+                modalText = modalText[jct.languageCode];
+            } else {
+                modalText = modalText.en;
+            }
+        }
+    }
+    if (!modalText) {
+        return "";
+    }
+    let modal_html = `<div class="modal" id="jct_modal_${modal_id}" style="display: block">
+        <div class="modal-content" id="jct_modal_${modal_id}_content">
+            <header class="modal-header">
+                <h2>
+                    <span class="close jct_modal_close" aria-label="Close" role="button" data-id="jct_modal_${modal_id}">&times;</span>                    
+                    ${modalText.title}
+                </h2>
+            </header>
+            <div>${modalText.body}</div>
+        </div>
+    </div>`;
+    return modal_html;
+};
+
+
+
 // -------- jct --------
 
 // ----------------------------------------
 // Initial definitions
 // ----------------------------------------
-let jct = {
-    api: JCT_API_endpoint,
-    host: JCT_UI_BASE_URL,
-    delay: 500,
-    cache: {},
-    chosen: {},
-    latest_response: null,
-    latest_full_response: null,
-    lang: null,
-    funder_langs: {},
-    load : {
-        funder: false,
-        response: false
+if (!window.hasOwnProperty("jct")) { jct = {}; }
+
+jct.api = JCT_API_endpoint;
+jct.host = JCT_UI_BASE_URL;
+jct.delay = 500;
+jct.cache = {};
+jct.chosen = {};
+jct.latest_response = null;
+jct.latest_full_response = null;
+jct.lang = null;
+jct.funder_langs = {};
+jct.load = {
+    funder: false,
+    response: false
+};
+jct.site_modals = {};
+jct.modal_setup = {};
+jct.clinputs = {};
+jct.inputsCycle = {
+    "journal" : "funder",
+    "funder" : "institution"
+};
+jct.languageCode = "en";
+jct.messages = {
+    en: {
+        journal: "Journal",
+        journal_placeholder: "By ISSN or title",
+        funder: "My Funder",
+        funder_placeholder: "By funder name",
+        institution: "My Institution",
+        institution_placeholder: "By ROR or name",
+        no_affiliation: "No affiliation",
+        explain: 'Explain this result'
     },
-    site_modals : {},
-    modal_setup : {},
-    clinputs: {},
-    inputsCycle: {
-        "journal" : "funder",
-        "funder" : "institution"
-    },
-    languageCode: "en",
-    messages: {
-        en: {
-            journal: "Journal",
-            journal_placeholder: "By ISSN or title",
-            funder: "My Funder",
-            funder_placeholder: "By funder name",
-            institution: "My Institution",
-            institution_placeholder: "By ROR or name",
-            no_affiliation: "No affiliation",
-            explain: 'Explain this result'
-        },
-        fr: {
-            journal: "Revue",
-            journal_placeholder: "Par numéro ISSN ou titre",
-            funder: "Mon organisme de financement",
-            funder_placeholder: "Par nom d’organisme de financement",
-            institution: "Mon institution",
-            institution_placeholder: "Par le ROR ou le nom",
-            no_affiliation: "Aucune affiliation",
-            explain: "Explications du résultat"
-        }
+    fr: {
+        journal: "Revue",
+        journal_placeholder: "Par numéro ISSN ou titre",
+        funder: "Mon organisme de financement",
+        funder_placeholder: "Par nom d’organisme de financement",
+        institution: "Mon institution",
+        institution_placeholder: "Par le ROR ou le nom",
+        no_affiliation: "Aucune affiliation",
+        explain: "Explications du résultat"
     }
 };
 
+// some convenience shortcuts
 jct.d = document;
 jct.d.gebi = document.getElementById;
 jct.d.gebc = document.getElementsByClassName;
@@ -510,7 +605,7 @@ jct.displayPriceData = (journalData) => {
 
         let currentDate = new Date();
         let yearCurrent = currentDate.getUTCFullYear();
-        let latestData = Math.max(journalData.price_data_years);
+        let latestData = Math.max.apply(null, journalData.price_data_years);
         let rolloverDate = new Date(parseInt(yearCurrent) + "-11-01T00:00:00Z");
 
         // if the current date is before the end of October of the current year, then
@@ -526,7 +621,7 @@ jct.displayPriceData = (journalData) => {
         }
 
         if (message) {
-            message = message.replaceAll("{year}", journalData.price_data_years.join(", "))
+            message = message.replaceAll("{years}", journalData.price_data_years.join(", "))
         }
     }
 
@@ -677,20 +772,17 @@ jct.buildCard = function(cardConfig, uiText, results, choices) {
 // Modal handling
 
 jct.bindModals = function() {
-    let triggers = document.getElementsByClassName("modal-trigger");
-    for (let i = 0; i < triggers.length; i++) {
-        let trigger = triggers[i];
-        trigger.removeEventListener("click", jct.modalTrigger);
-        trigger.addEventListener("click", jct.modalTrigger)
-    }
+    // delegate to the generic modals module to handle regular modals
+    jct.bindModalTriggers();
 
+    // jct results specific modals under "read_more" handled here
     let readMores = document.getElementsByClassName("read_more");
     for (let i = 0; i < readMores.length; i++) {
         let trigger = readMores[i];
         trigger.removeEventListener("click", jct.readMoreTrigger);
-        trigger.addEventListener("click", jct.readMoreTrigger)
+        trigger.addEventListener("click", jct.readMoreTrigger);
     }
-}
+};
 
 jct.readMoreTrigger = function(event) {
     event.preventDefault();
@@ -698,7 +790,7 @@ jct.readMoreTrigger = function(event) {
     let cardId = element.getAttribute("data-card");
     let modal = jct.readMoreModal(cardId);
     jct.modalShow(modal);
-}
+};
 
 jct.readMoreModal = function(cardId) {
     let content = jct.explain_card(jct.latest_full_response, cardId);
@@ -715,74 +807,7 @@ jct.readMoreModal = function(cardId) {
         </div>
     </div>`;
     return modal_html;
-}
-
-jct.modalTrigger = function(event) {
-    event.preventDefault();
-    let element = event.target;
-    let modalId = element.getAttribute("data-modal");
-    let modal = jct.build_modal(modalId);
-    jct.modalShow(modal);
-    if (jct.modal_setup.hasOwnProperty(modalId)) {
-        jct.modal_setup[modalId]();
-    }
-}
-
-jct.modalShow = function(content) {
-    let modal_div = jct.d.gebi("jct_modal_container");
-    modal_div.innerHTML = content;
-
-    let closers = document.getElementsByClassName("jct_modal_close");
-    for (let i = 0; i < closers.length; i++) {
-        closers[i].addEventListener("click", (e) => {
-            jct.closeModal();
-        });
-    }
-
-    window.addEventListener("click", jct._windowCloseModal)
-}
-
-jct.closeModal = function() {
-    let modal_div = jct.d.gebi("jct_modal_container");
-    modal_div.innerText = "";
-    window.removeEventListener("click", jct._windowCloseModal)
-}
-
-jct._windowCloseModal = function(e) {
-    let modals = [].slice.call(jct.d.gebc("modal"));
-    if (modals.includes(e.target)){
-        jct.closeModal();
-    }
-}
-
-jct.build_modal = (modal_id) => {
-    let modalText = jct.lang ? jct.lang.modals[modal_id] : "";
-    if (!modalText) {
-        modalText = jct.site_modals[modal_id];
-        if (modalText.en) {
-            if (modalText[jct.languageCode]) {
-                modalText = modalText[jct.languageCode];
-            } else {
-                modalText = modalText.en;
-            }
-        }
-    }
-    if (!modalText) {
-        return "";
-    }
-    let modal_html = `<div class="modal" id="jct_modal_${modal_id}" style="display: block">
-        <div class="modal-content" id="jct_modal_${modal_id}_content">
-            <header class="modal-header">
-                <h2>
-                    <span class="close jct_modal_close" aria-label="Close" role="button" data-id="jct_modal_${modal_id}">&times;</span>                    
-                    ${modalText.title}
-                </h2>
-            </header>
-            <div>${modalText.body}</div>
-        </div>
-    </div>`
-    return modal_html;
-}
+};
 
 //////////////////////////////////////////////
 // Funder autocomplete
@@ -1596,7 +1621,7 @@ jct.setup = (manageUrl=true) => {
 
 // -------- funders --------
 
-jct.funderlist=[{"id": "academyoffinlandaka", "name": "Academy of Finland", "abbr": "AKA", "country": null, "primary": true}, {"id": "aligningscienceacrossparkinsonsasap", "name": "Aligning Science Across Parkinson's", "abbr": "ASAP", "country": null, "primary": true}, {"id": "austriansciencefundfwf", "name": "Austrian Science Fund", "abbr": "FWF", "country": null, "primary": true}, {"id": "billmelindagatesfoundation", "name": "Bill & Melinda Gates Foundation", "abbr": null, "country": null, "primary": true}, {"id": "europeancommissionhorizoneuropeframeworkprogramme", "name": "European Commission (Horizon Europe Framework Programme)", "abbr": null, "country": null, "primary": true}, {"id": "formassweden", "name": "Formas", "abbr": null, "country": "Sweden", "primary": true}, {"id": "fortesweden", "name": "FORTE", "abbr": null, "country": "Sweden", "primary": true}, {"id": "frenchnationalresearchagencyanr", "name": "French National Research Agency", "abbr": "ANR", "country": null, "primary": true}, {"id": "highercouncilforscienceandtechnologyhcstjordan", "name": "Higher Council for Science and Technology", "abbr": "HCST", "country": "Jordan", "primary": true}, {"id": "howardhughesmedicalinstitutehhmi", "name": "Howard Hughes Medical Institute", "abbr": "HHMI", "country": null, "primary": true}, {"id": "luxembourgnationalresearchfundfnr", "name": "Luxembourg National Research Fund", "abbr": "FNR", "country": null, "primary": true}, {"id": "nationalhealthandmedicalresearchcouncil", "name": "National Health and Medical Research Council", "abbr": "NHMRC", "country": "Australia", "primary": true}, {"id": "nationalinstitutefornuclearphysicsinfnitaly", "name": "National Institute for Nuclear Physics", "abbr": "INFN", "country": "Italy", "primary": true}, {"id": "nationalscienceandtechnologycouncilnstczambia", "name": "National Science and Technology Council", "abbr": "NSTC", "country": "Zambia", "primary": true}, {"id": "nationalsciencecentrepolandncn", "name": "National Science Centre", "abbr": "NCN", "country": "Poland", "primary": true}, {"id": "netherlandsorganisationforscientificresearchnwo", "name": "Netherlands Organisation for Scientific Research", "abbr": "NWO", "country": null, "primary": true}, {"id": "quebecresearchfunds", "name": "Fonds de recherche du Qu\u00e9bec (Quebec Research Funds)", "abbr": "FRQ", "country": null, "primary": true}, {"id": "researchcouncilofnorwayrcn", "name": "Research Council of Norway", "abbr": "RCN", "country": null, "primary": true}, {"id": "sciencefoundationirelandsfi", "name": "Science Foundation Ireland", "abbr": "SFI", "country": null, "primary": true}, {"id": "slovenianresearchagencyarrs", "name": "Slovenian Research Agency", "abbr": "ARRS", "country": null, "primary": true}, {"id": "southafricanmedicalresearchcouncilsamrc", "name": "South African Medical Research Council", "abbr": "SAMRC", "country": null, "primary": true}, {"id": "specialprogrammeforresearchandtrainingintropicaldiseasestdr", "name": "Special Programme for Research and Training in Tropical Diseases", "abbr": "TDR", "country": null, "primary": true}, {"id": "swissnationalsciencefoundationsnsf", "name": "Swiss National Science Foundation", "abbr": "SNSF", "country": null, "primary": true}, {"id": "templetonworldcharityfoundationtwcf", "name": "Templeton World Charity Foundation", "abbr": "TWCF", "country": null, "primary": true}, {"id": "unitedkingdomresearchinnovationukri", "name": "UK Research and Innovation.", "abbr": "UKRI", "country": null, "primary": true}, {"id": "unitedkingdomresearchinnovationukri", "name": "Arts and Humanities Research Council", "abbr": "AHRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Biotechnology and Biological Sciences Research Council", "abbr": "BBSRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Economic and Social Research Council", "abbr": "ESRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Engineering and Physical Sciences Research Council", "abbr": "EPSRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Innovate UK", "abbr": "UKRI", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Medical Research Council", "abbr": "MRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Natural Environment Research Council", "abbr": "NERC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "National Centre for the Replacement Refinement & Reduction of Animals in Research", "abbr": "NC3Rs (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Research England", "abbr": "UKRI", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Science and Technology Facilities Council", "abbr": "STFC (UKRI)", "country": null, "primary": false}, {"id": "vinnovasweden", "name": "Vinnova", "abbr": null, "country": "Sweden", "primary": true}, {"id": "wellcome", "name": "Wellcome", "abbr": null, "country": null, "primary": true}, {"id": "worldhealthorganizationwho", "name": "World Health Organization", "abbr": "WHO", "country": null, "primary": true}]
+jct.funderlist=[{"id": "academyoffinlandaka", "name": "Academy of Finland", "abbr": "AKA", "country": null, "primary": true}, {"id": "aligningscienceacrossparkinsonsasap", "name": "Aligning Science Across Parkinson's", "abbr": "ASAP", "country": null, "primary": true}, {"id": "austriansciencefundfwf", "name": "Austrian Science Fund", "abbr": "FWF", "country": null, "primary": true}, {"id": "billmelindagatesfoundation", "name": "Bill & Melinda Gates Foundation", "abbr": null, "country": null, "primary": true}, {"id": "europeancommissionhorizoneuropeframeworkprogramme", "name": "European Commission (Horizon Europe Framework Programme)", "abbr": null, "country": null, "primary": true}, {"id": "formassweden", "name": "Formas", "abbr": null, "country": "Sweden", "primary": true}, {"id": "fortesweden", "name": "FORTE", "abbr": null, "country": "Sweden", "primary": true}, {"id": "frenchnationalresearchagencyanr", "name": "French National Research Agency", "abbr": "ANR", "country": null, "primary": true}, {"id": "highercouncilforscienceandtechnologyhcstjordan", "name": "Higher Council for Science and Technology", "abbr": "HCST", "country": "Jordan", "primary": true}, {"id": "howardhughesmedicalinstitutehhmi", "name": "Howard Hughes Medical Institute", "abbr": "HHMI", "country": null, "primary": true}, {"id": "luxembourgnationalresearchfundfnr", "name": "Luxembourg National Research Fund", "abbr": "FNR", "country": null, "primary": true}, {"id": "nationalhealthandmedicalresearchcouncil", "name": "National Health and Medical Research Council", "abbr": "NHMRC", "country": "Australia", "primary": true}, {"id": "nationalinstitutefornuclearphysicsinfnitaly", "name": "National Institute for Nuclear Physics", "abbr": "INFN", "country": "Italy", "primary": true}, {"id": "nationalscienceandtechnologycouncilnstczambia", "name": "National Science and Technology Council", "abbr": "NSTC", "country": "Zambia", "primary": true}, {"id": "nationalsciencecentrepolandncn", "name": "National Science Centre", "abbr": "NCN", "country": "Poland", "primary": true}, {"id": "netherlandsorganisationforscientificresearchnwo", "name": "Netherlands Organisation for Scientific Research", "abbr": "NWO", "country": null, "primary": true}, {"id": "quebecresearchfunds", "name": "Fonds de recherche du Qu\u00e9bec (Quebec Research Funds)", "abbr": "FRQ", "country": null, "primary": true}, {"id": "researchcouncilofnorwayrcn", "name": "Research Council of Norway", "abbr": "RCN", "country": null, "primary": true}, {"id": "sciencefoundationirelandsfi", "name": "Science Foundation Ireland", "abbr": "SFI", "country": null, "primary": true}, {"id": "slovenianresearchandinnovationagency", "name": "Slovenian Research and Innovation Agency", "abbr": "ARIS", "country": null, "primary": true}, {"id": "southafricanmedicalresearchcouncilsamrc", "name": "South African Medical Research Council", "abbr": "SAMRC", "country": null, "primary": true}, {"id": "specialprogrammeforresearchandtrainingintropicaldiseasestdr", "name": "Special Programme for Research and Training in Tropical Diseases", "abbr": "TDR", "country": null, "primary": true}, {"id": "swissnationalsciencefoundationsnsf", "name": "Swiss National Science Foundation", "abbr": "SNSF", "country": null, "primary": true}, {"id": "templetonworldcharityfoundationtwcf", "name": "Templeton World Charity Foundation", "abbr": "TWCF", "country": null, "primary": true}, {"id": "unitedkingdomresearchinnovationukri", "name": "UK Research and Innovation.", "abbr": "UKRI", "country": null, "primary": true}, {"id": "unitedkingdomresearchinnovationukri", "name": "Arts and Humanities Research Council", "abbr": "AHRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Biotechnology and Biological Sciences Research Council", "abbr": "BBSRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Economic and Social Research Council", "abbr": "ESRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Engineering and Physical Sciences Research Council", "abbr": "EPSRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Innovate UK", "abbr": "UKRI", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Medical Research Council", "abbr": "MRC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Natural Environment Research Council", "abbr": "NERC (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "National Centre for the Replacement Refinement & Reduction of Animals in Research", "abbr": "NC3Rs (UKRI)", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Research England", "abbr": "UKRI", "country": null, "primary": false}, {"id": "unitedkingdomresearchinnovationukri", "name": "Science and Technology Facilities Council", "abbr": "STFC (UKRI)", "country": null, "primary": false}, {"id": "vinnovasweden", "name": "Vinnova", "abbr": null, "country": "Sweden", "primary": true}, {"id": "wellcome", "name": "Wellcome", "abbr": null, "country": null, "primary": true}, {"id": "worldhealthorganizationwho", "name": "World Health Organization", "abbr": "WHO", "country": null, "primary": true}]
 
 
 // -------- find_out_more --------
@@ -1667,6 +1692,12 @@ jct.copy_results_url = () => {
 
 // -------- feedback --------
 
+if (!window.hasOwnProperty("jct")) { jct = {}; }
+if (!jct.site_modals) { jct.site_modals = {}; }
+if (!jct.modal_setup) { jct.modal_setup = {}; }
+
+if (!jct.api) { jct.api = JCT_API_endpoint; }
+
 jct.site_modals.feedback = {
     title: `Feedback? Suggestion? Contact us here.`,
     body: `<p>This tool is delivered by <a href="https://cottagelabs.com/" target="_blank" rel="noopener">
@@ -1716,63 +1747,76 @@ jct.site_modals.feedback = {
             <a href="/notices#privacy_notice">Privacy Notice</a> •
             <a href="/notices#disclaimer_and_copyright">Disclaimer & Copyright</a>
         </p>` // Feedback modal uses generic id names. If embedding in the plugin, need to change id names
-}
+};
 
 jct.modal_setup.feedback = () => {
     // WARNING: Feedback modal uses generic id names. If embedding in the plugin, need to change id names
-    jct.d.gebi("contact_form")
-        .addEventListener("submit", (event) => {
-            event.preventDefault()
+    jct.d.gebi("contact_form").addEventListener("submit", (event) => {
+        event.preventDefault();
         let name  = jct.d.gebi("name").value;
         let email = jct.d.gebi("email").value;
         let message = jct.d.gebi("message").value;
-        let timestamp = new Date().toUTCString()
+        let timestamp = new Date().toUTCString();
+
+        let context = {
+            "navigator data": {
+                "appCodeName": navigator.appCodeName,
+                "appName": navigator.appName,
+                "appVersion": navigator.appVersion,
+                "cookieEnabled": navigator.cookieEnabled,
+                "language": navigator.language,
+                "platform": navigator.platform,
+                "userAgent": navigator.userAgent,
+                "vendor": navigator.vendor
+            }
+        };
+        if (window.hasOwnProperty("jct") && jct.get_fom_url) {
+            context.page = "JCT";
+            context.request = {
+                "timestamp" : timestamp,
+                "issn" : jct.chosen.journal ? jct.chosen.journal.id : "",
+                "funder" : jct.chosen.funder ? jct.chosen.funder.id : "",
+                "ror" : jct.chosen.institution ? jct.chosen.institution.id : ""
+            };
+            context.results = [
+                jct.latest_response
+            ];
+            context.url = jct.get_fom_url();
+        }
+
+        if (window.hasOwnProperty("jct_ta")) {
+            context.page = "JCT TA";
+            context.request = {
+                "timestamp" : timestamp,
+                "issn" : jct_ta.chosen.journal ? jct_ta.chosen.journal.id : "",
+                "ror" : jct_ta.chosen.institution ? jct_ta.chosen.institution.id : ""
+            };
+        }
 
         let data =
             JSON.stringify({
                 "name" : name,
                 "email" : email,
                 "feedback" : message,
-                "context" : {
-                    "request" : {
-                        "timestamp" : timestamp,
-                        "issn" : jct.chosen.journal ? jct.chosen.journal.id : "",
-                        "funder" : jct.chosen.funder ? jct.chosen.funder.id : "",
-                        "ror" : jct.chosen.institution ? jct.chosen.institution.id : "",
-                        "navigator data": {
-                            "appCodeName": navigator.appCodeName,
-                            "appName": navigator.appName,
-                            "appVersion": navigator.appVersion,
-                            "cookieEnabled": navigator.cookieEnabled,
-                            "language": navigator.language,
-                            "platform": navigator.platform,
-                            "userAgent": navigator.userAgent,
-                            "vendor": navigator.vendor
-                        }
-                    },
-                    "results" : [
-                        jct.latest_response
-                    ],
-                    "url" : jct.get_fom_url()
-                }
+                "context" : context
             });
 
         let xhr = new XMLHttpRequest();
         xhr.open('POST', jct.api + '/feedback');
         xhr.onload = () => {
-            alert("message sent successfully")
+            alert("Message sent successfully");
             //jct.d.gebi("feedback_success").style.display = "block"
         };
         xhr.onerror = () => {
             //jct.d.gebi("feedback_error").style.display = "block"
-            alert("Oops, something went wrong");
+            alert("We were unable to send your feedback, please try again.");
         };
         xhr.setRequestHeader('Content-type', 'application/json');
         xhr.send(data);
         jct.closeModal();
-        return false
+        return false;
     });
-}
+};
 
 
 

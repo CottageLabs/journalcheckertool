@@ -1,4 +1,4 @@
-let jct_ta = {
+jct_ta = {
     api: JCT_API_endpoint,
     latest_full_response: false,
     chosen: {},

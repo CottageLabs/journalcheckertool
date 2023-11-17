@@ -1,52 +1,53 @@
 // ----------------------------------------
 // Initial definitions
 // ----------------------------------------
-let jct = {
-    api: JCT_API_endpoint,
-    host: JCT_UI_BASE_URL,
-    delay: 500,
-    cache: {},
-    chosen: {},
-    latest_response: null,
-    latest_full_response: null,
-    lang: null,
-    funder_langs: {},
-    load : {
-        funder: false,
-        response: false
+if (!window.hasOwnProperty("jct")) { jct = {}; }
+
+jct.api = JCT_API_endpoint;
+jct.host = JCT_UI_BASE_URL;
+jct.delay = 500;
+jct.cache = {};
+jct.chosen = {};
+jct.latest_response = null;
+jct.latest_full_response = null;
+jct.lang = null;
+jct.funder_langs = {};
+jct.load = {
+    funder: false,
+    response: false
+};
+jct.site_modals = {};
+jct.modal_setup = {};
+jct.clinputs = {};
+jct.inputsCycle = {
+    "journal" : "funder",
+    "funder" : "institution"
+};
+jct.languageCode = "en";
+jct.messages = {
+    en: {
+        journal: "Journal",
+        journal_placeholder: "By ISSN or title",
+        funder: "My Funder",
+        funder_placeholder: "By funder name",
+        institution: "My Institution",
+        institution_placeholder: "By ROR or name",
+        no_affiliation: "No affiliation",
+        explain: 'Explain this result'
     },
-    site_modals : {},
-    modal_setup : {},
-    clinputs: {},
-    inputsCycle: {
-        "journal" : "funder",
-        "funder" : "institution"
-    },
-    languageCode: "en",
-    messages: {
-        en: {
-            journal: "Journal",
-            journal_placeholder: "By ISSN or title",
-            funder: "My Funder",
-            funder_placeholder: "By funder name",
-            institution: "My Institution",
-            institution_placeholder: "By ROR or name",
-            no_affiliation: "No affiliation",
-            explain: 'Explain this result'
-        },
-        fr: {
-            journal: "Revue",
-            journal_placeholder: "Par numéro ISSN ou titre",
-            funder: "Mon organisme de financement",
-            funder_placeholder: "Par nom d’organisme de financement",
-            institution: "Mon institution",
-            institution_placeholder: "Par le ROR ou le nom",
-            no_affiliation: "Aucune affiliation",
-            explain: "Explications du résultat"
-        }
+    fr: {
+        journal: "Revue",
+        journal_placeholder: "Par numéro ISSN ou titre",
+        funder: "Mon organisme de financement",
+        funder_placeholder: "Par nom d’organisme de financement",
+        institution: "Mon institution",
+        institution_placeholder: "Par le ROR ou le nom",
+        no_affiliation: "Aucune affiliation",
+        explain: "Explications du résultat"
     }
 };
 
+// some convenience shortcuts
 jct.d = document;
 jct.d.gebi = document.getElementById;
 jct.d.gebc = document.getElementsByClassName;
@@ -172,7 +173,7 @@ jct.displayPriceData = (journalData) => {
 
         let currentDate = new Date();
         let yearCurrent = currentDate.getUTCFullYear();
-        let latestData = Math.max(journalData.price_data_years);
+        let latestData = Math.max.apply(null, journalData.price_data_years);
         let rolloverDate = new Date(parseInt(yearCurrent) + "-11-01T00:00:00Z");
 
         // if the current date is before the end of October of the current year, then
@@ -188,7 +189,7 @@ jct.displayPriceData = (journalData) => {
         }
 
         if (message) {
-            message = message.replaceAll("{year}", journalData.price_data_years.join(", "))
+            message = message.replaceAll("{years}", journalData.price_data_years.join(", "))
         }
     }
 
@@ -339,20 +340,17 @@ jct.buildCard = function(cardConfig, uiText, results, choices) {
 // Modal handling
 
 jct.bindModals = function() {
-    let triggers = document.getElementsByClassName("modal-trigger");
-    for (let i = 0; i < triggers.length; i++) {
-        let trigger = triggers[i];
-        trigger.removeEventListener("click", jct.modalTrigger);
-        trigger.addEventListener("click", jct.modalTrigger)
-    }
+    // delegate to the generic modals module to handle regular modals
+    jct.bindModalTriggers();
 
+    // jct results specific modals under "read_more" handled here
     let readMores = document.getElementsByClassName("read_more");
     for (let i = 0; i < readMores.length; i++) {
         let trigger = readMores[i];
         trigger.removeEventListener("click", jct.readMoreTrigger);
-        trigger.addEventListener("click", jct.readMoreTrigger)
+        trigger.addEventListener("click", jct.readMoreTrigger);
     }
-}
+};
 
 jct.readMoreTrigger = function(event) {
     event.preventDefault();
@@ -360,7 +358,7 @@ jct.readMoreTrigger = function(event) {
     let cardId = element.getAttribute("data-card");
     let modal = jct.readMoreModal(cardId);
     jct.modalShow(modal);
-}
+};
 
 jct.readMoreModal = function(cardId) {
     let content = jct.explain_card(jct.latest_full_response, cardId);
@@ -377,74 +375,7 @@ jct.readMoreModal = function(cardId) {
         </div>
     </div>`;
     return modal_html;
-}
-
-jct.modalTrigger = function(event) {
-    event.preventDefault();
-    let element = event.target;
-    let modalId = element.getAttribute("data-modal");
-    let modal = jct.build_modal(modalId);
-    jct.modalShow(modal);
-    if (jct.modal_setup.hasOwnProperty(modalId)) {
-        jct.modal_setup[modalId]();
-    }
-}
-
-jct.modalShow = function(content) {
-    let modal_div = jct.d.gebi("jct_modal_container");
-    modal_div.innerHTML = content;
-
-    let closers = document.getElementsByClassName("jct_modal_close");
-    for (let i = 0; i < closers.length; i++) {
-        closers[i].addEventListener("click", (e) => {
-            jct.closeModal();
-        });
-    }
-
-    window.addEventListener("click", jct._windowCloseModal)
-}
-
-jct.closeModal = function() {
-    let modal_div = jct.d.gebi("jct_modal_container");
-    modal_div.innerText = "";
-    window.removeEventListener("click", jct._windowCloseModal)
-}
-
-jct._windowCloseModal = function(e) {
-    let modals = [].slice.call(jct.d.gebc("modal"));
-    if (modals.includes(e.target)){
-        jct.closeModal();
-    }
-}
-
-jct.build_modal = (modal_id) => {
-    let modalText = jct.lang ? jct.lang.modals[modal_id] : "";
-    if (!modalText) {
-        modalText = jct.site_modals[modal_id];
-        if (modalText.en) {
-            if (modalText[jct.languageCode]) {
-                modalText = modalText[jct.languageCode];
-            } else {
-                modalText = modalText.en;
-            }
-        }
-    }
-    if (!modalText) {
-        return "";
-    }
-    let modal_html = `<div class="modal" id="jct_modal_${modal_id}" style="display: block">
-        <div class="modal-content" id="jct_modal_${modal_id}_content">
-            <header class="modal-header">
-                <h2>
-                    <span class="close jct_modal_close" aria-label="Close" role="button" data-id="jct_modal_${modal_id}">&times;</span>                    
-                    ${modalText.title}
-                </h2>
-            </header>
-            <div>${modalText.body}</div>
-        </div>
-    </div>`
-    return modal_html;
-}
+};
 
 //////////////////////////////////////////////
 // Funder autocomplete

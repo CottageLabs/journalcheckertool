@@ -128,6 +128,11 @@ clinput.CLInput = class {
 
     setInputToSearch() {
         if (this.search) {
+            console.log(this.search);
+            if (this.search !== this.input.value) {
+                console.log(this.input.value);
+            }
+
             this.input.value = this.search;
             let end = this.search.length;
             window.setTimeout(() => {
@@ -275,6 +280,7 @@ clinput.CLInput = class {
     }
 
     stateActiveInputEnter() {
+        
         this.setInputToSearch();
         this._addEventListener(this.input, "blur", () => {
             if (!this.input.value) {

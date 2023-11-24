@@ -396,7 +396,7 @@ jct_ta.setup = () => {
         label: "Limit by Institution",
         // initialSelection: params.value,
         // inputAttributes: params.inputAttributes,
-        logState: false,
+        logState: true,
         options: (text, callback) => {
             let effective_text = jct_ta.suggest_prepare(text, ["of", "the", "and", "universi", "universit", "university"])
             let effectiveTextLength = effective_text.length;

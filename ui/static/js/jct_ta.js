@@ -339,7 +339,6 @@ jct_ta.setup = () => {
                 };
                 jct_ta.jx('suggest/journal/'+text, false, ourcb);
             } else {
-                // FIXME: this should be handled inside clinput
                 callback([]);
             }
         },
@@ -411,7 +410,6 @@ jct_ta.setup = () => {
                 };
                 jct_ta.jx('suggest/institution/' + text, false, ourcb);
             } else {
-                // FIXME: this should be handled inside clinput
                 callback([]);
             }
         },

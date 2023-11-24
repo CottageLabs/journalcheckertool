@@ -793,7 +793,7 @@ jct.choose = (e, el, which) => {
     let next = jct.inputsCycle[which];
     if (next) {
         let inp = jct.clinputs[next];
-        if (!inp.hasChoice()) {
+        if (!inp.hasSelection()) {
             inp.activate();
         }
     }
@@ -820,7 +820,8 @@ jct.set_each_default = (type, value) => {
         jct.chosen[type] = selectedObject;
         jct._calculate_if_all_data_provided();
     }
-    jct.clinputs[type].setChoice(value, doChoose);
+    // jct.clinputs[type].setChoice(value, doChoose);
+    jct.clinputs[type].setSelectionByLookup(value);
 }
 
 //////////////////////////////////////////////////////////////
@@ -943,7 +944,7 @@ jct.setup = (manageUrl=true) => {
         element: jct.d.gebi("jct_journal-container"),
         id: "jct_journal",
         label: jct.getText("journal"),
-        inputAttributes : {
+        inputAttrs : {
             which: "journal",
             placeholder: jct.getText("journal_placeholder"),
             required: true,
@@ -962,6 +963,8 @@ jct.setup = (manageUrl=true) => {
                     callback(js.data);
                 }
                 jct.jx('suggest/journal/'+text, false, ourcb);
+            } else {
+                callback([]);
             }
         },
         optionsTemplate : function(obj) {
@@ -1003,12 +1006,14 @@ jct.setup = (manageUrl=true) => {
             }
             return frag;
         },
-        onChoice: function(e,el) {
+        onChoose: function(e,el) {
             jct.choose(e,el, "journal");
         },
+        // onClear: function(e, idx) {
+        //     jct.clear("journal");
+        // },
         rateLimit: 400,
         optionsLimit: 10,
-        allowClear: true,
         newValue: function(text) {
             let rx = /^\d{4}-\d{3}[\dXx]{1}$/
             let match = text.match(rx);
@@ -1026,7 +1031,7 @@ jct.setup = (manageUrl=true) => {
         element: jct.d.gebi("jct_funder-container"),
         id: "jct_funder",
         label: jct.getText("funder"),
-        inputAttributes : {
+        inputAttrs : {
             which: "funder",
             placeholder: jct.getText("funder_placeholder"),
             required: true,
@@ -1059,22 +1064,24 @@ jct.setup = (manageUrl=true) => {
             }
             return entry;
         },
-        onChoice: function(e,el) {
+        onChoose: function(e,el) {
             jct.choose(e,el, "funder");
         },
-        selectedObjectToSearchString: function(selected) {
+        selectionToSearchText: function(selected) {
             return selected.name
         },
         rateLimit: 0,
         optionsLimit: 10,
-        allowClear: true,
+        // onClear: function(e, idx) {
+        //     jct.clear("journal");
+        // },
     });
 
     jct.clinputs.institution = clinput.init({
         element: jct.d.gebi("jct_institution-container"),
         id: "jct_institution",
         label: jct.getText("institution"),
-        inputAttributes : {
+        inputAttrs : {
             which: "institution",
             placeholder: jct.getText("institution_placeholder"),
             required: true,
@@ -1089,6 +1096,8 @@ jct.setup = (manageUrl=true) => {
                     callback(js.data);
                 }
                 jct.jx('suggest/institution/'+text, false, ourcb);
+            } else {
+                callback([]);
             }
         },
         optionsTemplate : function(obj) {
@@ -1120,12 +1129,14 @@ jct.setup = (manageUrl=true) => {
             }
             return frag;
         },
-        onChoice: function(e,el) {
+        onChoose: function(e,el) {
             jct.choose(e,el, "institution");
         },
         rateLimit: 400,
         optionsLimit: 10,
-        allowClear: true,
+        // onClear: function(e, idx) {
+        //     jct.clear("journal");
+        // },
     });
 
     jct.input_top = jct.d.gebi("jct_journal-container").getElementsByTagName("input")[0].getBoundingClientRect().top

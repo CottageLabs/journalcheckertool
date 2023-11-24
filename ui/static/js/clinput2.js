@@ -46,9 +46,24 @@ clinput.CLInput = class {
     // API through which we interact
     ////////////////////////////////
 
+    setSelectionByLookup(selection) {
+        let callback = () => {
+            if (this.options.length > 0) {
+                this.chooseOption(false, 0);
+                this.transition(this.currentState, "Selected");
+            }
+        };
+
+        this.optionsMethod(selection, (data) => {this.optionsReceived(data, callback)});
+    }
+
     currentSelection() {
         // the object that is currently selected, if present
         return this.selection;
+    }
+
+    hasSelection() {
+        return this.selection !== false;
     }
 
     currentSearch() {
@@ -74,6 +89,10 @@ clinput.CLInput = class {
         this.clear(params);
         this._clearEventListeners();
         this.transition(false, "Initial");
+    }
+
+    activate() {
+        this.input.focus();
     }
 
     // Display management
@@ -586,26 +605,35 @@ clinput.selectionToText.guessText = function(clInputInstance) {
         let v = selection[key];
         if (Array.isArray(v)) {
             for (var j = 0; j < v.length; j++) {
-                if (v[j].toLowerCase().includes(lsv)) {
-                    return v[j];
+                try {
+                    if (v[j].toLowerCase().includes(lsv)) {
+                        return v[j];
+                    }
+                } catch (e) {
+                    // just carry on
                 }
             }
         } else {
-            // console.log(v)
-            if (v.toLowerCase().includes(lsv)) {
-                return v;
+            try {
+                if (v.toLowerCase().includes(lsv)) {
+                    return v;
+                }
+            } catch (e) {
+                // just carry on
             }
         }
     }
 
     if (keys.length > 0) {
-        let v = selection[keys[0]]
+        let v = selection[keys[0]];
         if (Array.isArray(v)) {
             if (v.length > 0) {
                 return v[0];
             }
         } else {
-            return v
+            if (typeof(v) === "string") {
+                return v;
+            }
         }
     }
 

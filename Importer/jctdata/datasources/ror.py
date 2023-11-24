@@ -112,7 +112,7 @@ class ROR(datasource.Datasource):
             data = archive.read(rorfile).decode(encoding="utf-8")
             j = json.loads(data)
             for ror_rec in j:
-                if ror_rec["status"] != "withdrawn":
+                if ror_rec.get("status", "active") == "active":
                     rec = {
                         'id': ror_rec.get('id', '').replace("https://ror.org/", ''),
                         'ror': ror_rec.get('id', ''),

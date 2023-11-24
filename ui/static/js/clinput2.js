@@ -26,6 +26,7 @@ clinput.CLInput = class {
         this.eventListeners = {};
         this.transitionInfo = {};
         this.search = "";
+        this.currentState = false;
 
         this.draw();
 
@@ -128,11 +129,6 @@ clinput.CLInput = class {
 
     setInputToSearch() {
         if (this.search) {
-            console.log(this.search);
-            if (this.search !== this.input.value) {
-                console.log(this.input.value);
-            }
-
             this.input.value = this.search;
             let end = this.search.length;
             window.setTimeout(() => {
@@ -256,11 +252,18 @@ clinput.CLInput = class {
             msg = " - " + msg;
         }
 
+        if (this.currentState !== source) {
+            this._log("ERROR: Transition from " + source + " to " + target + " requested, but current state is " + this.currentState);
+            return;
+        }
+
         if (source) {
             let sourceFn = "state" + source + "Exit";
             this._log("TState: " + source + " (Exit)" + msg);
             this[sourceFn]();
         }
+
+        this.currentState = target;
 
         let targetFn = "state" + target + "Enter";
         this._log("TState: " + target + " (Enter)" + msg);
@@ -312,8 +315,6 @@ clinput.CLInput = class {
     }
 
     stateActiveInputWithOptionsEnter() {
-        this.setInputToSearch();
-
         this._addEventListener(this.input, "blur", () => {
             if (!this.input.value) {
                 this.clear();
@@ -374,7 +375,12 @@ clinput.CLInput = class {
                     }
                 });
             }
-        })
+        });
+
+        if (this.search !== this.input.value) {
+            let event = new Event("keyup");
+            this.input.dispatchEvent(event);
+        }
     }
 
     stateActiveInputWithOptionsExit() {
@@ -585,7 +591,7 @@ clinput.selectionToText.guessText = function(clInputInstance) {
                 }
             }
         } else {
-            console.log(v)
+            // console.log(v)
             if (v.toLowerCase().includes(lsv)) {
                 return v;
             }

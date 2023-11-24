@@ -322,7 +322,9 @@ jct_ta.setup = () => {
         label: "Limit by Journal",
         logState: false,
         // initialSelection: params.value,
-        // inputAttributes: params.inputAttributes,
+        inputAttrs: {
+            placeholder: "Enter a journal"
+        },
         options: (text, callback) => {
             let effectiveTextLength = text.length;
             let pattern = /[0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9xX]/;
@@ -395,7 +397,9 @@ jct_ta.setup = () => {
         id: "jct_institution",
         label: "Limit by Institution",
         // initialSelection: params.value,
-        // inputAttributes: params.inputAttributes,
+        inputAttrs: {
+            placeholder: "Enter an institution"
+        },
         logState: true,
         options: (text, callback) => {
             let effective_text = jct_ta.suggest_prepare(text, ["of", "the", "and", "universi", "universit", "university"])
@@ -405,7 +409,7 @@ jct_ta.setup = () => {
                     let js = JSON.parse(xhr.response);
                     callback(js.data);
                 };
-                jct_ta.jx('suggest/institution/'+text, false, ourcb);
+                jct_ta.jx('suggest/institution/' + text, false, ourcb);
             } else {
                 // FIXME: this should be handled inside clinput
                 callback([]);

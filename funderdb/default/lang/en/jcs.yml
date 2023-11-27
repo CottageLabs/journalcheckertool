@@ -1,12 +1,12 @@
 current: <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="vertical-align:middle; margin-right:15px;">
-  <mask id="mask0_408_249" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="30" height="30">
-  <rect width="30" height="30" fill="url(#pattern0)"/>
+  <mask id="jcs_current_mask0_408_249" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="30" height="30">
+  <rect width="30" height="30" fill="url(#jcs_current_pattern0)"/>
   </mask>
-  <g mask="url(#mask0_408_249)">
+  <g mask="url(#jcs_current_mask0_408_249)">
   <circle cx="15" cy="15" r="25" fill="#2BAB3F"/>
   </g>
   <defs>
-  <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+  <pattern id="jcs_current_pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
   <use xlink:href="#image0_408_249" transform="scale(0.0333333)"/>
   </pattern>
   <image id="image0_408_249" width="30" height="30" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABmJLR0QA/wD/AP+gvaeTAAABmUlEQVRIie3WT0sVURjH8U9QbyAwiK6irYLuS3DhVipT6g20jf4segMt3bYMtaBtu1DEdUvdKYQERiCI5OamtFEZF2eGe7nce+bMzL2t/MHDDDNznu95zjzneQ7X+k+6UeHbKTzFI0yjhZs4wR6+4Sv+jGpyLazhAlmJneMzJppCF3GaAOy3Ezzv8XMHO/ieAn2LyxrQwi7wIofu5c+2UyJtAi3sCCv5/W4+iaFqqbe8/XaMh7iNrTIofBoRtJ37e4DlMuiUtOxNiVR+PRayfTIGfj0GaPHuXQy8OSJouw+aYT0G3h8TNMPvGPjvgAHPsISzBtAM/6qC7+fv5gbAU6FZ7nuoBi31L6EpwKzuHu/fMkcRaIYfMfCw5PopFJYi8oMKkRa2EQO/igzshd+qCM3wMgaeFC8gvfAq0POecUO1WuLkAO+Fhp+63T6WQeGewdld1zq4mwKGec1rdia01iep0EJvNOvJl0Ltr6UF9Za9g8d1oYUm8EHIzJQov0j4p1WOty3d4+2M7vY4FDJ9QzjiHlbwea3x6wrYXZeYtDSmZwAAAABJRU5ErkJggg=="/>
@@ -14,40 +14,40 @@ current: <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http
   </svg><strong>{journal}</strong> has provided up-to-date price and service data to the <a href='https://www.coalition-s.org/journal-comparison-service/' target='_blank'>Journal Comparison Service</a>
 
 stale: <svg width="30" height="31" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="vertical-align:middle; margin-right:15px;">
-  <mask id="mask0_408_264" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="30" height="31">
-  <rect y="0.5" width="30" height="30" fill="url(#pattern0)"/>
+  <mask id="jcs_stale_mask0_408_264" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="30" height="31">
+  <rect y="0.5" width="30" height="30" fill="url(#jcs_stale_pattern0)"/>
   </mask>
-  <g mask="url(#mask0_408_264)">
-  <circle cx="15" cy="15.5" r="25" fill="url(#paint0_linear_408_264)"/>
+  <g mask="url(#jcs_stale_mask0_408_264)">
+  <circle cx="15" cy="15.5" r="25" fill="url(#jcs_stale_paint0_linear_408_264)"/>
   </g>
   <defs>
-  <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
-  <use xlink:href="#image0_408_264" transform="scale(0.0333333)"/>
+  <pattern id="jcs_stale_pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+  <use xlink:href="#jcs_stale_image0_408_264" transform="scale(0.0333333)"/>
   </pattern>
-  <linearGradient id="paint0_linear_408_264" x1="-4.69981" y1="0.954548" x2="20.0826" y2="4.44836" gradientUnits="userSpaceOnUse">
+  <linearGradient id="jcs_stale_paint0_linear_408_264" x1="-4.69981" y1="0.954548" x2="20.0826" y2="4.44836" gradientUnits="userSpaceOnUse">
   <stop stop-color="#F47115"/>
   <stop offset="1" stop-color="#FABE5E"/>
   </linearGradient>
-  <image id="image0_408_264" width="30" height="30" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABmJLR0QA/wD/AP+gvaeTAAABmUlEQVRIie3WT0sVURjH8U9QbyAwiK6irYLuS3DhVipT6g20jf4segMt3bYMtaBtu1DEdUvdKYQERiCI5OamtFEZF2eGe7nce+bMzL2t/MHDDDNznu95zjzneQ7X+k+6UeHbKTzFI0yjhZs4wR6+4Sv+jGpyLazhAlmJneMzJppCF3GaAOy3Ezzv8XMHO/ieAn2LyxrQwi7wIofu5c+2UyJtAi3sCCv5/W4+iaFqqbe8/XaMh7iNrTIofBoRtJ37e4DlMuiUtOxNiVR+PRayfTIGfj0GaPHuXQy8OSJouw+aYT0G3h8TNMPvGPjvgAHPsISzBtAM/6qC7+fv5gbAU6FZ7nuoBi31L6EpwKzuHu/fMkcRaIYfMfCw5PopFJYi8oMKkRa2EQO/igzshd+qCM3wMgaeFC8gvfAq0POecUO1WuLkAO+Fhp+63T6WQeGewdld1zq4mwKGec1rdia01iep0EJvNOvJl0Ltr6UF9Za9g8d1oYUm8EHIzJQov0j4p1WOty3d4+2M7vY4FDJ9QzjiHlbwea3x6wrYXZeYtDSmZwAAAABJRU5ErkJggg=="/>
+  <image id="jcs_stale_image0_408_264" width="30" height="30" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABmJLR0QA/wD/AP+gvaeTAAABmUlEQVRIie3WT0sVURjH8U9QbyAwiK6irYLuS3DhVipT6g20jf4segMt3bYMtaBtu1DEdUvdKYQERiCI5OamtFEZF2eGe7nce+bMzL2t/MHDDDNznu95zjzneQ7X+k+6UeHbKTzFI0yjhZs4wR6+4Sv+jGpyLazhAlmJneMzJppCF3GaAOy3Ezzv8XMHO/ieAn2LyxrQwi7wIofu5c+2UyJtAi3sCCv5/W4+iaFqqbe8/XaMh7iNrTIofBoRtJ37e4DlMuiUtOxNiVR+PRayfTIGfj0GaPHuXQy8OSJouw+aYT0G3h8TNMPvGPjvgAHPsISzBtAM/6qC7+fv5gbAU6FZ7nuoBi31L6EpwKzuHu/fMkcRaIYfMfCw5PopFJYi8oMKkRa2EQO/igzshd+qCM3wMgaeFC8gvfAq0POecUO1WuLkAO+Fhp+63T6WQeGewdld1zq4mwKGec1rdia01iep0EJvNOvJl0Ltr6UF9Za9g8d1oYUm8EHIzJQov0j4p1WOty3d4+2M7vY4FDJ9QzjiHlbwea3x6wrYXZeYtDSmZwAAAABJRU5ErkJggg=="/>
   </defs>
   </svg> <strong>{journal}</strong> has not provided up-to-date price and service data to the <a href='https://www.coalition-s.org/journal-comparison-service/' target='_blank'>Journal Comparison Service</a>, but we do hold some archival data for the year(s) {years}
 
 none: <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="vertical-align:middle; margin-right:15px;">
-  <mask id="mask0_408_286" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="30" height="30">
-  <rect width="30" height="30" fill="url(#pattern0)"/>
+  <mask id="jcs_none_mask0_408_286" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="30" height="30">
+  <rect width="30" height="30" fill="url(#jcs_none_pattern0)"/>
   </mask>
-  <g mask="url(#mask0_408_286)">
-  <path d="M30 15C30 23.2843 23.2843 30 15 30C6.71573 30 0 23.2843 0 15C0 6.71573 6.71573 0 15 0C23.2843 0 30 6.71573 30 15Z" fill="url(#paint0_linear_408_286)"/>
+  <g mask="url(#jcs_none_mask0_408_286)">
+  <path d="M30 15C30 23.2843 23.2843 30 15 30C6.71573 30 0 23.2843 0 15C0 6.71573 6.71573 0 15 0C23.2843 0 30 6.71573 30 15Z" fill="url(#jcs_none_paint0_linear_408_286)"/>
   </g>
   <defs>
-  <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
-  <use xlink:href="#image0_408_286" transform="scale(0.02)"/>
+  <pattern id="jcs_none_pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+  <use xlink:href="#jcs_none_image0_408_286" transform="scale(0.02)"/>
   </pattern>
-  <linearGradient id="paint0_linear_408_286" x1="15" y1="5.6142e-07" x2="15" y2="30" gradientUnits="userSpaceOnUse">
+  <linearGradient id="jcs_none_paint0_linear_408_286" x1="15" y1="5.6142e-07" x2="15" y2="30" gradientUnits="userSpaceOnUse">
   <stop stop-color="#FF0000"/>
   <stop offset="0.473958" stop-color="#F65B11"/>
   <stop offset="1" stop-color="#F47115"/>
   </linearGradient>
-  <image id="image0_408_286" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAE0UlEQVRoge2a329VRRDHP7WVXkIV2gZKog8SSw1CWh4FionRaJsSU000FvENg4mBlh+v6v9A0oQHfTe+GyIqUCDYUn4VgtCqvFBMKLYIxNoWzfVhZty9J7c/7p49tyVhks3c3XPO7Hx3d2ZnZy88oaVFFRFl1QGvAtuAl4EXgTXACn3+F3AHuAn8DJwBTgH3IuoQTDngI+AY8C+QL7H8A3wH7AKqy6w7AMuBg8DvnlJTwHHgM6AT2ADUAk9rqdW2TuBz4IR+Y9/fBg4gg1MW6gB+8xQYBHYDKwNkrQI+Bs578n4F2qNoOgvlgCNehxeANxPvtAD7gW+AIWACmNEyAVzWZ/uB5sS3bcAlT34vGczOWlU8jxjtXqBSn9UgS+IapdvINQVVo7IqgW5gEjfbDbFArEOmOw9cBzZpexXQA4wHAEiWPxRAlcpuBob12S+qQypa64E4i7hYgCbgYgQAyXIBWK991AP9HpjgmcnhltNZ3H6wA3iQAQgrDxCHgvZpYAYJtBkz7Ou4mdgJPMoQhJUZoEv7rMcts95SQXTgDNtsYkeZQPhgzA034xxA20JBLMftE3u1rYmw5bTVk9sa8P19oFG/78HZy4KW2CGc4VUiniTUsJMUImPQ0+OytvXMByKHCztss7ORWCwg/spo1/oo88Rmu7xRANmo0uwTsYDcRTxYBc6T7pwLyDF9abfWD6ToPCYQfznt0frR2UDUIWH1FC4ADAk7sgJyVWXUAtOIBy0aqHbqB8e13pKy49hA8sBGlXNS62+b4Ke8TlqVn1D+ejG0i0xvKD+p3HQuALJB+RXlr2SsVAhtUT6k3HQuAGLB2ojylzJWKoRMJ9PRdC4AYvHUmPLnMlYqhJ5Xfkd5fbGXphEDWpaoLyVjn1I51Yl6wYw81uQDeaj8mUR9KdGsOvpAJpSvUX47Qset3u/tEeSNKrfT4rg98IGYJ2hSfiNCx6dx6/tUBHmmk+loOhcAsZdalPdH6Dg2/aTcdPx/sH0gZ5S/pvzHjJUKoR+Um46ni71UiwsaV2lb2qAxZrGIow4XND5ryvszcg+ZhWrgPW37cq7hWQBtQ84QFaQ39q+Uv4/sdd8jx++i9CGC/rzWa5Dk2WJviGO4g5Udu7uYg3KI280Db2lb9xIA8ql+b9mdWyzgGsJOhRdxh347XpZakvtIiIxznh5D2rZvPhAgs2Jp0m5tW0+22cXZyp/IzZc/wMOUcClk2YpJXPq/A0malQvEDC4Ztxn4W9uTVxnzUi9uBCxc7ioTmBngA+1zNZKUywOHSwUBssQGVUA/LondjmQAs1xONhM1wIC2D5DinrEBNxr9uJlp9EDGLOdwNrHaAzGCC2aDaZ0HZhgX51QiGcC7EQCMIS7WbsE2e32OAC+kBWHUgJuBSSRZZrdLK7R+NQDAFcQz2rKtQryTGfYAEWYiSTmcA8gjCeXk7etGVexr5GJzHImLppEI4ZI+24f8qcCoAvGKtk+YYWd6996Gm/Y8slnuQYLOUqkO+ITCbP8IAS42lHLIchr1FJgG+oAvgHeQ2alHArxl+nsT8K6+00dhguMWMlOL8g+IaiQrfhQ5ApRqI4+Ab5H9KRWAmH+qWYn8qWY7kgFsRFyonygYQ8KfG8ihqI85QvEn9DjTf/MRrfKSM7J2AAAAAElFTkSuQmCC"/>
+  <image id="jcs_none_image0_408_286" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAE0UlEQVRoge2a329VRRDHP7WVXkIV2gZKog8SSw1CWh4FionRaJsSU000FvENg4mBlh+v6v9A0oQHfTe+GyIqUCDYUn4VgtCqvFBMKLYIxNoWzfVhZty9J7c/7p49tyVhks3c3XPO7Hx3d2ZnZy88oaVFFRFl1QGvAtuAl4EXgTXACn3+F3AHuAn8DJwBTgH3IuoQTDngI+AY8C+QL7H8A3wH7AKqy6w7AMuBg8DvnlJTwHHgM6AT2ADUAk9rqdW2TuBz4IR+Y9/fBg4gg1MW6gB+8xQYBHYDKwNkrQI+Bs578n4F2qNoOgvlgCNehxeANxPvtAD7gW+AIWACmNEyAVzWZ/uB5sS3bcAlT34vGczOWlU8jxjtXqBSn9UgS+IapdvINQVVo7IqgW5gEjfbDbFArEOmOw9cBzZpexXQA4wHAEiWPxRAlcpuBob12S+qQypa64E4i7hYgCbgYgQAyXIBWK991AP9HpjgmcnhltNZ3H6wA3iQAQgrDxCHgvZpYAYJtBkz7Ou4mdgJPMoQhJUZoEv7rMcts95SQXTgDNtsYkeZQPhgzA034xxA20JBLMftE3u1rYmw5bTVk9sa8P19oFG/78HZy4KW2CGc4VUiniTUsJMUImPQ0+OytvXMByKHCztss7ORWCwg/spo1/oo88Rmu7xRANmo0uwTsYDcRTxYBc6T7pwLyDF9abfWD6ToPCYQfznt0frR2UDUIWH1FC4ADAk7sgJyVWXUAtOIBy0aqHbqB8e13pKy49hA8sBGlXNS62+b4Ke8TlqVn1D+ejG0i0xvKD+p3HQuALJB+RXlr2SsVAhtUT6k3HQuAGLB2ojylzJWKoRMJ9PRdC4AYvHUmPLnMlYqhJ5Xfkd5fbGXphEDWpaoLyVjn1I51Yl6wYw81uQDeaj8mUR9KdGsOvpAJpSvUX47Qset3u/tEeSNKrfT4rg98IGYJ2hSfiNCx6dx6/tUBHmmk+loOhcAsZdalPdH6Dg2/aTcdPx/sH0gZ5S/pvzHjJUKoR+Um46ni71UiwsaV2lb2qAxZrGIow4XND5ryvszcg+ZhWrgPW37cq7hWQBtQ84QFaQ39q+Uv4/sdd8jx++i9CGC/rzWa5Dk2WJviGO4g5Udu7uYg3KI280Db2lb9xIA8ql+b9mdWyzgGsJOhRdxh347XpZakvtIiIxznh5D2rZvPhAgs2Jp0m5tW0+22cXZyp/IzZc/wMOUcClk2YpJXPq/A0malQvEDC4Ztxn4W9uTVxnzUi9uBCxc7ioTmBngA+1zNZKUywOHSwUBssQGVUA/LondjmQAs1xONhM1wIC2D5DinrEBNxr9uJlp9EDGLOdwNrHaAzGCC2aDaZ0HZhgX51QiGcC7EQCMIS7WbsE2e32OAC+kBWHUgJuBSSRZZrdLK7R+NQDAFcQz2rKtQryTGfYAEWYiSTmcA8gjCeXk7etGVexr5GJzHImLppEI4ZI+24f8qcCoAvGKtk+YYWd6996Gm/Y8slnuQYLOUqkO+ITCbP8IAS42lHLIchr1FJgG+oAvgHeQ2alHArxl+nsT8K6+00dhguMWMlOL8g+IaiQrfhQ5ApRqI4+Ab5H9KRWAmH+qWYn8qWY7kgFsRFyonygYQ8KfG8ihqI85QvEn9DjTf/MRrfKSM7J2AAAAAElFTkSuQmCC"/>
   </defs>
   </svg> <strong>{journal}</strong> has not provided any price or service data to the <a href='https://www.coalition-s.org/journal-comparison-service/' target='_blank'>Journal Comparison Service</a>

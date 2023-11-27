@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='jctdata',
-    version='5.5.1',
+    version='5.5.2',
     packages=find_packages(),
     install_requires=[
         "click~=8.1.3",
@@ -11,7 +11,7 @@ setup(
         "Deprecated==1.2.13",
         "Markdown==3.1.1",
         "wheel",
-        "PyYAML==6.0"
+        "PyYAML==6.0.1"
     ],
     url='http://journalcheckertool.org/',
     author='Cottage Labs',

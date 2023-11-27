@@ -70,38 +70,30 @@ class ROR(datasource.Datasource):
         self._ror_map(infile, ror_file)
         self._title_map(infile, title_file)
 
-    @deprecated(reason='ROR moved these files to Zenodo; we can only get old data from the GitHub repo.')
     def _get_latest_file(self):
         """
-        To get the tree sha,
-        git clone https://github.com/ror-community/ror-api.git
-        cd ror-api/rorapi/
-        git ls-tree HEAD | grep data
-        > 040000 tree 8ec3e0e5bce8a33c644f1544b877d756eca1a2f6    data
-
-        Using github api to get the list of files in dir
-        https://api.github.com/repos/ror-community/ror-api/git/trees/8ec3e0e5bce8a33c644f1544b877d756eca1a2f6?recursive=false
-
-        If we wanted to get list commits in the directory
-        https://api.github.com/repos/ror-community/ror-api/commits?path=rorapi/data
-
-        ROR data file url
-        https://github.com/ror-community/ror-api/raw/master/rorapi/data/ror-2021-09-23/ror.zip
+        Download latest data file through zenodo
         """
-        url = "https://api.github.com/repos/ror-community/ror-api/git/trees/{a}?recursive=false".format(
-            a=settings.ROR_TREE_SHA)
+        record = None
+        url = settings.ZENODO_ROR_DOWNLOAD_PATH
         resp = requests.get(url)
-        if resp.ok:
-            data_files = {}
-            for fp in resp.json().get('tree', []):
-                if fp.get('path', '').startswith('ror') and fp.get('type', None) == 'blob':
-                    dt = fp['path'].strip('/ror.zip').strip('ror-')
-                    data_files[dt] = fp['path']
-            dates = list(data_files.keys())
-            dates.sort(reverse=True)
-            latest_dt = datetime.strptime(dates[0], settings.ROR_DIR_DATE_FORMAT)
-            url = settings.ROR_DOWNLOAD_PATH + data_files[dates[0]]
-            return latest_dt, url
+        hits = resp.json().get('hits', {})
+        # Get the first record
+        if "hits" in hits:
+            hits_hits = hits.get("hits", [])
+            if len(hits_hits) > 0:
+                record = hits["hits"][0]
+
+        if record:
+            latest_dt = datetime.fromisoformat(record["created"]).strftime(settings.ROR_DIR_DATE_FORMAT)
+            files = record.get("files", [])
+            files_count = len(files)
+            # Get the last file which is latest
+            if files_count > 0:
+                file = files[files_count - 1]
+                url = file["links"]["self"]
+                return latest_dt, url
+
         return None, None
 
     def _extract_ror_data(self, zip_file, out):
@@ -120,15 +112,16 @@ class ROR(datasource.Datasource):
             data = archive.read(rorfile).decode(encoding="utf-8")
             j = json.loads(data)
             for ror_rec in j:
-                rec = {
-                    'id': ror_rec.get('id', '').replace("https://ror.org/", ''),
-                    'ror': ror_rec.get('id', ''),
-                    'title': ror_rec.get('name', ''),
-                    'aliases': ror_rec.get('aliases', []),
-                    'acronyms': ror_rec.get('acronyms', []),
-                    'country': ror_rec.get('country', {}).get('country_name', '')
-                }
-                o.write(json.dumps(rec) + "\n")
+                if ror_rec.get("status", "active") == "active":
+                    rec = {
+                        'id': ror_rec.get('id', '').replace("https://ror.org/", ''),
+                        'ror': ror_rec.get('id', ''),
+                        'title': ror_rec.get('name', ''),
+                        'aliases': ror_rec.get('aliases', []),
+                        'acronyms': ror_rec.get('acronyms', []),
+                        'country': ror_rec.get('country', {}).get('country_name', '')
+                    }
+                    o.write(json.dumps(rec) + "\n")
 
     @staticmethod
     def _ror_map(infile, outfile):

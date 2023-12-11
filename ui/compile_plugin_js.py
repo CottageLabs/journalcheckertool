@@ -1,6 +1,6 @@
 import os, argparse
 
-read_files = ["i_am_a_widget", "api_endpoint", "clinput", "modals", "jct", "funders", "find_out_more", "feedback", "plugin"]
+read_files = ["i_am_a_widget", "api_endpoint", "clinput2", "modals", "jct", "funders", "find_out_more", "feedback", "plugin"]
 
 def compile(env=""):
     with open(os.path.join("static", "js", "jct_plugin.js"), "w") as outfile:

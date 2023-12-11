@@ -44,13 +44,13 @@ logs:
     SA.OABNonCompliant.Properties:
       version: 'The manuscript version that can be archived is:'
       embargo: 'There is an embargo period (in months):'
-      licence: 'The licence that can be used on the Author Accepted Manuscript (AAM) to be archived is:'
+      licence: 'The licence that can be used on the version to be archived is:'
     SA.OABIncomplete: We were unable to determine if this journal provides a route to compliance.
     SA.OABIncomplete.Properties:
       missing: 'The following required information was missing from the OA.Works permissions database:'
     SA.OABCompliant: This journal's self-archiving policy aligns with your funder's open access policy.
     SA.OABCompliant.Properties:
-      version: 'The Author Accepted Manuscript (AAM) version that can be archived is:'
+      version: 'The manuscript version that can be archived is:'
       embargo: 'There is an embargo period (in months):'
       licence: 'The licence that can be used on the Author Accepted Manuscripts (AAM) to be archived is:'
     SA.FunderRRNotActive: Your funder has not implemented the

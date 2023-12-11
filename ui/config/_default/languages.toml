@@ -2,6 +2,7 @@
     languageName = "English"
     weight = 1
 [fr]
+    contentDir = "content/fr"
     languageCode = "fr"
     languageName = "Français"
     title="Outil pour vérifier les revues"
@@ -40,7 +41,7 @@
         [[fr.menu.main]]
              name = "Transformative&nbsp;Agreements&nbsp;Search"
              pre = " • "
-             url = "/ta-search"
+             url = "/fr/ta-search"
              weight = 3
         [[fr.menu.main]]
             name = "Listes&nbsp;d’exceptions"
@@ -59,10 +60,10 @@
             weight = 6
         [[fr.menu.main]]
             name = "Widget&nbsp;intégrable"
-            pre = " • "
             url = "/widget"
             weight = 7
         [[fr.menu.main]]
+            pre = " • "
             name = "FAQ"
             url = "/faq"
             weight = 8

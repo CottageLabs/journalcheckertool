@@ -811,16 +811,15 @@ jct.choose = (e, el, which) => {
     jct._calculate_if_all_data_provided();
 }
 
+jct.clear = (type) => {
+    jct.chosen[type] = false;
+}
+
 // ----------------------------------------
 // function to apply default values to the select boxes
 // and which runs the compliance check if all boxes are set
 // ----------------------------------------
 jct.set_each_default = (type, value) => {
-    let doChoose = (selectedObject) => {
-        jct.chosen[type] = selectedObject;
-        jct._calculate_if_all_data_provided();
-    }
-    // jct.clinputs[type].setChoice(value, doChoose);
     jct.clinputs[type].setSelectionByLookup(value);
 }
 
@@ -1009,9 +1008,9 @@ jct.setup = (manageUrl=true) => {
         onChoose: function(e,el) {
             jct.choose(e,el, "journal");
         },
-        // onClear: function(e, idx) {
-        //     jct.clear("journal");
-        // },
+        onClear: function(e, idx) {
+            jct.clear("journal");
+        },
         rateLimit: 400,
         optionsLimit: 10,
         newValue: function(text) {
@@ -1067,14 +1066,15 @@ jct.setup = (manageUrl=true) => {
         onChoose: function(e,el) {
             jct.choose(e,el, "funder");
         },
-        selectionToSearchText: function(selected) {
-            return selected.name
+        selectionToSearchText: function(clInputInstance) {
+            let selected = clInputInstance.currentSelection();
+            return selected.name || "";
         },
         rateLimit: 0,
         optionsLimit: 10,
-        // onClear: function(e, idx) {
-        //     jct.clear("journal");
-        // },
+        onClear: function(e, idx) {
+            jct.clear("journal");
+        }
     });
 
     jct.clinputs.institution = clinput.init({
@@ -1134,9 +1134,9 @@ jct.setup = (manageUrl=true) => {
         },
         rateLimit: 400,
         optionsLimit: 10,
-        // onClear: function(e, idx) {
-        //     jct.clear("journal");
-        // },
+        onClear: function(e, idx) {
+            jct.clear("journal");
+        }
     });
 
     jct.input_top = jct.d.gebi("jct_journal-container").getElementsByTagName("input")[0].getBoundingClientRect().top
@@ -1147,7 +1147,7 @@ jct.setup = (manageUrl=true) => {
 
     jct.d.gebi("jct_notHE").addEventListener("click", (event) => {
         if (event.target.checked && jct.chosen.institution) {
-            jct.clinputs.institution.clear();
+            jct.clinputs.institution.reset();
             jct.chosen.institution = "";
         }
         jct._calculate_if_all_data_provided();

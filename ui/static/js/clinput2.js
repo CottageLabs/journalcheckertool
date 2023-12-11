@@ -88,7 +88,7 @@ clinput.CLInput = class {
         params = params || {};
         this.clear(params);
         this._clearEventListeners();
-        this.transition(false, "Initial");
+        this.transition(this.currentState, "Initial");
     }
 
     activate() {

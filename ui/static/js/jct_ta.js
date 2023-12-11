@@ -26,6 +26,23 @@ jct_ta.messages.en = {
     limit_by_institution: "Limit by Institution"
 };
 
+jct_ta.messages.fr = {
+    loading: "Loading TAs…",
+    start_over: "Recommencer", //
+    title_tooltip: "Certaines ententes de transformation comprennent plus d’une liste de revues et d’institutions. Lorsque c’est le cas, les différents liens entre ces listes sont identifiés ici.", //
+    esac_id: "Identifiant ESAC", //
+    journals_institutions: "Revues participantes et institutions", //
+    expires: "Expiration", //
+    journal: "Journal", //
+    institution: "Institution", //
+    and: "et", //
+    no_results: "Aucune entente de transformation trouvée contenant", //
+    see_all: "See all participating journals and institutions",
+    rel_intro: "Cette entente décrit les groupes suivants de revues participantes et d’institutions", //
+    limit_by_journal: "Par journal", //
+    limit_by_institution: "Par institution" //
+};
+
 jct_ta.d = document;
 jct_ta.d.gebi = document.getElementById;
 jct_ta.d.gebc = document.getElementsByClassName;

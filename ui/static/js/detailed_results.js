@@ -30,7 +30,33 @@ jct.explain = (q) => {
     detailed_results.append(elem);
 
     jct._resultPrint();
-}
+    let button = jct.d.gebi("jct_toggle_noncompliant_unknown");
+    if (button) {
+        button.addEventListener("click", jct.toggle_noncompliant_unknown);
+    }
+};
+
+jct.toggle_noncompliant_unknown = (event) => {
+    event.preventDefault();
+    let element = event.currentTarget;
+    let state = element.getAttribute("data-state");
+    let section = jct.d.gebc("jct_noncompliant_unknown");
+    if (section && section.length > 0) {
+        section = section[0];
+    } else {
+        return;
+    }
+
+    if (!state || state === "hidden") {
+        section.setAttribute("style", "display:block");
+        element.setAttribute("data-state", "shown");
+        element.innerHTML = jct.lang.explain.noncompliant_unknown_toggle.hide;
+    } else {
+        section.setAttribute("style", "display:none");
+        element.setAttribute("data-state", "hidden");
+        element.innerHTML = jct.lang.explain.noncompliant_unknown_toggle.show;
+    }
+};
 
 jct.explain_card = (q, cardId) => {
     let yq = jct._yourQuery(q);
@@ -61,7 +87,7 @@ jct.explain_card = (q, cardId) => {
     let routesText = jct._serialiseRoutes(routes);
 
     return `${way} ${yq} ${routesText}`;
-}
+};
 
 jct._serialiseRoutes = (routes) => {
     let compliant = "";
@@ -79,8 +105,14 @@ jct._serialiseRoutes = (routes) => {
         unknown = `<hr><h2>${jct.lang.explain.supporting_data.unknown_routes}</h2>` + routes.unknown.join("");
     }
 
-    return `${compliant} ${non_compliant} ${unknown}`
-}
+    let hiddenRoutes = "";
+    if (routes.non_compliant.length > 0 || routes.unknown.length > 0) {
+        hiddenRoutes = `<button class="button button--secondary" id="jct_toggle_noncompliant_unknown">${jct.lang.explain.noncompliant_unknown_toggle.show}</button>
+            <div class="jct_noncompliant_unknown" style="display:none">${non_compliant} ${unknown}</div>`;
+    }
+
+    return `${compliant} ${hiddenRoutes}`;
+};
 
 jct._resultPrint = () => {
     let print = jct.d.gebi('jct_print');

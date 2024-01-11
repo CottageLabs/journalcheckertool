@@ -9,5 +9,6 @@ body:
             which expires on <em>{end_date}</em></p>"
 explain:
   title: Transformative agreement
-  text: This way to comply is available to you because you are the corresponding author and your selected journal and
-        institution are both present in an active Transformative Agreement.
+  text: "This way to comply with your funders' Plan S-aligned OA policy is available to you because the selected journal 
+        and institution are both present in an active Transformative Agreement. Note: you must be the correspoding 
+        author to take advantage of this arrangement"

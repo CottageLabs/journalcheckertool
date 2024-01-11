@@ -25,6 +25,9 @@ versions:
   publishedVersion: Published version
   acceptedVersion: Accepted version
   submittedVersion: Submitted version
+noncompliant_unknown_toggle:
+  show: Show Non-Compliant and Undetermined routes
+  hide: Hide Non-Compliant and Undetermined routes
 routes:
   self_archiving:
     label: Self Archiving Route

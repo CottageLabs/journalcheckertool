@@ -1,5 +1,10 @@
 """
-This is useful to generate json data files by reading the data file as csv.
+This script is useful to generate json data files by reading the data file as csv.
+The script generates output at test_database/jct directory at one level above the scripts directory.
+
+Usage:
+    python generate_test_data.py [<csv_file1> <csv_file2> ... ]
+
 """
 
 import csv
@@ -61,7 +66,7 @@ def csv_to_json(csv_file_paths, output_dir):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python script.py <csv_file1> <csv_file2> ...")
+        print("Usage: python generate_test_data.py <csv_file1> <csv_file2> ...")
         sys.exit(1)
 
     csv_file_paths = sys.argv[1:]

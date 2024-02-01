@@ -37,7 +37,7 @@ jct_ta.messages.fr = {
     institution: "Institution", //
     and: "et", //
     no_results: "Aucune entente de transformation trouvée contenant", //
-    see_all: "See all participating journals and institutions",
+    see_all: "Voir toutes les revues et institutions participantes",
     rel_intro: "Cette entente décrit les groupes suivants de revues participantes et d’institutions", //
     limit_by_journal: "Par journal", //
     limit_by_institution: "Par institution" //

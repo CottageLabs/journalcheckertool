@@ -39,7 +39,7 @@
             url = "/transformative-agreements"
             weight = 2
         [[fr.menu.main]]
-             name = "Transformative&nbsp;Agreements&nbsp;Search"
+             name = "Recherche&nbsp;d’accords&nbsp;transformants"
              pre = " • "
              url = "/fr/ta-search"
              weight = 3
@@ -49,7 +49,7 @@
             url = "/exception-lists"
             weight = 4
         [[fr.menu.main]]
-            name = "Journals&nbsp;participating&nbsp;in&nbsp;JCS"
+            name = "Revues&nbsp;participant&nbsp;au&nbsp;JCS"
             pre = " • "
             url = "/jcs"
             weight = 5
@@ -78,7 +78,7 @@
             url = "/notices#disclaimer_and_copyright"
             weight = 10
         [[fr.menu.main]]
-            name = "Acknowledgements"
+            name = "Reconnaissance&nbsp;des&nbsp;contributions"
             pre = " • "
             url = "/acknowledgements"
             weight = 11

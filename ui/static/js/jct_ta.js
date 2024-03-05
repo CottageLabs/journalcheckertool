@@ -8,9 +8,62 @@ jct_ta = {
     },
 };
 
+jct_ta.messages = {};
+jct_ta.messages.en = {
+    loading: "Loading TAs…",
+    start_over: "Start over",
+    title_tooltip: "Some TAs specify more than one list of Journals and Institutions.  Where present, the different relationships between those lists are identified here",
+    esac_id: "ESAC ID",
+    journals_institutions: "Participating journals and institutions",
+    expires: "Expires",
+    journal: "Journal",
+    institution: "Institution",
+    and: "and",
+    no_results: "No Transformative Agreements found which contain your selected",
+    see_all: "See all participating journals and institutions",
+    rel_intro: "This agreement defines the following groups of participating journals and institutions",
+    limit_by_journal: "Limit by Journal",
+    limit_by_institution: "Limit by Institution"
+};
+
+jct_ta.messages.fr = {
+    loading: "Loading TAs…",
+    start_over: "Recharger", //
+    title_tooltip: "Certaines ententes de transformation comprennent plus d’une liste de revues et d’institutions. Lorsque c’est le cas, les différents liens entre ces listes sont identifiés ici.", //
+    esac_id: "Identifiant ESAC", //
+    journals_institutions: "Revues et institutions concernées par l’accord", //
+    expires: "Date de fin de l’accord", //
+    journal: "Journal", //
+    institution: "Institution", //
+    and: "et", //
+    no_results: "Aucune entente de transformation trouvée contenant", //
+    see_all: "Voir les revues et les institutions concernées par l’accord",
+    rel_intro: "Cette entente décrit les groupes suivants de revues participantes et d’institutions", //
+    limit_by_journal: "Recherche par revue", //
+    limit_by_institution: "Recherche par institution" //
+};
+
 jct_ta.d = document;
 jct_ta.d.gebi = document.getElementById;
 jct_ta.d.gebc = document.getElementsByClassName;
+
+jct_ta.getText = (messageKey) => {
+    // start by looking in the desired language pack
+    let pack = jct_ta.messages[jct_ta.languageCode];
+    if (pack[messageKey]) {
+        return pack[messageKey];
+    }
+
+    // fall back to the english language pack
+    pack = jct_ta.messages.en;
+    if (pack[messageKey]) {
+        return pack[messageKey];
+    }
+
+    // if still no luck, return the key with some markup so it's obvious
+    return "[[" + messageKey + "]]";
+};
+
 
 jct_ta.inputs_plugin_html = () => {
     return `
@@ -48,7 +101,7 @@ jct_ta.inputs_plugin_html = () => {
             <div></div>
             <div></div>
             <div></div>
-            <span class="sr-only">Loading TAs…</span>
+            <span class="sr-only">${jct_ta.getText("loading")}</span>
         </div>
     </div>
 `;};
@@ -134,16 +187,16 @@ jct_ta.drawResults = () => {
         }
     </style>
     <button id="jct_ta_results_clear" class="button button--primary">
-        <img src="/img/restart.svg" alt="restart"> Start over
+        <img src="/img/restart.svg" alt="restart"> ${jct_ta.getText("start_over")}
     </button>
     
     <table style="width: 100%">
         <thead style="color: #fff;
                     font-weight: bold;">
             <tr style="border-bottom: #fff 2px solid;">
-                <td>ESAC ID</td>
-                <td title="Some TAs specify more than one list of Journals and Institutions.  Where present, the different relationships between those lists are identified here">Participating journals and institutions</td>
-                <td>Expires</td>
+                <td>${jct_ta.getText("esac_id")}</td>
+                <td title="${jct_ta.getText("title_tooltip")}">${jct_ta.getText("journals_institutions")}</td>
+                <td>${jct_ta.getText("expires")}</td>
             </tr>
             </thead>
             <tbody style="color: #ffffff">`;
@@ -169,15 +222,15 @@ jct_ta.drawResults = () => {
         let institution = "";
         let and = "";
         if (jct_ta.chosen.journal) {
-            journal = " Journal ";
+            journal = ` ${jct_ta.getText("journal")} `;
         }
         if (jct_ta.chosen.institution) {
-            institution = " Institution ";
+            institution = ` ${jct_ta.getText("institution")} `;
         }
         if (journal !== "" && institution !== "") {
-            and = " and ";
+            and = ` ${jct_ta.getText("and")} `;
         }
-        frag += `<tr><td colspan="3">No Transformative Agreements found which contain your selected ${journal} ${and} ${institution}</td></tr>`;
+        frag += `<tr><td colspan="3">${jct_ta.getText("no_results")} ${journal} ${and} ${institution}</td></tr>`;
     }
     frag += `</tbody></table>`;
     jct_ta.d.gebi('jct_ta_results_list').innerHTML = frag;
@@ -197,11 +250,8 @@ jct_ta.drawResults = () => {
 jct_ta.result_html = (result, showEsac, hasRelationships) => {
     let rel = result.jct_id.substring(result.esac_id.length + 1);
     if (rel.length === 0) {
-        rel = "See all participating journals and institutions";
+        rel = jct_ta.getText("see_all");
     }
-    // else {
-    //     rel = "Subgroup of participating journals and instititons: " + rel;
-    // }
 
     let esac_link = "&nbsp;";
     let start_class = "";
@@ -214,7 +264,7 @@ jct_ta.result_html = (result, showEsac, hasRelationships) => {
         return `
             <tr${start_class}>
             <td>${esac_link}</td> 
-            <td>This agreement defines the following groups of participating journals and institutions:</td>
+            <td>${jct_ta.getText("rel_intro")}:</td>
             <td>&nbsp;</td>
             </tr>
             <tr>
@@ -236,13 +286,6 @@ jct_ta.result_html = (result, showEsac, hasRelationships) => {
 
 jct_ta.choose = (e, el, which) => {
     jct_ta.chosen[which] = el;
-    // let next = jct.inputsCycle[which];
-    // if (next) {
-    //     let inp = jct.clinputs[next];
-    //     if (!inp.hasChoice()) {
-    //         inp.activate();
-    //     }
-    // }
     jct_ta.cycle();
 };
 
@@ -261,7 +304,6 @@ jct_ta.cycle = () => {
             qr.ror = jct_ta.chosen.institution.id;
         }
         jct_ta.jx('ta_search', qr);
-        // jct_ta.d.gebi("jct_loading").style.display = "block";
     }
 };
 
@@ -299,7 +341,7 @@ jct_ta.selectionToText = function(clInputInstance) {
     }
 
     if (keys.length > 0) {
-        let v = selection[keys[0]]
+        let v = selection[keys[0]];
         if (Array.isArray(v)) {
             if (v.length > 0) {
                 return v[0];
@@ -313,16 +355,24 @@ jct_ta.selectionToText = function(clInputInstance) {
 };
 
 jct_ta.setup = () => {
+    let html = jct.d.getElementsByTagName("html");
+    let lang = "en";
+    if (html.length > 0) {
+        lang = html[0].getAttribute("lang");
+    }
+    if (jct_ta.messages[lang]) {
+        jct_ta.languageCode = lang;
+    } else {
+        jct_ta.languageCode = "en";
+    }
+
     jct_ta.d.gebi("jct_ta_inputs").innerHTML = jct_ta.inputs_plugin_html();
-    // jct_ta.d.gebi("jct_ta_results").innerHTML = jct_ta.results_plugin_html;
 
     jct_ta.clinputs.journal = clinput.init({
         element: jct_ta.d.gebi("jct_journal-container"),
         id: "jct_journal",
-        label: "Limit by Journal",
+        label: jct_ta.getText("limit_by_journal"),
         logState: false,
-        // initialSelection: params.value,
-        // inputAttributes: params.inputAttributes,
         options: (text, callback) => {
             let effectiveTextLength = text.length;
             let pattern = /[0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9xX]/;
@@ -393,9 +443,7 @@ jct_ta.setup = () => {
     jct_ta.clinputs.institution = clinput.init({
         element: jct_ta.d.gebi("jct_institution-container"),
         id: "jct_institution",
-        label: "Limit by Institution",
-        // initialSelection: params.value,
-        // inputAttributes: params.inputAttributes,
+        label: jct_ta.getText("limit_by_institution"),
         logState: false,
         options: (text, callback) => {
             let effective_text = jct_ta.suggest_prepare(text, ["of", "the", "and", "universi", "universit", "university"])

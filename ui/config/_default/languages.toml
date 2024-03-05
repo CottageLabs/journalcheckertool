@@ -2,6 +2,7 @@
     languageName = "English"
     weight = 1
 [fr]
+    contentDir = "content/fr"
     languageCode = "fr"
     languageName = "Français"
     title="Outil pour vérifier les revues"
@@ -38,9 +39,9 @@
             url = "/transformative-agreements"
             weight = 2
         [[fr.menu.main]]
-             name = "Transformative&nbsp;Agreements&nbsp;Search"
+             name = "Recherche&nbsp;d’accords&nbsp;transformants"
              pre = " • "
-             url = "/ta-search"
+             url = "/fr/ta-search"
              weight = 3
         [[fr.menu.main]]
             name = "Listes&nbsp;d’exceptions"
@@ -48,7 +49,7 @@
             url = "/exception-lists"
             weight = 4
         [[fr.menu.main]]
-            name = "Journals&nbsp;participating&nbsp;in&nbsp;JCS"
+            name = "Revues&nbsp;participant&nbsp;au&nbsp;JCS"
             pre = " • "
             url = "/jcs"
             weight = 5
@@ -59,10 +60,10 @@
             weight = 6
         [[fr.menu.main]]
             name = "Widget&nbsp;intégrable"
-            pre = " • "
             url = "/widget"
             weight = 7
         [[fr.menu.main]]
+            pre = " • "
             name = "FAQ"
             url = "/faq"
             weight = 8
@@ -77,7 +78,7 @@
             url = "/notices#disclaimer_and_copyright"
             weight = 10
         [[fr.menu.main]]
-            name = "Acknowledgements"
+            name = "Reconnaissance&nbsp;des&nbsp;contributions"
             pre = " • "
             url = "/acknowledgements"
             weight = 11

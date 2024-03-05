@@ -29,11 +29,11 @@
     weight = 6
 [[main]]
     name = "Embeddable&nbsp;Widget"
-    pre = " • "
     url = "/widget"
     weight = 7
 [[main]]
     name = "FAQ"
+    pre = " • "
     url = "/faq"
     weight = 8
 [[main]]

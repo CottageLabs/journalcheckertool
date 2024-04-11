@@ -18,11 +18,15 @@ def index(infile, bulkfile, conn, index_type, mapping, alias):
     with open(infile, "r") as f, open(bulkfile, "w") as o:
         line = f.readline()
         while line:
-            d = json.loads(line)
-            if "id" not in d:
-                d["id"] = uuid.uuid4().hex
-            bulklines = esprit.raw.to_bulk_single_rec(d)
-            o.write(bulklines)
+            if line:
+                try:
+                    d = json.loads(line)
+                    if "id" not in d:
+                        d["id"] = uuid.uuid4().hex
+                    bulklines = esprit.raw.to_bulk_single_rec(d)
+                    o.write(bulklines)
+                except json.JSONDecodeError:
+                    print(f"skipped line {line}")
             line = f.readline()
 
     if not esprit.raw.type_exists(conn, index_type, es_version="1.7.5"):
@@ -63,7 +67,38 @@ def index(infile, bulkfile, conn, index_type, mapping, alias):
         esprit.raw.delete(conn)
 
 
-def index_latest_with_alias(target, index_suffix):
+def update_with_test_data(input_file, output_file):
+    """
+    Reads each line from the input file and appends it to a new line in the output file.
+
+    Args:
+      input_file: Path to the input file.
+      output_file: Path to the output file.
+    """
+    test_data_file = os.path.join(settings.TEST_DATABASE, input_file)
+    # Check if output file exists
+    if os.path.exists(test_data_file) and os.path.exists(output_file):
+        os.makedirs(settings.TEMP_DIR, exist_ok=True)
+
+        # Clear existing files in temp directory (if any)
+        for filename in os.listdir(settings.TEMP_DIR):
+            file_path = os.path.join(settings.TEMP_DIR, filename)
+            os.remove(file_path)
+
+        # Copy existing output file to temporary directory
+        output_file = shutil.copy2(output_file, settings.TEMP_DIR)
+
+        # Open the input file in read mode and output file in append mode
+        with open(test_data_file, 'r') as in_file, open(output_file, 'a') as out_file:
+            # Read each line from the input file
+            for line in in_file:
+                # Write the line to the output file
+                out_file.write('\n' + line.strip())
+
+    return output_file
+
+
+def index_latest_with_alias(target, index_suffix, test_database=False):
     target_dir = settings.INDEX_PATH[target]
     os.makedirs(target_dir, exist_ok=True)
 
@@ -100,6 +135,12 @@ def index_latest_with_alias(target, index_suffix):
     print("LOADER: INDEX_TYPE: {x}".format(x=INDEX_TYPE))
     print("LOADER: ALIAS: {x}".format(x=ALIAS))
     print("LOADER: BULK: {x}".format(x=BULK_FILE))
+
+    if test_database:
+        print("Appending test data")
+        # add test database records to the file
+        IN = update_with_test_data(target + ".json", IN)
+        print("LOADER: IN: {x}".format(x=IN))
 
     index(IN, BULK_FILE, CONN, INDEX_TYPE, MAPPING, ALIAS)
 

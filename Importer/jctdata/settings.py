@@ -10,6 +10,8 @@ def rel2abs(file, *args):
 
 DATABASES = rel2abs(__file__, "..", "databases")
 RESOURCES = rel2abs(__file__, "..", "resources")
+TEST_DATABASE = rel2abs(__file__, "..", "test_database")
+TEMP_DIR = rel2abs(__file__, "..", "temp")
 
 DIR_DATE_FORMAT = "%Y-%m-%d_%H%M"
 

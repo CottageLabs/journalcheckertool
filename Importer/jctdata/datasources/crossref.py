@@ -33,7 +33,7 @@ class Crossref(datasource.Datasource):
                     self.log("configured import limit reached {x}".format(x=self.LIMIT))
                     break
 
-                url = 'https://api.crossref.org/journals?cursor=' + cursor + '&rows=' + str(self.ROW_PER_PAGE)
+                url = 'https://api.crossref.org/journals?cursor=' + cursor + '&rows=' + str(self.ROW_PER_PAGE) + "&mailto=" + settings.CROSSREF_MAILTO
                 self.log("retrieve from {x}".format(x=url))
                 resp = requests.get(url)
                 if resp.status_code != 200:

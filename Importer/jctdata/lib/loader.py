@@ -93,7 +93,7 @@ def update_with_test_data(input_file, output_file):
             # Read each line from the input file
             for line in in_file:
                 # Write the line to the output file
-                out_file.write('\n' + line.strip())
+                out_file.write(line.strip()+"\n")
 
     return output_file
 

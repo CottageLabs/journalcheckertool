@@ -15,6 +15,8 @@ from jctdata import settings
 @click.option("-f", "--force-resolve", is_flag=True)
 @click.option("-t", "--test-database", is_flag=True)
 def entry_point(mode, targets, stage=None, full_pipeline=True, force_resolve=False, test_database=False):
+    if test_database:
+        full_pipeline = False
     run(mode, targets, stage, full_pipeline, force_resolve, test_database)
 
 

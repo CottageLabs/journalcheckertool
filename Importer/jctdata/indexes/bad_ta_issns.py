@@ -27,10 +27,10 @@ class BadTAIssns(Indexer):
         pathset = resolver.SOURCES["ta"].current_paths()
         bad_issns = pathset.get("bad_issns")
 
-        if not os.path.exists(bad_issns):
+        if os.path.exists(bad_issns):
+            shutil.copy(bad_issns, outfile)
+            self.log("Copied bad issns in TAs to {x}".format(x=outfile))
+        else:
             self.log("No bad issns in TAs found")
-
-        shutil.copy(bad_issns, outfile)
-        self.log("Copied bad issns in TAs to {x}".format(x=outfile))
 
         self._cleanup()

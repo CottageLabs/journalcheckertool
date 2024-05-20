@@ -102,7 +102,7 @@ class ROR(datasource.Datasource):
         with ZipFile(zip_file, mode="r") as archive, open(out, "w") as o:
             rorfile = None
             for zi in archive.infolist():
-                if zi.filename.endswith(".json") and not zi.filename.startswith("."):
+                if zi.filename.endswith("ror-data.json") and not zi.filename.startswith("."):
                     rorfile = zi
                     break
 

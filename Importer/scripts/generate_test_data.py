@@ -16,9 +16,11 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 import random
 from jctdata import settings
+import constants
 
 journal_filename = "journal"
 funder_filename = "funder_config"
+funder_lang_filename = "funder_language"
 jac_filename = "jac"
 iac_filename = "iac"
 institution_filename = "institution"
@@ -62,7 +64,7 @@ def generate_created_at():
 def parse_header(header):
     """ Parse the header to get the filename and the JSON key. """
     parts = header.split('.')
-    return parts[0], '.'.join(parts[1:]) if len(parts) > 1 else None
+    return parts[0].lower(), '.'.join(parts[1:]) if len(parts) > 1 else None
 
 
 def generate_random_title_and_publisher():
@@ -169,12 +171,27 @@ def get_funder_data(route, data):
         if value:
             FUNDER_ROW["routes"][route][key] = value
             # funder_id, name = generate_funder_id_name()
-            FUNDER_ROW["id"] = data["id"]
-            FUNDER_ROW["name"] = data["name"]
-        else:
-            return None
+        elif key.lower() == 'rights_retention':
+            FUNDER_ROW['routes']['self_archiving']['rights_retention'] = '2050-01-17T00:00:00Z'
+
+    FUNDER_ROW["id"] = data["id"]
+    FUNDER_ROW["name"] = data["name"]
 
     return FUNDER_ROW
+
+
+def get_lang_data(lang, data):
+    lang = lang.lower()
+    lang_data = None
+    if lang == "en":
+        lang_data = constants.FUNDER_LANG_EN
+    elif lang == "fr":
+        lang_data = constants.FUNDER_LANG_FR
+
+    if lang_data:
+        lang_data["id"] = data["id"] + "__" + lang
+
+    return lang_data
 
 
 def write_json_files(route, data, written_files, output_dir):
@@ -202,6 +219,16 @@ def write_json_files(route, data, written_files, output_dir):
         if mode == 'w':
             written_files.add(iac_filename)
 
+    # Check if there's data for institution (case-insensitive) to process
+    funder_config_present = any(filename.lower() == funder_filename for filename in data.keys())
+    if funder_config_present:
+        # Open funder_language.json file for writing if journal data is present and prepare it for writing
+        funder_lang_file_path = os.path.join(output_dir, f"{funder_lang_filename}.json")
+        mode = 'a' if funder_lang_file_path in written_files else 'w'
+        funder_lang_file = open(funder_lang_file_path, mode, encoding='utf-8')
+        if mode == 'w':
+            written_files.add(funder_lang_filename)
+
     for filename, contents in data.items():
         file_path = os.path.join(output_dir, f"{filename}.json")
         mode = 'a' if filename in written_files else 'w'
@@ -213,13 +240,24 @@ def write_json_files(route, data, written_files, output_dir):
                     jac_entry = generate_jac_entry(content["issn"])
                     json.dump(jac_entry, jac_file)
                     jac_file.write('\n')
-                if filename.lower() == funder_filename:
+                elif filename.lower() == funder_filename:
                     funder_data = get_funder_data(route, content)
                     # write data to funder config the funder data available
                     if funder_data:
                         json.dump(funder_data, json_file)
                         json_file.write('\n')
-                if filename.lower() == institution_filename:
+
+                    # Write funder language data
+                    funder_lang_data_en = get_lang_data("en", content)
+                    funder_lang_data_fr = get_lang_data("fr", content)
+                    if funder_lang_data_en:
+                        json.dump(funder_lang_data_en, funder_lang_file)
+                        funder_lang_file.write('\n')
+                    if funder_lang_data_fr:
+                        json.dump(funder_lang_data_fr, funder_lang_file)
+                        funder_lang_file.write('\n')
+
+                elif filename.lower() == institution_filename:
                     # write the corresponding jac entry
                     iac_entry = generate_iac_entry(content["ror"])
                     json.dump(iac_entry, iac_file)
@@ -232,6 +270,15 @@ def write_json_files(route, data, written_files, output_dir):
     if journal_filename in data:
         jac_file.close()
         written_files.add(jac_filename)
+
+
+def parse_value(value: str):
+    if value.lower() == "true":
+        return True
+    elif value.lower() == "false":
+        return False
+    else:
+        return ast.literal_eval(value)
 
 
 def csv_to_json(route, csv_file_path, output_dir, written_files):
@@ -253,23 +300,23 @@ def csv_to_json(route, csv_file_path, output_dir, written_files):
                     filename, json_key = parse_header(header)
                     if json_key:
                         nested_keys = json_key.split('.')
-                        if row[header]:
 
-                            try:
-                                set_value(json_objects[filename], nested_keys, ast.literal_eval(row[header]))
-                            except:
-                                print("route : " + route + " header : " + header + " value : " + row[header])
-                                set_value(json_objects[filename], nested_keys, row[header])
-                            if filename.lower() == journal_filename:
-                                journal_id = generate_issn()
-                                set_value(json_objects[filename], ["issn"], journal_id)
-                            if filename.lower() == institution_filename:
-                                institution_id = generate_ror_id()
-                                set_value(json_objects[filename], ["ror"], institution_id)
-                            if filename.lower() == funder_filename:
-                                funder_id, name = generate_funder_id_name()
-                                set_value(json_objects[filename], ["id"], funder_id)
-                                set_value(json_objects[filename], ["name"], name)
+                        try:
+                            set_value(json_objects[filename], nested_keys, parse_value(row[header]))
+                        except:
+                            print("route : " + route + " header : " + header + " value : " + row[header])
+                            set_value(json_objects[filename], nested_keys, row[header])
+
+            if journal_filename in json_objects:
+                journal_id = generate_issn()
+                set_value(json_objects[journal_filename], ["issn"], journal_id)
+            if institution_filename in json_objects:
+                institution_id = generate_ror_id()
+                set_value(json_objects[institution_filename], ["ror"], institution_id)
+            if funder_filename in json_objects:
+                funder_id, name = generate_funder_id_name()
+                set_value(json_objects[funder_filename], ["id"], funder_id)
+                set_value(json_objects[funder_filename], ["name"], name)
 
             # Add the created JSON objects to the data
             for filename, json_obj in json_objects.items():
@@ -283,7 +330,7 @@ def csv_to_json(route, csv_file_path, output_dir, written_files):
 def write_test_records():
     file_path = os.path.join(output_dir, "test_records.json")
     with open(file_path, "w", encoding='utf-8') as records_file:
-        json.dump(testrecords, records_file)
+        json.dump(testrecords, records_file, indent=2)
 
 
 if __name__ == "__main__":

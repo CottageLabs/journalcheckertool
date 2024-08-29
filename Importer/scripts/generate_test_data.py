@@ -240,6 +240,10 @@ def write_json_files(route, data, written_files, output_dir):
                     jac_entry = generate_jac_entry(content["issn"])
                     json.dump(jac_entry, jac_file)
                     jac_file.write('\n')
+
+                    json.dump(content, json_file)
+                    json_file.write('\n')
+
                 elif filename.lower() == funder_filename:
                     funder_data = get_funder_data(route, content)
                     # write data to funder config the funder data available
@@ -262,6 +266,9 @@ def write_json_files(route, data, written_files, output_dir):
                     iac_entry = generate_iac_entry(content["ror"])
                     json.dump(iac_entry, iac_file)
                     iac_file.write('\n')
+
+                    json.dump(content, json_file)
+                    json_file.write('\n')
                 else:
                     json.dump(content, json_file)
                     json_file.write('\n')

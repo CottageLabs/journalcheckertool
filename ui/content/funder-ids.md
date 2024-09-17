@@ -45,6 +45,9 @@ you will need to use the following identifiers in place of the name of the funde
 **Formas**
 : `formassweden`
 
+**Foundation for Science and Technology of Portugal**
+: `foundationforscienceandtechnologyofportugalfct`
+
 **French National Research Agency**
 : `frenchnationalresearchagencyanr`
 

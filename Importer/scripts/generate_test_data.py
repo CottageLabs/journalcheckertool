@@ -14,6 +14,7 @@ import os
 import sys
 from collections import defaultdict
 from datetime import datetime, timedelta
+from copy import deepcopy
 import random
 from jctdata import settings
 import constants
@@ -241,6 +242,7 @@ def write_json_files(route, data, written_files, output_dir):
                     json.dump(jac_entry, jac_file)
                     jac_file.write('\n')
 
+                    add_oa_works_permissions(content)
                     json.dump(content, json_file)
                     json_file.write('\n')
 
@@ -277,6 +279,19 @@ def write_json_files(route, data, written_files, output_dir):
     if journal_filename in data:
         jac_file.close()
         written_files.add(jac_filename)
+
+
+def add_oa_works_permissions(journal_json):
+    if "all_permissions" in journal_json and journal_json["all_permissions"]:
+        perms = deepcopy(constants.OA_WORKS_PERMISSIONS)
+        if "oabcompliant" in journal_json and not journal_json["oabcompliant"]:
+            perms["best_permission"]["licences"] = []
+            perms["best_permission"]["licence"] = ""
+            for p in perms["all_permissions"]:
+                p["licences"] = []
+                p["licence"] = ""
+
+        journal_json["oa_works_permissions"] = perms
 
 
 def parse_value(value: str):

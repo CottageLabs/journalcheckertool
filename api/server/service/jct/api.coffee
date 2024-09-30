@@ -490,9 +490,19 @@ API.service.jct.calculate = (params={}, refresh) ->
     hascompliant = false
     allcached = true
     _results = []
+    oa_permissions = undefined
 
-    # get data from oa.works
-    oa_permissions = API.service.jct.oa_works (issnsets[journal] ? journal), (if institution? then institution else undefined)
+    if journal
+        issn = journal.split(',') if typeof journal is 'string'
+        issn_qr = 'issn.exact:"' + issn.join('" OR issn.exact:"') + '"'
+        journal_rec = jct_journal.find issn_qr
+        if journal_rec and journal_rec.oa_works_permissions
+            oa_permissions = journal_rec.oa_works_permissions
+
+    if oa_permissions is undefined
+        # get data from oa.works
+        oa_permissions = API.service.jct.oa_works (issnsets[journal] ? journal), (if institution? then institution else undefined)
+
     # get funder config
     funder_config = API.service.jct.funder_config funder, undefined
 

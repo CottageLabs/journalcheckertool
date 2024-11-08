@@ -689,6 +689,17 @@ API.service.jct.ta = (issn, ror) ->
 # fields called pissn and eissn will contain ISSNs to check against
 # check if an issn is in the transformative journals list (to be provided by plan S)
 API.service.jct.tj = (issn, funder) ->
+  now = new Date();
+  cutoff = new Date("2025-01-01T00:00:00.000Z");
+  if now > cutoff
+    res =
+      route: 'tj'
+      compliant: 'no'
+      qualifications: undefined,
+      issn: issn
+      log: []
+    return res
+
   issn = issn.split(',') if typeof issn is 'string'
   if issn and issn.length
     res = 

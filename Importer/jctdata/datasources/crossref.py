@@ -60,6 +60,11 @@ class Crossref(datasource.Datasource):
                     title = entry.get("title")
                     issns = entry.get("ISSN")
                     issns = list(set(issns))    # because sometimes the issns are duplicated
+                    if "0000-0000" in issns:
+                        issns.remove("0000-0000")   # remove the placeholder ISSN
+                    if len(issns) == 0:
+                        self.log("no ISSNs found for title: " + title)
+                        continue
                     doi_years = [pair[0] for pair in entry.get("breakdowns", {}).get("dois-by-issued-year", [])]
                     last_doi = max(doi_years) if len(doi_years) > 0 else 0
                     discontinued = entry.get("discontinued", False)

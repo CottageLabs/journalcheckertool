@@ -60,6 +60,8 @@ class Crossref(datasource.Datasource):
                     title = entry.get("title")
                     issns = entry.get("ISSN")
                     issns = list(set(issns))    # because sometimes the issns are duplicated
+                    while None in issns:
+                        issns.remove(None)
                     if "0000-0000" in issns:
                         issns.remove("0000-0000")   # remove the placeholder ISSN
                     if len(issns) == 0:

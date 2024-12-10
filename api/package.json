@@ -1,17 +1,17 @@
 {
   "name": "jct_api",
   "description": "This software provides the API for the Journal Checker Tool.",
-  "version": "1.0.0",
-  "author": "Mark MacGillivray",
+  "version": "1.0.1",
+  "author": "Mark MacGillivray, Cottage Labs",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CottageLabs/jct_api.git"
+    "url": "git+https://github.com/CottageLabs/journalcheckertool.git"
   },
   "bugs": {
-    "url": "https://github.com/CottageLabs/jct_api/issues"
+    "url": "https://github.com/CottageLabs/journalcheckertool/issues"
   },
-  "homepage": "https://github.com/CottageLabs/jct_api#readme",
+  "homepage": "https://github.com/CottageLabs/journalcheckertool#readme",
   "dependencies": {
     "@babel/runtime": "^7.23.2",
     "adm-zip": "^0.5.10",

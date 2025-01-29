@@ -114,6 +114,7 @@ jct.inputs_plugin_html = () => {
             <span class="sr-only">Loading choices…</span>
         </div>
     </div>
+    <div class="col col--1of1">Banner Here</div>
 `};
 
 // ----------------------------------------

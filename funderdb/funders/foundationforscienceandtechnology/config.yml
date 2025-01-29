@@ -1,0 +1,10 @@
+id: foundationforscienceandtechnology
+name: Foundation for Science and Technology
+abbr: FCT
+country: Portugal
+plan_s: 2025-01-01
+apc:
+  tj: false # implementation roadmap
+routes:
+  self_archiving:
+    rights_retention: 2025-01-01  # implementation roadmap

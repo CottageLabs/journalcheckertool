@@ -45,6 +45,9 @@ you will need to use the following identifiers in place of the name of the funde
 **Formas**
 : `formassweden`
 
+**Foundation for Science and Technology**
+: `foundationforscienceandtechnology`
+
 **French National Research Agency**
 : `frenchnationalresearchagencyanr`
 
@@ -122,6 +125,3 @@ you will need to use the following identifiers in place of the name of the funde
 
 **World Health Organization**
 : `worldhealthorganizationwho`
-
-
-

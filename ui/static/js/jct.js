@@ -54,8 +54,8 @@ jct.messages = {
     }
 };
 jct.banner = {
-    from: new Date("2025-02-17"),
-    to: new Date("2025-03-22")
+    // from: new Date("2025-02-17"),
+    // to: new Date("2025-03-22")
 };
 
 // some convenience shortcuts
@@ -69,6 +69,9 @@ jct.d.gebc = document.getElementsByClassName;
 jct.banner_frag = (pos) => {
     let banner = "";
     if (window.hasOwnProperty("JCT_WIDGET")) {
+        return banner;
+    }
+    if (!jct.banner.from) {
         return banner;
     }
     let now = new Date();

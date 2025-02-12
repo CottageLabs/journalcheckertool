@@ -1,0 +1,17 @@
+#jct_banner {
+  background: #F9F6F6;
+  border: 2px solid #F39325;
+  padding: 20px;
+  margin-bottom: $spacing-04;
+  color: $coal;
+  display: inline-block;
+  a {
+    color: $coal;
+    font-weight: bold;
+    text-decoration: underline;
+  }
+}
+
+.jct_banner_container {
+  text-align: center;
+}

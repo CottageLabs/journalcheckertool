@@ -34,7 +34,12 @@ jct.messages = {
         institution_placeholder: "By ROR or name",
         no_affiliation: "No affiliation",
         explain: 'Explain this result',
-        banner: '<a href="https://coalitions.typeform.com/JCT-survey-2025" target="_blank" rel="noopener">Make the JCT work better for you - Take our survey</a>'
+        banner: `<a href="https://coalitions.typeform.com/JCT-survey-2025" target="_blank" rel="noopener">
+                    <img src="/img/icons/check_green.svg">
+                    Make the JCT work better for you - Take our survey
+                    <svg style="margin-left: 10px" width="16px" height="16px" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="none">
+                    <path fill="#F47115" fill-rule="evenodd" d="M2.293 15.293a1 1 0 101.414 1.414l6-6a1 1 0 000-1.414l-6-6a1 1 0 00-1.414 1.414L7.586 10l-5.293 5.293zm8 0a1 1 0 101.414 1.414l6-6a1 1 0 000-1.414l-6-6a1 1 0 10-1.414 1.414L15.586 10l-5.293 5.293z"/>
+                    </svg></a>`
     },
     fr: {
         journal: "Revue",
@@ -49,7 +54,7 @@ jct.messages = {
     }
 };
 jct.banner = {
-    from: new Date("2025-02-17"),
+    from: new Date("2025-01-17"),
     to: new Date("2025-03-22")
 };
 

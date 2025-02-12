@@ -430,6 +430,21 @@ footer {
   text-align: center;
   font-size: 0.833em; }
 
+#jct_banner {
+  background: #F9F6F6;
+  border: 2px solid #F39325;
+  padding: 20px;
+  margin-bottom: 1.5rem;
+  color: #585756;
+  display: inline-block; }
+  #jct_banner a {
+    color: #585756;
+    font-weight: bold;
+    text-decoration: underline; }
+
+.jct_banner_container {
+  text-align: center; }
+
 a.button {
   display: inline-block; }
 

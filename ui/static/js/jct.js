@@ -33,7 +33,13 @@ jct.messages = {
         institution: "My Institution",
         institution_placeholder: "By ROR or name",
         no_affiliation: "No affiliation",
-        explain: 'Explain this result'
+        explain: 'Explain this result',
+        banner: `<a href="https://coalitions.typeform.com/JCT-survey-2025" target="_blank" rel="noopener">
+                    <img src="/img/icons/check_green.svg">
+                    Make the JCT work better for you - Take our survey
+                    <svg style="margin-left: 10px" width="16px" height="16px" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="none">
+                    <path fill="#F47115" fill-rule="evenodd" d="M2.293 15.293a1 1 0 101.414 1.414l6-6a1 1 0 000-1.414l-6-6a1 1 0 00-1.414 1.414L7.586 10l-5.293 5.293zm8 0a1 1 0 101.414 1.414l6-6a1 1 0 000-1.414l-6-6a1 1 0 10-1.414 1.414L15.586 10l-5.293 5.293z"/>
+                    </svg></a>`
     },
     fr: {
         journal: "Revue",
@@ -43,8 +49,13 @@ jct.messages = {
         institution: "Mon institution",
         institution_placeholder: "Par le ROR ou le nom",
         no_affiliation: "Aucune affiliation",
-        explain: "Explications du résultat"
+        explain: "Explications du résultat",
+        banner: '<a href="https://coalitions.typeform.com/JCT-survey-2025" target="_blank" rel="noopener">Faites en sorte que le JCT fonctionne mieux pour vous - Répondez à notre sondage</a>'
     }
+};
+jct.banner = {
+    from: new Date("2025-02-17"),
+    to: new Date("2025-03-22")
 };
 
 // some convenience shortcuts
@@ -55,10 +66,23 @@ jct.d.gebc = document.getElementsByClassName;
 ////////////////////////////////////////////////////////
 // HTML Fragments for Application structure
 
+jct.banner_frag = (pos) => {
+    let banner = "";
+    if (window.hasOwnProperty("JCT_WIDGET")) {
+        return banner;
+    }
+    let now = new Date();
+    if (now > jct.banner.from && now < jct.banner.to) {
+        banner = `<div class="col col--1of1 jct_banner_container" id="jct_banner_container_${pos}"><div id="jct_banner">${jct.getText("banner")}</div></div>`;
+    }
+    return banner;
+};
+
 // ----------------------------------------
 // html for input form
 // ----------------------------------------
 jct.inputs_plugin_html = () => {
+    let banner = jct.banner_frag("top");
     return `
     <h2 class="sr-only">Make a query</h2>
     <div class="col col--1of3 expression">
@@ -106,6 +130,7 @@ jct.inputs_plugin_html = () => {
     </div>
     <div class="col col--1of3 suggest" id="jct_suggestinstitution">
     </div>
+    ${banner}
     <div class="loading" id="jct_loading" style="display:none">
         <div class="loading__dots">
             <div></div>
@@ -129,12 +154,16 @@ jct.results_plugin_html = `
 // ----------------------------------------
 // html for tiles_plugin
 // ----------------------------------------
-jct.tiles_plugin_html = `
-    <section class="row" id="jct_paths_results">
-        <h3 class="sr-only">Results</h3>
-    </section>
-    <section class="row" id="jct_jcs_price_data"></section>
-`;
+jct.tiles_plugin_html = () => {
+    let banner = jct.banner_frag("tiles");
+    return `
+        <section class="row" id="jct_paths_results">
+            <h3 class="sr-only">Results</h3>
+        </section>
+        ${banner}
+        <section class="row" id="jct_jcs_price_data"></section>
+    `;
+};
 
 // ----------------------------------------
 // Function to display the selected list of tiles
@@ -585,6 +614,11 @@ jct.success = () => {
     jct.d.gebi('jct_notcompliant').style.display = 'none';
     jct.d.gebi("jct_loading").style.display = "none";
 
+    let bc = jct.d.gebi("jct_banner_container_top");
+    if (bc) {
+        bc.style.display = "none";
+    }
+
     let paths_results = jct.d.gebi("jct_paths_results");
     jct._emptyElement(paths_results)
     jct.display_result(js);
@@ -907,7 +941,7 @@ jct.setup = (manageUrl=true) => {
 
     jct.d.gebi("jct_inputs_plugin").innerHTML = jct.inputs_plugin_html();   // is a function call because it needs to call the language pack
     jct.d.gebi("jct_results_plugin").innerHTML = jct.results_plugin_html;
-    jct.d.gebi("jct_tiles_plugin").innerHTML = jct.tiles_plugin_html;
+    jct.d.gebi("jct_tiles_plugin").innerHTML = jct.tiles_plugin_html();
     let f = jct.d.gebi("jct_funder");
     jct.suggesting = true;
 

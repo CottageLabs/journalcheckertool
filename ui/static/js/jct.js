@@ -55,7 +55,7 @@ jct.messages = {
 };
 jct.banner = {
     from: new Date("2025-02-19"),
-    to: new Date("2025-03-22")
+    to: new Date("2025-03-29")
 };
 
 // some convenience shortcuts

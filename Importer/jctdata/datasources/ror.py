@@ -110,15 +110,38 @@ class ROR(datasource.Datasource):
             }
         # get data from version 2
         elif schema_version == 'v2':
-            title_v2 = next(
-                    (name["value"] for name in ror_rec["names"] if "ror_display" in name["types"] or "label" in name["types"]),
-                    ''  # Default if no match is found
-                )
-            aliases = [
-                name["value"]
-                for name in ror_rec["names"]
-                if ("alias" in name["types"] or "label" in name["types"]) and name["value"] != title_v2
-            ]
+            all_names = [(n.get("value"), n["types"] == "ror_display", n.get("lang"))
+                     for n in ror_rec.get("names", [])
+                     if ("ror_display" in n.get("types", []) or "label" in n.get("types", [])) and n.get("value") is not None]
+
+            if len(all_names) == 0:
+                self.log("No names found in ROR record {x}".format(x=ror_rec.get("id", '')))
+                return
+
+            all_displays = [(n[0], n[2]) for n in all_names if n[1] is True]
+
+            # some tortuous logic to get the title:
+            # * If there is only one display name, use that
+            # * If there are multiple display names, use the first one in English
+            # * If there are no display names, use the first name of any kind in English
+            # * Otherwise use the first name of any kind
+            title_v2 = ""
+            if len(all_displays) == 1:
+                title_v2 = all_displays[0][0]
+            elif len(all_displays) > 1:
+                en_displays = [(n[0], n[2]) for n in all_displays if n[2] == "en"]
+                if len(en_displays) > 0:
+                    title_v2 = en_displays[0][0]
+                else:
+                    title_v2 = all_displays[0][0]
+            if len(all_displays) == 0:
+                en_names = [(n[0], n[2]) for n in all_names if n[2] == "en"]
+                if len(en_names) > 0:
+                    title_v2 = en_names[0][0]
+                else:
+                    title_v2 = all_names[0][0]
+
+            aliases = [n[0] for n in all_names if n[0] != title_v2]
             acronyms = [name["value"] for name in ror_rec["names"] if "acronym" in name["types"]]
             country = ror_rec["locations"][0]["geonames_details"]["country_name"] if ("locations" in ror_rec and
                                                                             len(ror_rec["locations"]) > 0) else ''
@@ -155,6 +178,8 @@ class ROR(datasource.Datasource):
 
             if rorfile is None:
                 raise Exception("Unable to extract ROR JSON file")
+
+            self.log("Extracting ROR data from {x}, schema {y}".format(x=rorfile.filename, y=schema_version))
 
             data = archive.read(rorfile).decode(encoding="utf-8")
             j = json.loads(data)

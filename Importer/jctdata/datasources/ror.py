@@ -96,31 +96,96 @@ class ROR(datasource.Datasource):
 
         return None, None
 
+    def _get_ror_record(self, ror_rec, schema_version):
+
+        # get data from version 1
+        if schema_version == 'v1':
+            return {
+                'id': ror_rec.get('id', '').replace("https://ror.org/", ''),
+                'ror': ror_rec.get('id', ''),
+                'title': ror_rec.get('name', ''),
+                'aliases': ror_rec.get('aliases', []),
+                'acronyms': ror_rec.get('acronyms', []),
+                'country': ror_rec.get('country', {}).get('country_name', '')
+            }
+        # get data from version 2
+        elif schema_version == 'v2':
+            all_names = [(n.get("value"), n["types"] == "ror_display", n.get("lang"))
+                     for n in ror_rec.get("names", [])
+                     if ("ror_display" in n.get("types", []) or "label" in n.get("types", [])) and n.get("value") is not None]
+
+            if len(all_names) == 0:
+                self.log("No names found in ROR record {x}".format(x=ror_rec.get("id", '')))
+                return
+
+            all_displays = [(n[0], n[2]) for n in all_names if n[1] is True]
+
+            # some tortuous logic to get the title:
+            # * If there is only one display name, use that
+            # * If there are multiple display names, use the first one in English
+            # * If there are no display names, use the first name of any kind in English
+            # * Otherwise use the first name of any kind
+            title_v2 = ""
+            if len(all_displays) == 1:
+                title_v2 = all_displays[0][0]
+            elif len(all_displays) > 1:
+                en_displays = [(n[0], n[2]) for n in all_displays if n[2] == "en"]
+                if len(en_displays) > 0:
+                    title_v2 = en_displays[0][0]
+                else:
+                    title_v2 = all_displays[0][0]
+            if len(all_displays) == 0:
+                en_names = [(n[0], n[2]) for n in all_names if n[2] == "en"]
+                if len(en_names) > 0:
+                    title_v2 = en_names[0][0]
+                else:
+                    title_v2 = all_names[0][0]
+
+            aliases = [n[0] for n in all_names if n[0] != title_v2]
+            acronyms = [name["value"] for name in ror_rec["names"] if "acronym" in name["types"]]
+            country = ror_rec["locations"][0]["geonames_details"]["country_name"] if ("locations" in ror_rec and
+                                                                            len(ror_rec["locations"]) > 0) else ''
+            return {
+                'id': ror_rec.get('id', '').replace("https://ror.org/", ''),
+                'ror': ror_rec.get('id', ''),
+                'title': title_v2,
+                'aliases': aliases,
+                'acronyms': acronyms,
+                'country': country
+            }
+        else:
+            raise Exception("Unable to extract ROR JSON file. Schema version not found")
+
     def _extract_ror_data(self, zip_file, out):
         self.log("extracting data dump {x}".format(x=zip_file))
 
         with ZipFile(zip_file, mode="r") as archive, open(out, "w") as o:
             rorfile = None
+            schema_version = None
+            # check if another version exist
             for zi in archive.infolist():
-                if zi.filename.endswith("ror-data.json") and not zi.filename.startswith("."):
+                if zi.filename.endswith("ror-data_schema_v2.json") and not zi.filename.startswith("."):
                     rorfile = zi
+                    schema_version = 'v2'
                     break
+            # if version not changed, use the old version
+            if not schema_version :
+                for zi in archive.infolist():
+                    if zi.filename.endswith("ror-data.json") and not zi.filename.startswith("."):
+                        rorfile = zi
+                        schema_version = 'v1'
+                        break
 
             if rorfile is None:
                 raise Exception("Unable to extract ROR JSON file")
+
+            self.log("Extracting ROR data from {x}, schema {y}".format(x=rorfile.filename, y=schema_version))
 
             data = archive.read(rorfile).decode(encoding="utf-8")
             j = json.loads(data)
             for ror_rec in j:
                 if ror_rec.get("status", "active") == "active":
-                    rec = {
-                        'id': ror_rec.get('id', '').replace("https://ror.org/", ''),
-                        'ror': ror_rec.get('id', ''),
-                        'title': ror_rec.get('name', ''),
-                        'aliases': ror_rec.get('aliases', []),
-                        'acronyms': ror_rec.get('acronyms', []),
-                        'country': ror_rec.get('country', {}).get('country_name', '')
-                    }
+                    rec = self._get_ror_record(ror_rec, schema_version)
                     o.write(json.dumps(rec) + "\n")
 
     @staticmethod

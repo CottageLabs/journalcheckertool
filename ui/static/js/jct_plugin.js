@@ -487,7 +487,7 @@ jct.messages = {
 };
 jct.banner = {
     from: new Date("2025-02-19"),
-    to: new Date("2025-03-22")
+    to: new Date("2025-03-29")
 };
 
 // some convenience shortcuts
@@ -596,7 +596,6 @@ jct.tiles_plugin_html = () => {
             <h3 class="sr-only">Results</h3>
         </section>
         ${banner}
-        <section class="row" id="jct_jcs_price_data"></section>
     `;
 };
 
@@ -611,65 +610,6 @@ jct.displayCards = (cardsToDisplay, result) => {
         jct.d.gebi("jct_paths_results").append(jct.htmlToElement(card));
     }
 }
-
-// ----------------------------------------
-// Function to display the JCS price data if relevant
-// ----------------------------------------
-
-jct.site_modals.jcs = {
-    en: {
-        title: "Journal Comparison Service",
-        body: `<p>The <a href="https://journalcomparisonservice.org/" target="_blank">Journal Comparison Service (JCS)</a> – 
-                developed by cOAlition S - provides libraries and library consortia with the ability to compare journal 
-                publishing services and fees to help determine if the prices charged are commensurate with the services provided.</p>
-                <p>If transparency of price and service data is important to you – and your preferred journal does not 
-                provide these data – then you may wish to consider submitting your manuscript to a journal which supports these values.</p>  
-                <p><a href="https://journalcheckertool.org/jcs">List of journals</a> that are providing current price and service data to the JCS.</p>
-                <p>More information about the JCS is available at: 
-                <a href="https://www.coalition-s.org/journal-comparison-service/" target="_blank">https://www.coalition-s.org/journal-comparison-service/</a></p>`
-    }
-};
-
-jct.displayPriceData = (journalData) => {
-    let message = jct.lang.jcs.none;
-    if (journalData.price_data_years && journalData.price_data_years.length > 0) {
-        message = jct.lang.jcs.stale;
-
-        let currentDate = new Date();
-        let yearCurrent = currentDate.getUTCFullYear();
-        let latestData = Math.max.apply(null, journalData.price_data_years);
-        let rolloverDate = new Date(parseInt(yearCurrent) + "-11-01T00:00:00Z");
-
-        // if the current date is before the end of October of the current year, then
-        // we will accept data from up to 2 years ago as current (e.g. in May 2023 data
-        // from 2021 is current).  If not, we will only accept data from one year ago
-        // (e.g. in November 2023 data from 2022 is current, and 2021 is stale)
-        let cutoffYear = yearCurrent - 1;
-        if (currentDate < rolloverDate) {
-            cutoffYear = yearCurrent - 2;
-        }
-        if (latestData >= cutoffYear) {
-            message = jct.lang.jcs.current;
-        }
-
-        if (message) {
-            message = message.replaceAll("{years}", journalData.price_data_years.join(", "))
-        }
-    }
-
-    if (message) {
-        message = message.replaceAll("{journal}", journalData.title);
-        message = `
-            <div class="col col--1of1"><div class="jcs_container">
-                <h5>Transparent price and service data</h5>
-                <p>${message}</p>
-                <a href="#" class="modal-trigger" data-modal="jcs">Click here to learn more</a>
-            </div>
-            </div>
-        `;
-        jct.d.gebi("jct_jcs_price_data").innerHTML = message;
-    }
-};
 
 // ----------------------------------------
 // Function to display specific card
@@ -1134,9 +1074,6 @@ jct.display_result = (js) => {
     // }
     let cardsToDisplay = js.cards;
     jct.displayCards(cardsToDisplay, js.results);
-    if (js.request.journal.length > 0) {
-        jct.displayPriceData(js.request.journal[0]);
-    }
 
     x = window.matchMedia("(max-width: 767px)")
     let results_section_top = jct.d.gebi("jct_results_plugin").offsetTop

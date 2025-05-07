@@ -32,8 +32,7 @@ MAX_DATASOURCE_AGE = {
     "sa_negative": 60 * 60 * 24 * 7,
     "sa_positive": 60 * 60 * 24 * 7,
     "funderdb": 60,   # funderdb is always updated, only a short delay to avoid importing multiple times in a concurrent run
-    "oa_exceptions": 60 * 60 * 24 * 7,
-    "jcs": 60 * 60 * 24 * 7
+    "oa_exceptions": 60 * 60 * 24 * 7
 }
 
 DATASOURCE_PATH = {
@@ -46,8 +45,7 @@ DATASOURCE_PATH = {
     "sa_negative": os.path.join(DATABASES, "sa_negative"),
     "sa_positive": os.path.join(DATABASES, "sa_positive"),
     "funderdb": os.path.join(DATABASES, "funderdb"),
-    "oa_exceptions": os.path.join(DATABASES, "oa_exceptions"),
-    "jcs": os.path.join(DATABASES, "jcs")
+    "oa_exceptions": os.path.join(DATABASES, "oa_exceptions")
 }
 
 DATASOURCE_HISTORY = {
@@ -60,8 +58,7 @@ DATASOURCE_HISTORY = {
     "sa_negative": 3,
     "sa_positive": 3,
     "funderdb": 2,
-    "oa_exceptions": 3,
-    "jcs": 3
+    "oa_exceptions": 3
 }
 
 INDEX_PATH = {
@@ -70,7 +67,6 @@ INDEX_PATH = {
     "funder_language": os.path.join(DATABASES, "jct", "funder_language"),
     "funder_config": os.path.join(DATABASES, "jct", "funder_config"),
     "journal": os.path.join(DATABASES, "jct", "journal"),
-    "jcs_csv": os.path.join(DATABASES, "jct", "jcs_csv"),
     "ta": os.path.join(DATABASES, "jct", "ta"),
     "institution": os.path.join(DATABASES, "jct", "institution"),
     "bad_ta_issns": os.path.join(DATABASES, "jct", "bad_ta_issns")
@@ -82,7 +78,6 @@ INDEX_HISTORY = {
     "funder_language": 5,
     "funder_config": 5,
     "journal": 5,
-    "jcs_csv": 2,
     "ta": 5,
     "institution": 5,
     "bad_ta_issns": 2
@@ -94,15 +89,12 @@ INDEX_LOADERS = {
     "funder_language": "es",
     "funder_config": "es",
     "journal": "es",
-    "jcs_csv": "file",
     "ta": "es",
     "institution": "es",
     "bad_ta_issns": "helpdesk"
 }
 
-FILE_LOADER_PATHS = {
-    "jcs_csv": rel2abs(__file__, "..", "..", "ui", "static", "data", "jcs_price_data.csv")
-}
+FILE_LOADER_PATHS = {}
 
 TEST_PATH = {
     "tj": os.path.join(DATABASES, "tests", "tj")
@@ -141,11 +133,7 @@ OA_EXCEPTIONS_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSexj1DPU
 
 FUNDER_DB_DIR = rel2abs(__file__, "..", "..", "funderdb")
 
-JCS_API = "https://journalcomparisonservice.org/issns/{year}"
-
-JCS_FIRST_YEAR = 2021
-
-JAC_PREF_ORDER = ["doaj", "crossref", "jcs", "tj", "sa_negative", "sa_positive", "oa_exceptions", "ta"]
+JAC_PREF_ORDER = ["doaj", "crossref", "tj", "sa_negative", "sa_positive", "oa_exceptions", "ta"]
 
 DEFAULT_MAPPING = {
     "dynamic_templates": [

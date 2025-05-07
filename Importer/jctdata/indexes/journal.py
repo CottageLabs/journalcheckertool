@@ -9,7 +9,7 @@ from jctdata.indexes.indexer import Indexer
 
 class Journal(Indexer):
     ID = "journal"
-    SOURCES = ["crossref", "doaj", "tj", "ta", "doaj_inprogress", "sa_negative", "sa_positive", "oa_exceptions", "jcs"]
+    SOURCES = ["crossref", "doaj", "tj", "ta", "doaj_inprogress", "sa_negative", "sa_positive", "oa_exceptions"]
 
     def __init__(self):
         super(Journal, self).__init__()
@@ -20,7 +20,6 @@ class Journal(Indexer):
         self._san_data = False
         self._sap_data = False
         self._oae_data = False
-        self._jcs_data = False
         self._ta_data = False
 
     def gather(self):
@@ -67,7 +66,6 @@ class Journal(Indexer):
                 self._sa_negative(record)
                 self._sa_positive(record)
                 self._oa_exceptions(record)
-                self._jcs(record)
                 self._ta(record)
 
                 o.write(json.dumps(record) + "\n")
@@ -238,24 +236,6 @@ class Journal(Indexer):
                             "funder": f,
                             "caveat": c
                         })
-
-    def _jcs(self, record):
-        if self._jcs_data is False:
-            paths = resolver.SOURCES["jcs"].current_paths()
-            jcs_csv = paths["origin"]
-            self._jcs_data = {}
-
-            with open(jcs_csv, "r") as f:
-                reader = csv.reader(f)
-                for row in reader:
-                    if row[0] not in self._jcs_data:
-                        self._jcs_data[row[0]] = []
-                    self._jcs_data[row[0]].append(int(row[3]))
-
-        for issn in record.get("issn", []):
-            if issn in self._jcs_data:
-                record["jcs_years"] = self._jcs_data[issn]
-                break
 
     def _ta(self, record):
         if self._ta_data is False:

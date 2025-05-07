@@ -487,7 +487,7 @@ jct.messages = {
 };
 jct.banner = {
     from: new Date("2025-02-19"),
-    to: new Date("2025-03-22")
+    to: new Date("2025-03-29")
 };
 
 // some convenience shortcuts
@@ -596,7 +596,6 @@ jct.tiles_plugin_html = () => {
             <h3 class="sr-only">Results</h3>
         </section>
         ${banner}
-        <section class="row" id="jct_jcs_price_data"></section>
     `;
 };
 
@@ -611,24 +610,6 @@ jct.displayCards = (cardsToDisplay, result) => {
         jct.d.gebi("jct_paths_results").append(jct.htmlToElement(card));
     }
 }
-
-// ----------------------------------------
-// Function to display the JCS price data if relevant
-// ----------------------------------------
-
-jct.site_modals.jcs = {
-    en: {
-        title: "Journal Comparison Service",
-        body: `<p>The <a href="https://journalcomparisonservice.org/" target="_blank">Journal Comparison Service (JCS)</a> – 
-                developed by cOAlition S - provides libraries and library consortia with the ability to compare journal 
-                publishing services and fees to help determine if the prices charged are commensurate with the services provided.</p>
-                <p>If transparency of price and service data is important to you – and your preferred journal does not 
-                provide these data – then you may wish to consider submitting your manuscript to a journal which supports these values.</p>  
-                <p><a href="https://journalcheckertool.org/jcs">List of journals</a> that are providing current price and service data to the JCS.</p>
-                <p>More information about the JCS is available at: 
-                <a href="https://www.coalition-s.org/journal-comparison-service/" target="_blank">https://www.coalition-s.org/journal-comparison-service/</a></p>`
-    }
-};
 
 // ----------------------------------------
 // Function to display specific card
@@ -1093,9 +1074,6 @@ jct.display_result = (js) => {
     // }
     let cardsToDisplay = js.cards;
     jct.displayCards(cardsToDisplay, js.results);
-    if (js.request.journal.length > 0) {
-        jct.displayPriceData(js.request.journal[0]);
-    }
 
     x = window.matchMedia("(max-width: 767px)")
     let results_section_top = jct.d.gebi("jct_results_plugin").offsetTop

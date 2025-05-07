@@ -630,47 +630,6 @@ jct.site_modals.jcs = {
     }
 };
 
-jct.displayPriceData = (journalData) => {
-    let message = jct.lang.jcs.none;
-    if (journalData.price_data_years && journalData.price_data_years.length > 0) {
-        message = jct.lang.jcs.stale;
-
-        let currentDate = new Date();
-        let yearCurrent = currentDate.getUTCFullYear();
-        let latestData = Math.max.apply(null, journalData.price_data_years);
-        let rolloverDate = new Date(parseInt(yearCurrent) + "-11-01T00:00:00Z");
-
-        // if the current date is before the end of October of the current year, then
-        // we will accept data from up to 2 years ago as current (e.g. in May 2023 data
-        // from 2021 is current).  If not, we will only accept data from one year ago
-        // (e.g. in November 2023 data from 2022 is current, and 2021 is stale)
-        let cutoffYear = yearCurrent - 1;
-        if (currentDate < rolloverDate) {
-            cutoffYear = yearCurrent - 2;
-        }
-        if (latestData >= cutoffYear) {
-            message = jct.lang.jcs.current;
-        }
-
-        if (message) {
-            message = message.replaceAll("{years}", journalData.price_data_years.join(", "))
-        }
-    }
-
-    if (message) {
-        message = message.replaceAll("{journal}", journalData.title);
-        message = `
-            <div class="col col--1of1"><div class="jcs_container">
-                <h5>Transparent price and service data</h5>
-                <p>${message}</p>
-                <a href="#" class="modal-trigger" data-modal="jcs">Click here to learn more</a>
-            </div>
-            </div>
-        `;
-        jct.d.gebi("jct_jcs_price_data").innerHTML = message;
-    }
-};
-
 // ----------------------------------------
 // Function to display specific card
 // ----------------------------------------

@@ -1,4 +1,3 @@
-import esprit
 import json
 import uuid
 import os
@@ -6,6 +5,7 @@ import requests
 import re
 import shutil
 from datetime import datetime
+import elasticsearch
 
 from jctdata import settings
 from jctdata.lib import send_mail
@@ -21,9 +21,32 @@ def index(infile, bulkfile, conn, index_type, mapping, alias):
             d = json.loads(line)
             if "id" not in d:
                 d["id"] = uuid.uuid4().hex
-            bulklines = esprit.raw.to_bulk_single_rec(d)
+            bulklines = _to_bulk_single_rec(d)
             o.write(bulklines)
             line = f.readline()
+
+    if conn.indices.exists(altered_key):
+        if force_mappings:
+            r = conn.indices.put_mapping(index=altered_key, body=mapping.get("mappings"),
+                                         request_timeout=app.config.get("ES_SOCKET_TIMEOUT", None))
+            print("Updating mapping via alias {0} for {1}; status: {2}".format(altered_key, key, r))
+        else:
+            print("Alias {0} already exists for type {1}".format(altered_key, key))
+    else:
+        print("Preparing new index / alias for " + key)
+        # Set up a new index and corresponding alias
+        idx_name = altered_key + '-{}'.format(dates.today(dates.FMT_DATE_SHORT))
+
+        try:
+            resp = es_connection.indices.create(index=idx_name,
+                                                body=mapping,
+                                                request_timeout=app.config.get("ES_SOCKET_TIMEOUT", None))
+            print("Initialised index: {}".format(resp['index']))
+        except elasticsearch.exceptions.RequestError as e:
+            print('Could not create index: ' + str(e))
+
+        resp2 = es_connection.indices.put_alias(index=idx_name, name=altered_key)
+        print("Created alias:     {:<25} -> {},  status {}".format(idx_name, altered_key, resp2))
 
     if not esprit.raw.type_exists(conn, index_type, es_version="1.7.5"):
         r = esprit.raw.put_mapping(conn, index_type, mapping, es_version="1.7.5")
@@ -90,7 +113,10 @@ def index_latest_with_alias(target, index_suffix):
     timestamped_index_name = ALIAS + datetime.strftime(datetime.utcnow(), settings.INDEX_SUFFIX_DATE_FORMAT)
 
     IN = os.path.join(target_dir, latest, target + ".json")
-    CONN = esprit.raw.Connection(settings.ES_HOST, timestamped_index_name)
+    # CONN = esprit.raw.Connection(settings.ES_HOST, timestamped_index_name)
+    CONN = elasticsearch.Elasticsearch(settings.ES_HOST,
+                                       verify_certs=False,
+                                       timeout=15)
     INDEX_TYPE = target
     BULK_FILE = os.path.join(target_dir, latest, target + ".bulk")
     MAPPING = {INDEX_TYPE : settings.DEFAULT_MAPPING}
@@ -103,6 +129,34 @@ def index_latest_with_alias(target, index_suffix):
 
     index(IN, BULK_FILE, CONN, INDEX_TYPE, MAPPING, ALIAS)
 
+def _to_bulk_single_rec(record, idkey="id", action="index", **kwargs):
+    """ Adapted from esprit. Create a bulk instruction from a single record. """
+    data = ''
+    idpath = idkey.split(".")
+
+    # traverse down the object in search of the supplied ID key
+    context = record
+    for pathseg in idpath:
+        if pathseg in context:
+            context = context[pathseg]
+        else:
+            raise Exception(
+                "'{0}' not available in record to generate bulk _id: {1}".format(idkey, json.dumps(record)))
+
+    datadict = {action: {'_id': context}}
+    datadict[action].update(kwargs)
+
+    data += json.dumps(datadict) + '\n'
+
+    if action == 'delete':
+        return data
+
+    # For update, we wrap the document in {doc: document} if not already supplied
+    if action == 'update' and not (record.get('doc') and len(record.keys()) == 1):
+        data += json.dumps({'doc': record}) + '\n'
+    else:
+        data += json.dumps(record) + '\n'
+    return data
 
 ################################################
 ## File loader functions

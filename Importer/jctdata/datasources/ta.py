@@ -46,6 +46,9 @@ class TA(datasource.Datasource):
                     first = False
                     continue
                 data_url = row[4]
+                if data_url is None or data_url == "":
+                    self.log("{y} no data URL for `{x}` ... skipping".format(x=row[0], y=i))
+                    continue
                 self.log("{y} retrieving from {x}".format(x=data_url, y=i))
                 try:
                     resp = requests.get(data_url, timeout=10)

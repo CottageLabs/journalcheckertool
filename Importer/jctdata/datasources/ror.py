@@ -110,7 +110,7 @@ class ROR(datasource.Datasource):
             }
         # get data from version 2
         elif schema_version == 'v2':
-            all_names = [(n.get("value"), n["types"] == "ror_display", n.get("lang"))
+            all_names = [(n.get("value"), "ror_display" in n.get("types", []), n.get("lang"))
                      for n in ror_rec.get("names", [])
                      if ("ror_display" in n.get("types", []) or "label" in n.get("types", [])) and n.get("value") is not None]
 

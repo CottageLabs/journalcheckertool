@@ -13,19 +13,23 @@ from jctdata import settings
 @click.option("-o", "--only", "full_pipeline", flag_value=False)
 @click.option("-a", "--all", "full_pipeline", flag_value=True, default=True)
 @click.option("-f", "--force-resolve", is_flag=True)
-def entry_point(mode, targets, stage=None, full_pipeline=True, force_resolve=False):
-    run(mode, targets, stage, full_pipeline, force_resolve)
+@click.option("-t", "--test-database", is_flag=True)
+def entry_point(mode, targets, stage=None, full_pipeline=True, force_resolve=False, test_database=False):
+    if test_database:
+        full_pipeline = False
+    run(mode, targets, stage, full_pipeline, force_resolve, test_database)
 
 
-def run(mode:str, targets:tuple, stage:str=None, full_pipeline:bool=True, force_resolve:bool=False):
+def run(mode:str, targets:tuple, stage:str=None, full_pipeline:bool=True, force_resolve:bool=False,
+        test_database:bool=False):
     processor = MODE_MAP.get(mode)
     if not processor:
         return
 
-    processor(targets, stage, full_pipeline, force_resolve)
+    processor(targets, stage, full_pipeline, force_resolve, test_database)
 
 
-def resolve(targets, stage=None, full_pipeline=True, force_resolve=False):
+def resolve(targets, stage=None, full_pipeline=True, force_resolve=False, test_database=False):
     if targets[0] == "_all":
         targets = resolver.SOURCES.keys()
 
@@ -43,7 +47,7 @@ def resolve(targets, stage=None, full_pipeline=True, force_resolve=False):
             getattr(datasource, stage)()
 
 
-def index(targets, stage=None, full_pipeline=True, force_resolve=False):
+def index(targets, stage=None, full_pipeline=True, force_resolve=False, test_database=False):
     if targets[0] == "_all":
         indexers = factory.get_all_indexers()
     else:
@@ -62,7 +66,7 @@ def index(targets, stage=None, full_pipeline=True, force_resolve=False):
             getattr(indexer, stage)()
 
 
-def load(targets, stage=None, full_pipeline=True, force_resolve=False):
+def load(targets, stage=None, full_pipeline=True, force_resolve=False, test_database=False):
     if targets[0] == "_all":
         targets = factory.get_all_index_names()
 
@@ -72,7 +76,7 @@ def load(targets, stage=None, full_pipeline=True, force_resolve=False):
     for t in targets:
         load_type = settings.INDEX_LOADERS[t]
         if load_type == "es":
-            loader.index_latest_with_alias(t, settings.ES_INDEX_SUFFIX)
+            loader.index_latest_with_alias(t, settings.ES_INDEX_SUFFIX, test_database)
         elif load_type == "file":
             loader.load_to_file(t)
         elif load_type == "helpdesk":

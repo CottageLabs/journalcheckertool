@@ -1,6 +1,6 @@
 id: academyoffinlandaka
-name: Academy of Finland
-abbr: AKA
+name: Research Council of Finland
+abbr: RCF
 plan_s: 2021-01-01
 apc:
   tj: true # implementation roadmap

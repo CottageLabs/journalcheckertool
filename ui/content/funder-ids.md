@@ -9,9 +9,6 @@ description: "List of Funder IDs supported by the JCT API"
 To make requests of the [JCT API](/apidocs) or to pre-populate the [widget](/widget) search boxes with funder names
 you will need to use the following identifiers in place of the name of the funder.
 
-**Academy of Finland**
-: `academyoffinlandaka`
-
 **Aligning Science Across Parkinson's**
 : `aligningscienceacrossparkinsonsasap`
 
@@ -87,13 +84,16 @@ you will need to use the following identifiers in place of the name of the funde
 **Netherlands Organisation for Scientific Research**
 : `netherlandsorganisationforscientificresearchnwo`
 
+**Research Council of Finland**
+: `academyoffinlandaka`
+
 **Research Council of Norway**
 : `researchcouncilofnorwayrcn`
 
 **Research England**
 : `unitedkingdomresearchinnovationukri`
 
-**Science Foundation Ireland**
+**Research Ireland**
 : `sciencefoundationirelandsfi`
 
 **Science and Technology Facilities Council**
@@ -125,3 +125,4 @@ you will need to use the following identifiers in place of the name of the funde
 
 **World Health Organization**
 : `worldhealthorganizationwho`
+

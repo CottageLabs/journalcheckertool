@@ -1,6 +1,5 @@
 id: sciencefoundationirelandsfi
-name: Science Foundation Ireland
-abbr: SFI
+name: Research Ireland
 plan_s: 2021-01-01
 apc:
   tj: true # implementation roadmap

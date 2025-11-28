@@ -791,7 +791,7 @@ API.service.jct.retention = (issn, refresh) ->
 
 API.service.jct.oa_works = (issn, institution) ->
   issn = issn.split(',') if typeof issn is 'string'
-  permsurl = 'https://api.openaccessbutton.org/permissions?meta=false&issn=' + (if typeof issn is 'string' then issn else issn.join(',')) + (if typeof institution is 'string' then '&ror=' + institution else if institution? and Array.isArray(institution) and institution.length then '&ror=' + institution.join(',') else '')
+  permsurl = 'https://api.oa.works/permissions?meta=false&issn=' + (if typeof issn is 'string' then issn else issn.join(',')) + (if typeof institution is 'string' then '&ror=' + institution else if institution? and Array.isArray(institution) and institution.length then '&ror=' + institution.join(',') else '')
   try
     perms = HTTP.call('GET', permsurl, {timeout:3000}).data
   catch

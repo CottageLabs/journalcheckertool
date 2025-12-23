@@ -112,7 +112,8 @@ class ROR(datasource.Datasource):
         elif schema_version == 'v2':
             all_names = [(n.get("value"), "ror_display" in n.get("types", []), n.get("lang"))
                      for n in ror_rec.get("names", [])
-                     if ("ror_display" in n.get("types", []) or "label" in n.get("types", [])) and n.get("value") is not None]
+                     if ("ror_display" in n.get("types", []) or "label" in n.get("types", [])) 
+                     and n.get("value")]
 
             if len(all_names) == 0:
                 self.log("No names found in ROR record {x}".format(x=ror_rec.get("id", '')))
@@ -141,10 +142,14 @@ class ROR(datasource.Datasource):
                 else:
                     title_v2 = all_names[0][0]
 
-            aliases = [n[0] for n in all_names if n[0] != title_v2]
-            acronyms = [name["value"] for name in ror_rec["names"] if "acronym" in name["types"]]
-            country = ror_rec["locations"][0]["geonames_details"]["country_name"] if ("locations" in ror_rec and
-                                                                            len(ror_rec["locations"]) > 0) else ''
+            aliases = [n.get("value") for n in ror_rec.get("names", []) if "alias" in n.get("types", []) and n.get("value")]
+            acronyms = [n.get("value") for n in ror_rec.get("names", []) if "acronym" in n.get("types", []) and n.get("value")]
+            country = ""
+            if "locations" in ror_rec and len(ror_rec["locations"]) > 0:
+                loc = ror_rec["locations"][0]
+                if "geonames_details" in loc and "country_name" in loc["geonames_details"]:
+                    country = loc["geonames_details"]["country_name"]
+            
             return {
                 'id': ror_rec.get('id', '').replace("https://ror.org/", ''),
                 'ror': ror_rec.get('id', ''),

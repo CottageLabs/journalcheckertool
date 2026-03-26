@@ -168,6 +168,11 @@ class ROR(datasource.Datasource):
                     rorfile = zi
                     schema_version = 'v2'
                     break
+                elif zi.filename.startswith("v2") and zi.filename.endswith(".json"):
+                    rorfile = zi
+                    schema_version = 'v2'
+                    break
+
             # if version not changed, use the old version
             if not schema_version :
                 for zi in archive.infolist():

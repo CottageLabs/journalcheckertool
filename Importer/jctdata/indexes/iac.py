@@ -49,7 +49,7 @@ class IAC(Indexer):
                 if rec.get('country', None):
                     record['country'] = rec['country']
                 main = rec.get('title', None)
-                if main is None:
+                if not main:
                     continue
                 record["title"] = main
                 if rec.get('aliases', []):

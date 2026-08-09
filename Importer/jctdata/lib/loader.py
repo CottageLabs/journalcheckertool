@@ -79,14 +79,12 @@ def index_latest_with_alias(target, index_suffix):
     dirs.sort(reverse=True)
     latest = dirs[0]
 
-    if index_suffix and not index_suffix.startswith('_'):
-        index_suffix = "_" + index_suffix
-
-    index_prefix = settings.ES_INDEX_PREFIX
+    index_suffix = index_suffix if index_suffix else ""
+    index_prefix = settings.ES_INDEX_PREFIX if settings.ES_INDEX_PREFIX else ""
     if index_prefix and not index_prefix.endswith('_'):
         index_prefix = index_prefix + "_"
 
-    ALIAS = index_prefix + target + index_suffix
+    ALIAS = index_prefix + index_suffix + "_" + target
     timestamped_index_name = ALIAS + datetime.strftime(datetime.utcnow(), settings.INDEX_SUFFIX_DATE_FORMAT)
 
     IN = os.path.join(target_dir, latest, target + ".json")
